@@ -1,0 +1,15 @@
+{
+  "translation": {
+    "welcome": "Benvenuto",
+    "imgNotFound": "Impossibile visualizzare l'immagine.",
+    "logInYourExpensesManagement": "Accedi alla tua gestione spese",
+    "enterEmailAndPassword": "Inserire l'e-mail e la password",
+    "enterEmail": "Inserire l'e-mail",
+    "enterPassword": "Inserire la password",
+    "invalidEnteredEmail": "L'e-mail inserita non è valida",
+    "email": "E-mail",
+    "password": "Password",
+    "logIn": "Accedi",
+    "unableLogin": "Impossibile accedere"
+  }
+}

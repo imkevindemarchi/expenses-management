@@ -1,0 +1,15 @@
+{
+  "translation": {
+    "welcome": "Welcome",
+    "imgNotFound": "Unable to display the image.",
+    "logInYourExpensesManagement": "Log-in to your expenses management",
+    "enterEmailAndPassword": "Enter your email and password",
+    "enterEmail": "Enter the e-mail",
+    "enterPassword": "Enter the password",
+    "invalidEnteredEmail": "The email you entered is not valid",
+    "email": "E-mail",
+    "password": "Password",
+    "logIn": "Log-in",
+    "unableLogin": "Unable log-in"
+  }
+}
