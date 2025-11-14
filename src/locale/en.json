@@ -10,6 +10,13 @@
     "email": "E-mail",
     "password": "Password",
     "logIn": "Log-in",
-    "unableLogin": "Unable log-in"
+    "unableLogin": "Unable log-in",
+    "italian": "Italian",
+    "english": "English",
+    "summary": "Summary",
+    "reports": "Reports",
+    "graphs": "Graphs",
+    "profile": "Profile",
+    "resetPassword": "Password reset"
   }
 }
