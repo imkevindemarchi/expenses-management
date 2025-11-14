@@ -5,3 +5,5 @@ export { default as Button } from "./Button.component";
 export { default as Backdrop } from "./Backdrop.component";
 export { default as Loader } from "./Loader.component";
 export { default as Popup } from "./Popup.component";
+export { default as Navbar } from "./Navbar.component";
+export { default as LanguageSelector } from "./LanguageSelector.component";

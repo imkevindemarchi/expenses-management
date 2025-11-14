@@ -6,3 +6,5 @@ export { Check as CheckIcon } from "./check.icon";
 export { Close as CloseIcon } from "./close.icon";
 export { Error as ErrorIcon } from "./error.icon";
 export { Warning as WarningIcon } from "./warning.icon";
+export { Logout as LogoutIcon } from "./logout.icon";
+export { User as UserIcon } from "./user.icon";

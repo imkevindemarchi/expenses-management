@@ -10,6 +10,13 @@
     "email": "E-mail",
     "password": "Password",
     "logIn": "Accedi",
-    "unableLogin": "Impossibile accedere"
+    "unableLogin": "Impossibile accedere",
+    "italian": "Italiano",
+    "english": "Inglese",
+    "summary": "Riepilogo",
+    "reports": "Report",
+    "graphs": "Grafici",
+    "profile": "Profilo",
+    "resetPassword": "Reset password"
   }
 }

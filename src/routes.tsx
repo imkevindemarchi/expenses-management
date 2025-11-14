@@ -17,4 +17,25 @@ export const ROUTES: TRoute[] = [
     element: <Login />,
     isHidden: true,
   },
+  {
+    path: "/",
+    name: "",
+    element: <></>,
+    isHidden: true,
+  },
+  {
+    path: "/summary",
+    name: "summary",
+    element: <></>,
+  },
+  {
+    path: "/reports",
+    name: "reports",
+    element: <></>,
+  },
+  {
+    path: "/graphs",
+    name: "graphs",
+    element: <></>,
+  },
 ];

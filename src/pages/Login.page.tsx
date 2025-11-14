@@ -80,7 +80,7 @@ const Login = () => {
           await Promise.resolve(
             AUTH_API.login(payload).then((response: THTTPResponse) => {
               if (response.hasSuccess) {
-                navigate("/admin");
+                navigate("/");
                 setToStorage("token", response.data?.access_token);
                 setIsUserAuthenticated(true);
               } else openPopup(t("unableLogin"), "error");

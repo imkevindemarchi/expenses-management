@@ -1,5 +1,5 @@
-import React, { ReactNode, useContext } from "react";
-import { Navigate, Route, Routes } from "react-router";
+import React, { useContext, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 
 // Assets
 import { ROUTES, TRoute } from "./routes";
@@ -14,13 +14,21 @@ const App = () => {
   const { isUserAuthenticated }: TAuthContext = useContext(
     AuthContext
   ) as TAuthContext;
+  const { pathname } = useLocation();
 
-  const routeElement = (route: TRoute): ReactNode =>
-    route.path === "/log-in" && isUserAuthenticated ? (
-      <Navigate to="/admin" replace />
-    ) : (
+  const protectedRoute = (route: TRoute) => {
+    return route.path === "/log-in" ? (
       route.element
+    ) : isUserAuthenticated ? (
+      route.element
+    ) : (
+      <Navigate to="/log-in" replace />
     );
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <Layout>
@@ -30,7 +38,7 @@ const App = () => {
             <Route
               key={index}
               path={route.path}
-              element={routeElement(route)}
+              element={protectedRoute(route)}
             />
           );
         })}
