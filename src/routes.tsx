@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 // Pages
-import { Login } from "./pages";
+import { Login, Profile } from "./pages";
 
 export type TRoute = {
   path: string;
@@ -21,6 +21,12 @@ export const ROUTES: TRoute[] = [
     path: "/",
     name: "",
     element: <></>,
+    isHidden: true,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    element: <Profile />,
     isHidden: true,
   },
   {

@@ -17,6 +17,16 @@
     "reports": "Report",
     "graphs": "Grafici",
     "profile": "Profilo",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "unableLoadProfile": "Impossibile caricare l'utente",
+    "uploadImage": "Carica immagine",
+    "insertName": "Inserisci il nome",
+    "insertSurname": "Inserisci il cognome",
+    "save": "Salva",
+    "unableRemoveImage": "Impossibile eliminare l'immagine",
+    "profileSuccessfullyUpdated": "Profilo aggiornato con successo",
+    "unableUpdateImage": "Impossibile aggiornare l'immagine",
+    "requiredField": "Campo obbligatorio*",
+    "cancel": "Annulla"
   }
 }

@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { NavigateFunction, useLocation, useNavigate } from "react-router";
+import { NavigateFunction, useNavigate } from "react-router";
 
 // Api
 import { AUTH_API } from "../api";
@@ -15,7 +15,7 @@ import { AUTH_API } from "../api";
 import { LoaderContext, TLoaderContext } from "./loader.provider";
 
 // Types
-import { THTTPResponse } from "../types";
+import { THTTPResponse, TProfile } from "../types";
 
 // Utils
 import { getFromStorage, removeFromStorage, setToStorage } from "../utils";
@@ -27,6 +27,7 @@ interface IProps {
 export type TAuthContext = {
   isUserAuthenticated: boolean;
   setIsUserAuthenticated: (value: boolean) => void;
+  userData: TProfile | null;
 };
 
 export const AuthContext = createContext<TAuthContext | null>(null);
@@ -38,10 +39,8 @@ export const AuthProvider = ({ children }: IProps): JSX.Element => {
   const { setState: setIsLoading }: TLoaderContext = useContext(
     LoaderContext
   ) as TLoaderContext;
-  const { pathname } = useLocation();
+  const [userData, setUserData] = useState<TProfile | null>(null);
 
-  const currentPathSection: string = pathname.split("/")[1];
-  const isAdminSection: boolean = currentPathSection.split("/")[0] === "admin";
   const navigate: NavigateFunction = useNavigate();
 
   function onLogout(): void {
@@ -59,6 +58,11 @@ export const AuthProvider = ({ children }: IProps): JSX.Element => {
           if (response.hasSuccess) {
             setToStorage("token", response.data?.access_token);
             setIsUserAuthenticated(true);
+            setUserData({
+              ...response.data?.user?.user_metadata,
+              id: response.data?.user?.id,
+              email: response.data?.user?.email,
+            });
           } else onLogout();
         }
       );
@@ -71,14 +75,14 @@ export const AuthProvider = ({ children }: IProps): JSX.Element => {
   }
 
   useEffect(() => {
-    isAdminSection && onLoad();
+    onLoad();
 
     // eslint-disable-next-line
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isUserAuthenticated, setIsUserAuthenticated }}
+      value={{ isUserAuthenticated, setIsUserAuthenticated, userData }}
     >
       {children}
     </AuthContext.Provider>

@@ -8,3 +8,9 @@ export function validateEmail(email: string): boolean {
 
   return REG_EX.test(email);
 }
+
+export function validateFormField(field: string): TValidation {
+  return field && field.trim() !== ""
+    ? { isValid: true }
+    : { isValid: false, message: "requiredField" };
+}
