@@ -8,6 +8,7 @@ import wallpaperImg from "../assets/images/login-wallpaper.jpg";
 import Loader from "./Loader.component";
 import Popup from "./Popup.component";
 import Navbar from "./Navbar.component";
+import Sidebar from "./Sidebar.component";
 
 interface IProps {
   children: ReactNode;
@@ -28,6 +29,8 @@ const Layout: FC<IProps> = ({ children }) => {
 
   const navbar = <Navbar />;
 
+  const sidebar = <Sidebar />;
+
   const layout = (
     <div
       style={{
@@ -36,6 +39,7 @@ const Layout: FC<IProps> = ({ children }) => {
       className="min-h-[100vh] bg-cover"
     >
       {navbar}
+      {sidebar}
       <div className="px-60 py-10 w-full min-h-[100vh] mobile:min-h-[110vh] pt-40 mobile:px-5 mobile:pt-28 flex flex-col gap-5">
         {children}
       </div>

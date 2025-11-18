@@ -8,3 +8,4 @@ export { default as Popup } from "./Popup.component";
 export { default as Navbar } from "./Navbar.component";
 export { default as LanguageSelector } from "./LanguageSelector.component";
 export { default as ImageSelector } from "./ImageSelector.component";
+export { default as Sidebar } from "./Sidebar.component";
