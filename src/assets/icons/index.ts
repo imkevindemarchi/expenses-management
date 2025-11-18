@@ -8,3 +8,6 @@ export { Error as ErrorIcon } from "./error.icon";
 export { Warning as WarningIcon } from "./warning.icon";
 export { Logout as LogoutIcon } from "./logout.icon";
 export { User as UserIcon } from "./user.icon";
+export { Image as ImageIcon } from "./image.icon";
+export { Save as SaveIcon } from "./save.icon";
+export { Edit as EditIcon } from "./edit.icon";

@@ -17,6 +17,15 @@
     "reports": "Reports",
     "graphs": "Graphs",
     "profile": "Profile",
-    "resetPassword": "Password reset"
+    "resetPassword": "Password reset",
+    "unableLoadProfile": "Unable load the profile",
+    "uploadImage": "Upload image",
+    "insertSurname": "Insert the surname",
+    "save": "Save",
+    "unableRemoveImage": "Unable to remove the image",
+    "profileSuccessfullyUpdated": "Profile successfully updated",
+    "unableUpdateImage": "Unable to update the image",
+    "requiredField": "Required field*",
+    "cancel": "Cancel"
   }
 }

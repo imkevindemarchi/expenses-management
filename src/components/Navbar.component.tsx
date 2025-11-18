@@ -44,7 +44,7 @@ const Navbar: FC = () => {
   ) as TPopupContext;
   const [isOnTopOfPage, setIsOnTopOfPage] = useState<boolean>(true);
   const [isUserDropdownOpened, setIsUserDropdownOpened] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const userLiquidGlassRef: any | null = useRef(null);
 
   const currentPaths: string[] = pathname.split("/");
@@ -155,7 +155,7 @@ const Navbar: FC = () => {
           className="flex flex-col gap-5 justify-center items-center w-40 py-5"
         >
           <span
-            onClick={() => navigate("/settings")}
+            onClick={() => navigate("/profile")}
             className="text-white hover:opacity-50 transition-all duration-300"
           >
             {t("profile")}
