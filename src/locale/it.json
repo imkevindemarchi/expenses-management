@@ -28,6 +28,13 @@
     "unableUpdateImage": "Impossibile aggiornare l'immagine",
     "requiredField": "Campo obbligatorio*",
     "cancel": "Annulla",
-    "logoutError": "Impossibile effettuare il log out"
+    "logoutError": "Impossibile effettuare il log out",
+    "passwordReset": "Reset password",
+    "insertPassword": "Inserisci la password",
+    "repeatPassword": "Ripeti la password",
+    "compileFormToResetPassword": "Compilare il seguente form per modificare la password",
+    "passwordNotMatch": "Le password non corrispondono",
+    "passwordSuccessfullyUpdated": "La password è stata aggiornata con successo",
+    "unableUpdatePassword": "Impossibile aggiornare la password"
   }
 }

@@ -44,7 +44,7 @@ export const PROFILE_API = {
         hasSuccess: true,
       };
     } catch (error) {
-      console.error("🚀 ~ get - error:", error);
+      console.error("🚀 ~ update - error:", error);
       return {
         hasSuccess: false,
       };

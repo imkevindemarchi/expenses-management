@@ -12,7 +12,7 @@ export type TSidebarContext = {
 export const SidebarContext = createContext<TSidebarContext | null>(null);
 
 export const SidebarProvider = ({ children }: IProps): JSX.Element => {
-  const [state, setState] = useState<boolean>(true);
+  const [state, setState] = useState<boolean>(false);
 
   const isOpen: boolean = state;
 
