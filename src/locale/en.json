@@ -26,6 +26,7 @@
     "profileSuccessfullyUpdated": "Profile successfully updated",
     "unableUpdateImage": "Unable to update the image",
     "requiredField": "Required field*",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "logoutError": "Unable to log out"
   }
 }

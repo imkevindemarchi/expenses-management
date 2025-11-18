@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useContext } from "react";
 import { useLocation } from "react-router";
 
 // Assets
@@ -9,6 +9,8 @@ import Loader from "./Loader.component";
 import Popup from "./Popup.component";
 import Navbar from "./Navbar.component";
 import Sidebar from "./Sidebar.component";
+import Hamburger from "./Hamburger.component";
+import { SidebarContext, TSidebarContext } from "../providers/sidebar.provider";
 
 interface IProps {
   children: ReactNode;
@@ -16,6 +18,10 @@ interface IProps {
 
 const Layout: FC<IProps> = ({ children }) => {
   const { pathname } = useLocation();
+  const {
+    isOpen: isSidebarOpen,
+    onStateChange: onSidebarStateChange,
+  }: TSidebarContext = useContext(SidebarContext) as TSidebarContext;
 
   const currentPathSection: string = pathname.split("/")[1];
 
@@ -29,6 +35,10 @@ const Layout: FC<IProps> = ({ children }) => {
 
   const navbar = <Navbar />;
 
+  const hamburger = (
+    <Hamburger isActive={isSidebarOpen} onClick={onSidebarStateChange} />
+  );
+
   const sidebar = <Sidebar />;
 
   const layout = (
@@ -39,6 +49,7 @@ const Layout: FC<IProps> = ({ children }) => {
       className="min-h-[100vh] bg-cover"
     >
       {navbar}
+      {hamburger}
       {sidebar}
       <div className="px-60 py-10 w-full min-h-[100vh] mobile:min-h-[110vh] pt-40 mobile:px-5 mobile:pt-28 flex flex-col gap-5">
         {children}
