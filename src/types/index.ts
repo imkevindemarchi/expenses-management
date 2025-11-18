@@ -7,3 +7,5 @@ export type THTTPResponse = {
 export type TLoginPayload = { email: string; password: string };
 
 export type { TProfile } from "./profile.type";
+
+export type { TPassword, TPasswordPayload } from "./password.type";

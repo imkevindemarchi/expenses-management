@@ -27,6 +27,13 @@
     "unableUpdateImage": "Unable to update the image",
     "requiredField": "Required field*",
     "cancel": "Cancel",
-    "logoutError": "Unable to log out"
+    "logoutError": "Unable to log out",
+    "passwordReset": "Password reset",
+    "insertPassword": "Inserisci la password",
+    "repeatPassword": "Repeat the password",
+    "compileFormToResetPassword": "Fill out the following form to change your password.",
+    "passwordNotMatch": "The passwords don't match",
+    "passwordSuccessfullyUpdated": "The password has successfully been updated",
+    "unableUpdatePassword": "Unable update the password"
   }
 }

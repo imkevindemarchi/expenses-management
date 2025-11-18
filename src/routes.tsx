@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 // Pages
-import { Login, Profile } from "./pages";
+import { Login, Profile, ResetPassword } from "./pages";
 
 export type TRoute = {
   path: string;
@@ -27,6 +27,12 @@ export const ROUTES: TRoute[] = [
     path: "/profile",
     name: "profile",
     element: <Profile />,
+    isHidden: true,
+  },
+  {
+    path: "/password-reset",
+    name: "password-reset",
+    element: <ResetPassword />,
     isHidden: true,
   },
   {
