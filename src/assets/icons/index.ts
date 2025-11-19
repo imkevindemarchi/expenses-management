@@ -12,3 +12,4 @@ export { Image as ImageIcon } from "./image.icon";
 export { Save as SaveIcon } from "./save.icon";
 export { Edit as EditIcon } from "./edit.icon";
 export { Create as CreateIcon } from "./create.icon";
+export { ArrowRight as ArrowRightIcon } from "./arrow-right.icon";

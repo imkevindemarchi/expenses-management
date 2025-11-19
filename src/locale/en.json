@@ -48,6 +48,8 @@
     "unableCreateCategory": "Unable to create the category",
     "create": "Create",
     "compileFormToCreateCategory": "Fill out the following form to create one category.",
-    "compileFormToUpdateCategory": "Fill out the following form to update the category."
+    "compileFormToUpdateCategory": "Fill out the following form to update the category.",
+    "new": "New",
+    "edit": "Edit"
   }
 }
