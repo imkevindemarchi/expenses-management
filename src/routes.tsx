@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 // Pages
-import { Category, Login, Profile, PasswordReset } from "./pages";
+import { Category, Login, Profile, PasswordReset, Categories } from "./pages";
 
 export type TRoute = {
   path: string;
@@ -41,7 +41,7 @@ export const ROUTES: TRoute[] = [
   {
     path: "/categories",
     name: "categories",
-    element: <></>,
+    element: <Categories />,
   },
   {
     path: "/categories/new",

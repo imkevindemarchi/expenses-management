@@ -1,3 +1,1 @@
-export type TCategory = {
-  label: string;
-};
+export type TCategory = { id: string | null; label: string };

@@ -13,3 +13,7 @@ export { Save as SaveIcon } from "./save.icon";
 export { Edit as EditIcon } from "./edit.icon";
 export { Create as CreateIcon } from "./create.icon";
 export { ArrowRight as ArrowRightIcon } from "./arrow-right.icon";
+export { Add as AddIcon } from "./add.icon";
+export { Search as SearchIcon } from "./search.icon";
+export { ArrowLeft as ArrowLeftIcon } from "./arrow-left.icon";
+export { Delete as DeleteIcon } from "./delete.icon";

@@ -50,6 +50,16 @@
     "compileFormToCreateCategory": "Fill out the following form to create one category.",
     "compileFormToUpdateCategory": "Fill out the following form to update the category.",
     "new": "New",
-    "edit": "Edit"
+    "edit": "Edit",
+    "total": "Total",
+    "noData": "No data available...",
+    "name": "Name",
+    "categorySuccessfullyDeleted": "Category successfully deleted",
+    "unableDeleteCategory": "Unable to delete the category",
+    "searchForName": "Search for name...",
+    "deleteCategory": "Delete category",
+    "confirmToDelete": "Confirm you want to delete ''{{name}}''?",
+    "no": "No",
+    "yes": "Yes"
   }
 }
