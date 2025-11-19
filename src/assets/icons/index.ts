@@ -11,3 +11,4 @@ export { User as UserIcon } from "./user.icon";
 export { Image as ImageIcon } from "./image.icon";
 export { Save as SaveIcon } from "./save.icon";
 export { Edit as EditIcon } from "./edit.icon";
+export { Create as CreateIcon } from "./create.icon";
