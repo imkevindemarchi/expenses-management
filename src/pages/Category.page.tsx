@@ -191,6 +191,18 @@ const Category: FC = () => {
     />
   );
 
+  const form = (
+    <form
+      onSubmit={onSubmit}
+      className="flex flex-col gap-5 justify-center items-center"
+    >
+      <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
+        {label}
+        {button}
+      </LiquidGlass>
+    </form>
+  );
+
   useEffect(() => {
     getData();
 
@@ -198,15 +210,16 @@ const Category: FC = () => {
   }, []);
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-col gap-5 justify-center items-center min-h-[70vh]"
-    >
-      <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
-        {label}
-        {button}
-      </LiquidGlass>
-    </form>
+    <div className="flex flex-col gap-10 pt-10">
+      <span className="text-lg text-white">
+        {t(
+          isEditMode
+            ? "compileFormToUpdateCategory"
+            : "compileFormToCreateCategory"
+        )}
+      </span>
+      {form}
+    </div>
   );
 };
 

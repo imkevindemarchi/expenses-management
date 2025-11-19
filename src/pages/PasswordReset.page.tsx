@@ -1,6 +1,9 @@
 import React, { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+// Api
+import { PASSWORD_API } from "../api";
+
 // Components
 import { Button, Input, LiquidGlass } from "../components";
 
@@ -16,7 +19,6 @@ import { THTTPResponse, TPassword, TPasswordPayload } from "../types";
 
 // Utils
 import { setPageTitle, TValidation, validateFormField } from "../utils";
-import { PASSWORD_API } from "../api";
 
 const DEFAULT_STATE: TPassword = {
   password: "",
@@ -37,7 +39,7 @@ const ERRORS_DEFAULT_STATE: TErrors = {
   },
 };
 
-const ResetPassword: FC = () => {
+const PasswordReset: FC = () => {
   const { t } = useTranslation();
   const { setState: setIsLoading }: TLoaderContext = useContext(
     LoaderContext
@@ -157,4 +159,4 @@ const ResetPassword: FC = () => {
   );
 };
 
-export default ResetPassword;
+export default PasswordReset;
