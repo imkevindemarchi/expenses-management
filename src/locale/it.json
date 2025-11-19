@@ -71,7 +71,13 @@
     "unableUpdateSubCategory": "Impossibile aggiornare la sotto-categoria",
     "subCategorySuccessfullyCreated": "Sotto-categoria creata con successo",
     "unableCreateSubCategory": "Impossibile creare la sotto-categoria",
-    "subCategorySuccessfullyDeleted": "Sub-categoria eliminata con successo",
-    "unableDeleteSubCategory": "Impossibile eliminare la sub-categoria"
+    "subCategorySuccessfullyDeleted": "Sotto-categoria eliminata con successo",
+    "unableDeleteSubCategory": "Impossibile eliminare la sotto-categoria",
+    "editSubCategory": "Modifica sotto-categoria",
+    "newSubCategory": "Nuova sotto-categoria",
+    "compileFormToUpdateSubCategory": "Compilare il seguente form per aggiornare la sotto-categoria.",
+    "compileFormToCreateSubCategory": "Compilare il seguente form per creare una sotto-categoria.",
+    "insertCategory": "Inserisci la categoria",
+    "category": "Categoria"
   }
 }

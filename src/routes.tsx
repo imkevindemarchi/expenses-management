@@ -8,6 +8,7 @@ import {
   PasswordReset,
   Categories,
   SubCategories,
+  SubCategory,
 } from "./pages";
 
 export type TRoute = {
@@ -66,6 +67,18 @@ export const ROUTES: TRoute[] = [
     path: "/sub-categories",
     name: "sub-categories",
     element: <SubCategories />,
+  },
+  {
+    path: "/sub-categories/new",
+    name: "sub-category",
+    element: <SubCategory />,
+    isHidden: true,
+  },
+  {
+    path: "/sub-categories/edit/:categoryId",
+    name: "sub-category",
+    element: <SubCategory />,
+    isHidden: true,
   },
   {
     path: "/profile",

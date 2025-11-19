@@ -20,6 +20,7 @@
     "resetPassword": "Password reset",
     "unableLoadProfile": "Unable load the profile",
     "uploadImage": "Upload image",
+    "insertName": "Insert the name",
     "insertSurname": "Insert the surname",
     "save": "Save",
     "unableRemoveImage": "Unable to remove the image",
@@ -71,6 +72,12 @@
     "subCategorySuccessfullyCreated": "Sub-category successfully created",
     "unableCreateSubCategory": "Unable to create the sub-category",
     "subCategorySuccessfullyDeleted": "Sub-category successfully deleted",
-    "unableDeleteSubCategory": "Unable to delete the sub-category"
+    "unableDeleteSubCategory": "Unable to delete the sub-category",
+    "editSubCategory": "Edit sub-category",
+    "newSubCategory": "New sub-category",
+    "compileFormToUpdateSubCategory": "Fill out the following form to update the sub-category.",
+    "compileFormToCreateSubCategory": "Fill out the following form to create one sub-category.",
+    "insertCategory": "Insert the category",
+    "category": "Category"
   }
 }
