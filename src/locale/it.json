@@ -51,6 +51,16 @@
     "compileFormToCreateCategory": "Compilare il seguente form per creare una categoria.",
     "compileFormToUpdateCategory": "Compilare il seguente form per aggiornare la categoria.",
     "new": "Nuovo",
-    "edit": "Modifica"
+    "edit": "Modifica",
+    "total": "Totale",
+    "noData": "Nessun dato disponibile...",
+    "name": "Nome",
+    "categorySuccessfullyDeleted": "Categoria eliminata con successo",
+    "unableDeleteCategory": "Impossibile eliminare la categoria",
+    "searchForName": "Cerca per nome...",
+    "deleteCategory": "Elimina categoria",
+    "confirmToDelete": "Confermi di voler eliminare ''{{name}}''?",
+    "no": "No",
+    "yes": "Sì"
   }
 }

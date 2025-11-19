@@ -30,7 +30,7 @@ import { TValidation } from "../utils/validation.util";
 // Utils
 import { setPageTitle, validateFormField } from "../utils";
 
-const DEFAULT_STATE: TCategory = {
+const DEFAULT_STATE: Partial<TCategory> = {
   label: "",
 };
 
@@ -46,7 +46,7 @@ const ERRORS_DEFAULT_STATE: TErrors = {
 
 const Category: FC = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<TCategory>(DEFAULT_STATE);
+  const [formData, setFormData] = useState<Partial<TCategory>>(DEFAULT_STATE);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { onOpen: openPopup }: TPopupContext = useContext(
     PopupContext
