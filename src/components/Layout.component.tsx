@@ -56,7 +56,7 @@ const Layout: FC<IProps> = ({ children }) => {
       {navbar}
       {hamburger}
       {sidebar}
-      <div className="px-60 py-10 w-full min-h-[100vh] mobile:min-h-[110vh] pt-40 mobile:px-5 mobile:pt-28 flex flex-col gap-5">
+      <div className="px-60 py-10 w-full min-h-[100vh] mobile:min-h-[110vh] mobile:px-5 mobile:pt-28 flex flex-col gap-5 pt-52">
         {breadcrumb}
         {children}
       </div>

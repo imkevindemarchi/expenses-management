@@ -1,11 +1,4 @@
-import React, {
-  ChangeEvent,
-  FC,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   NavigateFunction,
@@ -127,10 +120,6 @@ const Categories: FC = () => {
     navigate(`${pathname}/edit/${rowData.id}`);
   }
 
-  const title: ReactNode = (
-    <span className="text-white text-2xl">{t("categories")}</span>
-  );
-
   async function onDelete(): Promise<void> {
     setDeleteModal(DEFAULT_DELETE_MODAL);
     setIsLoading(true);
@@ -151,7 +140,9 @@ const Categories: FC = () => {
     navigate(`${pathname}/new`);
   }
 
-  const header: ReactNode = (
+  const title = <span className="text-white text-2xl">{t("categories")}</span>;
+
+  const header = (
     <div className="w-full flex justify-between items-center gap-5">
       <Input
         autoFocus
@@ -184,7 +175,7 @@ const Categories: FC = () => {
     </div>
   );
 
-  const tableComponent: ReactNode = (
+  const tableComponent = (
     <Table
       data={tableData}
       columns={talbeColumns}
@@ -198,7 +189,7 @@ const Categories: FC = () => {
     />
   );
 
-  const modalComponent: ReactNode = (
+  const modalComponent = (
     <Modal
       isOpen={deleteModal.show}
       title={t("deleteCategory")}
