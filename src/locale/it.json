@@ -61,6 +61,17 @@
     "deleteCategory": "Elimina categoria",
     "confirmToDelete": "Confermi di voler eliminare ''{{name}}''?",
     "no": "No",
-    "yes": "Sì"
+    "yes": "Sì",
+    "sub-categories": "Sotto-categorie",
+    "subCategories": "Sotto-categorie",
+    "unableLoadSubCategories": "Impossibile caricare le sotto-categorie",
+    "unableLoadSubCategory": "Impossibile caricare la sotto-categoria",
+    "subCategoryAlreadyExists": "La sotto-categoria esiste già",
+    "subCategorySuccessfullyUpdated": "Sotto-categoria aggiornata con successo",
+    "unableUpdateSubCategory": "Impossibile aggiornare la sotto-categoria",
+    "subCategorySuccessfullyCreated": "Sotto-categoria creata con successo",
+    "unableCreateSubCategory": "Impossibile creare la sotto-categoria",
+    "subCategorySuccessfullyDeleted": "Sub-categoria eliminata con successo",
+    "unableDeleteSubCategory": "Impossibile eliminare la sub-categoria"
   }
 }

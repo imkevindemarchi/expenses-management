@@ -60,6 +60,17 @@
     "deleteCategory": "Delete category",
     "confirmToDelete": "Confirm you want to delete ''{{name}}''?",
     "no": "No",
-    "yes": "Yes"
+    "yes": "Yes",
+    "sub-categories": "Sub-categories",
+    "subCategories": "Sub-categories",
+    "unableLoadSubCategories": "Unable to load sub-categories",
+    "unableLoadSubCategory": "Unable to load the sub-category",
+    "subCategoryAlreadyExists": "The sub-category already exists",
+    "subCategorySuccessfullyUpdated": "Sub-category successfully updated",
+    "unableUpdateSubCategory": "Unable to update the sub-category",
+    "subCategorySuccessfullyCreated": "Sub-category successfully created",
+    "unableCreateSubCategory": "Unable to create the sub-category",
+    "subCategorySuccessfullyDeleted": "Sub-category successfully deleted",
+    "unableDeleteSubCategory": "Unable to delete the sub-category"
   }
 }
