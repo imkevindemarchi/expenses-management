@@ -1,5 +1,8 @@
+// Types
+import { TCategory } from "./category.type";
+
 export type TSubCategory = {
   id: string | null;
   label: string;
-  categoryId: string;
+  category: TCategory | null;
 };

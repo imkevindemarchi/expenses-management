@@ -66,7 +66,10 @@ const SubCategories: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { pathname } = useLocation();
 
-  const talbeColumns: IColumn[] = [{ key: "label", value: t("name") }];
+  const talbeColumns: IColumn[] = [
+    { key: "label", value: t("name") },
+    { key: "category", value: t("category") },
+  ];
 
   setPageTitle(t("subCategories"));
 
@@ -77,7 +80,12 @@ const SubCategories: FC = () => {
       SUB_CATEGORY_API.getAllWithFilters(table.from, table.to, table.label)
     ).then((response: THTTPResponse) => {
       if (response && response.hasSuccess) {
-        setTableData(response.data);
+        const data: TSubCategory[] = response.data.map(
+          (subCategory: TSubCategory) => {
+            return { ...subCategory, category: subCategory.category?.label };
+          }
+        );
+        setTableData(data);
         setTable((prevState) => {
           return { ...prevState, total: response?.totalRecords as number };
         });
