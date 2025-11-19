@@ -3,3 +3,4 @@ export { default as Profile } from "./Profile.page";
 export { default as PasswordReset } from "./PasswordReset.page";
 export { default as Category } from "./Category.page";
 export { default as Categories } from "./Categories.page";
+export { default as SubCategories } from "./SubCategories.page";

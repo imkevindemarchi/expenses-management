@@ -1,7 +1,14 @@
 import { ReactNode } from "react";
 
 // Pages
-import { Category, Login, Profile, PasswordReset, Categories } from "./pages";
+import {
+  Category,
+  Login,
+  Profile,
+  PasswordReset,
+  Categories,
+  SubCategories,
+} from "./pages";
 
 export type TRoute = {
   path: string;
@@ -54,6 +61,11 @@ export const ROUTES: TRoute[] = [
     name: "category",
     element: <Category />,
     isHidden: true,
+  },
+  {
+    path: "/sub-categories",
+    name: "sub-categories",
+    element: <SubCategories />,
   },
   {
     path: "/profile",
