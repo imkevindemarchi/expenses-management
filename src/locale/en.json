@@ -34,6 +34,18 @@
     "compileFormToResetPassword": "Fill out the following form to change your password.",
     "passwordNotMatch": "The passwords don't match",
     "passwordSuccessfullyUpdated": "The password has successfully been updated",
-    "unableUpdatePassword": "Unable update the password"
+    "unableUpdatePassword": "Unable update the password",
+    "invalidData": "Invalid data",
+    "categories": "Categories",
+    "editCategory": "Edit category",
+    "newCategory": "New category",
+    "unableLoadCategories": "Unable to load categories",
+    "unableLoadCategory": "Unable to load the category",
+    "categoryAlreadyExists": "The category already exists",
+    "categorySuccessfullyUpdated": "Category successfully updated",
+    "unableUpdateCategory": "Unable to update the category",
+    "categorySuccessfullyCreated": "Category successfully created",
+    "unableCreateCategory": "Unable to create the category",
+    "create": "Create"
   }
 }

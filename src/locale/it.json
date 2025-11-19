@@ -35,6 +35,18 @@
     "compileFormToResetPassword": "Compilare il seguente form per modificare la password",
     "passwordNotMatch": "Le password non corrispondono",
     "passwordSuccessfullyUpdated": "La password è stata aggiornata con successo",
-    "unableUpdatePassword": "Impossibile aggiornare la password"
+    "unableUpdatePassword": "Impossibile aggiornare la password",
+    "invalidData": "Dati non validi",
+    "categories": "Categorie",
+    "editCategory": "Modifica categoria",
+    "newCategory": "Nuova categoria",
+    "unableLoadCategories": "Impossibile caricare le categorie",
+    "unableLoadCategory": "Impossibile caricare la categoria",
+    "categoryAlreadyExists": "La categoria esiste già",
+    "categorySuccessfullyUpdated": "Categoria aggiornata con successo",
+    "unableUpdateCategory": "Impossibile aggiornare la categoria",
+    "categorySuccessfullyCreated": "Categoria creata con successo",
+    "unableCreateCategory": "Impossibile creare la categoria",
+    "create": "Crea"
   }
 }

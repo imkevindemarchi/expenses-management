@@ -99,7 +99,7 @@ const ResetPassword: FC = () => {
           })
         );
       }
-    }
+    } else openPopup(t("invalidData"), "error");
 
     setIsLoading(false);
   }

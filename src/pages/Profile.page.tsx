@@ -130,7 +130,7 @@ const Profile: FC = () => {
       surname: formData?.surname,
     };
 
-    if (userData?.id && isFormValid)
+    if (userData?.id && isFormValid) {
       await Promise.resolve(PROFILE_API.update(payload)).then(
         async (profileRes: THTTPResponse) => {
           if (profileRes && profileRes.hasSuccess) {
@@ -161,9 +161,10 @@ const Profile: FC = () => {
                   } else openPopup(t("unableRemoveImage"), "error");
                 }
               );
-          } else openPopup(t("unableLoadProfile"), "error");
+          }
         }
       );
+    } else openPopup(t("invalidData"), "error");
 
     setIsLoading(false);
   }

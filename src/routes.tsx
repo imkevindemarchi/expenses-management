@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 // Pages
-import { Login, Profile, ResetPassword } from "./pages";
+import { Category, Login, Profile, ResetPassword } from "./pages";
 
 export type TRoute = {
   path: string;
@@ -24,18 +24,6 @@ export const ROUTES: TRoute[] = [
     isHidden: true,
   },
   {
-    path: "/profile",
-    name: "profile",
-    element: <Profile />,
-    isHidden: true,
-  },
-  {
-    path: "/password-reset",
-    name: "password-reset",
-    element: <ResetPassword />,
-    isHidden: true,
-  },
-  {
     path: "/summary",
     name: "summary",
     element: <></>,
@@ -49,5 +37,34 @@ export const ROUTES: TRoute[] = [
     path: "/graphs",
     name: "graphs",
     element: <></>,
+  },
+  {
+    path: "/categories",
+    name: "categories",
+    element: <></>,
+  },
+  {
+    path: "/categories/new",
+    name: "category",
+    element: <Category />,
+    isHidden: true,
+  },
+  {
+    path: "/categories/edit/:categoryId",
+    name: "category",
+    element: <Category />,
+    isHidden: true,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    element: <Profile />,
+    isHidden: true,
+  },
+  {
+    path: "/password-reset",
+    name: "password-reset",
+    element: <ResetPassword />,
+    isHidden: true,
   },
 ];
