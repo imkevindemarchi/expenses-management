@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, ReactNode, useRef } from "react";
+import React, { ChangeEvent, FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 // Assets
@@ -28,7 +28,7 @@ const ImageSelector: FC<IProps> = ({ onChange, error = { isValid: true } }) => {
     files && files.length > 0 && onChange(files[0]);
   }
 
-  const iconButton: ReactNode = (
+  const iconButton = (
     <LiquidGlass
       onClick={onIconButtonClick}
       className="w-52 h-52 mobile:w-40 mobile:h-40 flex justify-center items-center flex-col gap-3 cursor-pointer hover:opacity-50"
@@ -41,7 +41,7 @@ const ImageSelector: FC<IProps> = ({ onChange, error = { isValid: true } }) => {
     </LiquidGlass>
   );
 
-  const input: ReactNode = (
+  const input = (
     <input
       ref={hiddenFileInput}
       type="file"

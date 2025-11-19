@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext } from "react";
+import React, { FC, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavigateFunction, useLocation, useNavigate } from "react-router";
 
@@ -7,7 +7,7 @@ import { AUTH_API } from "../api";
 
 // Assets
 import logoImg from "../assets/images/logo.png";
-import { LogoutIcon } from "../assets/icons";
+import { LogoutIcon, UserIcon } from "../assets/icons";
 
 // Components
 import LiquidGlass from "./LiquidGlass.component";
@@ -18,6 +18,9 @@ import { SidebarContext, TSidebarContext } from "../providers/sidebar.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+
+// Hooks
+import { useClickOutside } from "../hooks";
 
 // Types
 import { ROUTES, TRoute } from "../routes";
@@ -44,6 +47,9 @@ const Sidebar: FC = () => {
   const { onOpen: openPopup }: TPopupContext = useContext(
     PopupContext
   ) as TPopupContext;
+  const [isUserDropdownOpened, setIsUserDropdownOpened] =
+    useState<boolean>(false);
+  const userLiquidGlassRef: any | null = useRef(null);
 
   const currentPaths: string[] = pathname.split("/");
   const currentPathSection: string = currentPaths[1];
@@ -78,7 +84,9 @@ const Sidebar: FC = () => {
     setIsLoading(false);
   }
 
-  const logo: ReactNode = (
+  useClickOutside(userLiquidGlassRef, () => setIsUserDropdownOpened(false));
+
+  const logo = (
     <LiquidGlass borderRadius={20} onClick={goToHome}>
       <img
         src={logoImg}
@@ -88,7 +96,7 @@ const Sidebar: FC = () => {
     </LiquidGlass>
   );
 
-  const routesComponent: ReactNode = (
+  const routesComponent = (
     <div className="flex flex-col justify-center text-center items-center gap-5">
       {ROUTES.map((route: TRoute, index: number) => {
         const isRouteHidden: boolean = route.isHidden ? true : false;
@@ -118,11 +126,47 @@ const Sidebar: FC = () => {
     </div>
   );
 
-  const languageSelector: ReactNode = (
+  const languageSelector = (
     <LanguageSelector value={language} onChange={onLanguageChange} />
   );
 
-  const logoutIcon: ReactNode = (
+  const userIcon = (
+    <LiquidGlass
+      ref={userLiquidGlassRef}
+      className="w-10 h-10 flex justify-center items-center relative"
+    >
+      <UserIcon
+        onClick={() => setIsUserDropdownOpened(!isUserDropdownOpened)}
+        className="w-6 h-6 text-white"
+      />
+      <div
+        style={{ left: "50%", transform: "translate(-50%, 0)" }}
+        className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
+          isUserDropdownOpened && "top-12 opacity-100 pointer-events-auto"
+        }`}
+      >
+        <LiquidGlass
+          borderRadius={30}
+          className="flex flex-col gap-5 justify-center items-center w-40 py-5"
+        >
+          <span
+            onClick={() => onRouteChange("/profile")}
+            className="text-white hover:opacity-50 transition-all duration-300"
+          >
+            {t("profile")}
+          </span>
+          <span
+            onClick={() => onRouteChange("/password-reset")}
+            className="text-white hover:opacity-50 transition-all duration-300"
+          >
+            {t("resetPassword")}
+          </span>
+        </LiquidGlass>
+      </div>
+    </LiquidGlass>
+  );
+
+  const logoutIcon = (
     <LiquidGlass className="w-10 h-10 flex justify-center items-center">
       <LogoutIcon onClick={onLogout} className="w-6 h-6 text-white" />
     </LiquidGlass>
@@ -142,6 +186,7 @@ const Sidebar: FC = () => {
       {routesComponent}
       <div className="flex items-center gap-5">
         {languageSelector}
+        {userIcon}
         {logoutIcon}
       </div>
     </LiquidGlass>
