@@ -46,6 +46,8 @@
     "unableUpdateCategory": "Unable to update the category",
     "categorySuccessfullyCreated": "Category successfully created",
     "unableCreateCategory": "Unable to create the category",
-    "create": "Create"
+    "create": "Create",
+    "compileFormToCreateCategory": "Fill out the following form to create one category.",
+    "compileFormToUpdateCategory": "Fill out the following form to update the category."
   }
 }

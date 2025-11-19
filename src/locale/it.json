@@ -47,6 +47,8 @@
     "unableUpdateCategory": "Impossibile aggiornare la categoria",
     "categorySuccessfullyCreated": "Categoria creata con successo",
     "unableCreateCategory": "Impossibile creare la categoria",
-    "create": "Crea"
+    "create": "Crea",
+    "compileFormToCreateCategory": "Compilare il seguente form per creare una categoria.",
+    "compileFormToUpdateCategory": "Compilare il seguente form per aggiornare la categoria."
   }
 }
