@@ -134,6 +134,7 @@ const Autocomplete: FC<IProps> = ({
             >
               <LiquidGlass
                 borderRadius={20}
+                backgroundColor="rgba(255, 255, 255, 0.5)"
                 className="flex flex-col gap-5 justify-center items-center w-full py-2"
               >
                 <div className="flex flex-col gap-2 max-h-60 overflow-y-scroll">
