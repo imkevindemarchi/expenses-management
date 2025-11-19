@@ -49,6 +49,8 @@
     "unableCreateCategory": "Impossibile creare la categoria",
     "create": "Crea",
     "compileFormToCreateCategory": "Compilare il seguente form per creare una categoria.",
-    "compileFormToUpdateCategory": "Compilare il seguente form per aggiornare la categoria."
+    "compileFormToUpdateCategory": "Compilare il seguente form per aggiornare la categoria.",
+    "new": "Nuovo",
+    "edit": "Modifica"
   }
 }
