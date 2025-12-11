@@ -7,9 +7,12 @@ import { TCategory, THTTPResponse } from "../types";
 const TABLE = "sub_categories";
 
 export const SUB_CATEGORY_API = {
-  getAll: async (): Promise<THTTPResponse> => {
+  getAll: async (userId: string): Promise<THTTPResponse> => {
     try {
-      const { data, error } = await supabase.from(TABLE).select("*");
+      const { data, error } = await supabase
+        .from(TABLE)
+        .select("*")
+        .eq("user_id", userId);
 
       if (!data || error)
         return {
@@ -31,7 +34,8 @@ export const SUB_CATEGORY_API = {
   getAllWithFilters: async (
     from: number,
     to: number,
-    label: string
+    label: string,
+    userId: string
   ): Promise<THTTPResponse> => {
     try {
       const {
@@ -42,7 +46,8 @@ export const SUB_CATEGORY_API = {
         .from(TABLE)
         .select("*", { count: "exact" })
         .range(from, to)
-        .ilike("label", `%${label}%`);
+        .ilike("label", `%${label}%`)
+        .eq("user_id", userId);
 
       if (!data || error)
         return {

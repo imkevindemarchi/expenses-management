@@ -19,6 +19,7 @@ import { Input, LiquidGlass, Modal, Table } from "../components";
 // Contexts
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { AuthContext, TAuthContext } from "../providers/auth.provider";
 
 // Types
 import { THTTPResponse, TCategory } from "../types";
@@ -65,6 +66,7 @@ const Categories: FC = () => {
   const [deleteModal, setDeleteModal] = useState<IModal>(DEFAULT_DELETE_MODAL);
   const navigate: NavigateFunction = useNavigate();
   const { pathname } = useLocation();
+  const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const talbeColumns: IColumn[] = [{ key: "label", value: t("name") }];
 
@@ -74,7 +76,12 @@ const Categories: FC = () => {
     setIsLoading(true);
 
     await Promise.resolve(
-      CATEGORY_API.getAllWithFilters(table.from, table.to, table.label)
+      CATEGORY_API.getAllWithFilters(
+        table.from,
+        table.to,
+        table.label,
+        userData?.id as string
+      )
     ).then((response: THTTPResponse) => {
       if (response && response.hasSuccess) {
         setTableData(response.data);
@@ -208,7 +215,7 @@ const Categories: FC = () => {
     getData();
 
     // eslint-disable-next-line
-  }, [table.from, table.to]);
+  }, [table.from, table.to, userData?.id]);
 
   useEffect(() => {
     setSearchParams({
