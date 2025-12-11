@@ -246,7 +246,7 @@ const Home: FC = () => {
           <LiquidGlass
             onClick={() => onFormDataChange("type", "income")}
             backgroundColor={isIncomeType ? "rgba(255, 255, 255, 0.5)" : ""}
-            className={`p-2 px-10 mobile:w-full mobile:justify-center flex items-center gap-5 transition-all duration-300 ${
+            className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
               isIncomeType
                 ? "cursor-default"
                 : "hover:opacity-50 cursor-pointer"
@@ -258,7 +258,7 @@ const Home: FC = () => {
           <LiquidGlass
             onClick={() => onFormDataChange("type", "exit")}
             backgroundColor={isExitType ? "rgba(255, 255, 255, 0.5)" : ""}
-            className={`p-2 px-10 mobile:w-full mobile:justify-center flex items-center gap-5 transition-all duration-300 ${
+            className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
               isExitType ? "cursor-default" : "hover:opacity-50 cursor-pointer"
             }`}
           >
