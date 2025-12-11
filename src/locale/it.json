@@ -14,8 +14,6 @@
     "italian": "Italiano",
     "english": "Inglese",
     "summary": "Riepilogo",
-    "reports": "Report",
-    "graphs": "Grafici",
     "profile": "Profilo",
     "resetPassword": "Reset password",
     "unableLoadProfile": "Impossibile caricare l'utente",
@@ -102,6 +100,10 @@
     "noResultFound": "Nessun risultato",
     "itemSuccessfullyAdded": "Voce aggiunta con successo",
     "unableAddItem": "Impossibile aggiungere la voce",
-    "insertItem": "Aggiungi voce"
+    "insertItem": "Aggiungi voce",
+    "insertValidYear": "Inserisci un anno valido",
+    "unableLoadItems": "Impossibile caricare le voci",
+    "exits": "Uscite",
+    "incomings": "Entrate"
   }
 }

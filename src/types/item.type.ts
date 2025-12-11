@@ -8,4 +8,5 @@ export type TItem = {
   user_id: string;
   category_id: string;
   sub_category_id: string;
+  year: number;
 };

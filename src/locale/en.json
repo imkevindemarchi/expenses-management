@@ -14,8 +14,6 @@
     "italian": "Italian",
     "english": "English",
     "summary": "Summary",
-    "reports": "Reports",
-    "graphs": "Graphs",
     "profile": "Profile",
     "resetPassword": "Password reset",
     "unableLoadProfile": "Unable load the profile",
@@ -102,6 +100,10 @@
     "noResultFound": "No result found",
     "itemSuccessfullyAdded": "Item successfully added",
     "unableAddItem": "Unable add the item",
-    "insertItem": "Insert item"
+    "insertItem": "Insert item",
+    "insertValidYear": "Insert a valid year",
+    "unableLoadItems": "Unable load items",
+    "exits": "Exits",
+    "incomings": "Incomings"
   }
 }
