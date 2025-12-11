@@ -231,7 +231,7 @@ const SubCategories: FC = () => {
   );
 
   useEffect(() => {
-    getData();
+    userData?.id && getData();
 
     // eslint-disable-next-line
   }, [table.from, table.to, userData?.id]);

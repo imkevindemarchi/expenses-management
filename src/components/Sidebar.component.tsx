@@ -55,7 +55,7 @@ const Sidebar: FC = () => {
   const currentPathSection: string = currentPaths[1];
 
   function goToHome(): void {
-    navigate("/admin");
+    navigate("/");
     onSidebarStateChange();
   }
 

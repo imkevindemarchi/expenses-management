@@ -20,6 +20,8 @@ type TInputType = "text" | "password" | "number";
 
 type TInputAutoComplete = "email" | "current-password";
 
+type TInputMode = "numeric";
+
 interface IProps {
   autoFocus?: boolean;
   placeholder: string;
@@ -33,6 +35,7 @@ interface IProps {
   autoComplete?: TInputAutoComplete;
   error?: TValidation;
   onSearch?: () => Promise<void>;
+  inputMode?: TInputMode;
 }
 
 const Input: FC<IProps> = ({
@@ -48,6 +51,7 @@ const Input: FC<IProps> = ({
   autoComplete,
   error = { isValid: true },
   onSearch,
+  inputMode,
 }) => {
   const inputRef = useRef<HTMLDivElement>(null);
   const [isValueChanged, setIsValueChanged] = useState<boolean>(false);
@@ -108,6 +112,7 @@ const Input: FC<IProps> = ({
               }
             }}
             autoComplete={autoComplete}
+            inputMode={inputMode}
           />
           {endIcon}
           {isLoading && <Spinner size={20} color="#ffffff" className="ml-2" />}

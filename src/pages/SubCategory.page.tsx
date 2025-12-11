@@ -246,7 +246,7 @@ const SubCategory: FC = () => {
   );
 
   useEffect(() => {
-    getData();
+    userData?.id && getData();
 
     // eslint-disable-next-line
   }, [userData?.id]);
