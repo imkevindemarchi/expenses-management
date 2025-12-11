@@ -192,12 +192,14 @@ const Home: FC = () => {
     <Grid container spacing={2}>
       {filteredCategories?.map((category: TCategory, index: number) => {
         return (
-          <Grid key={index} size={{ xs: 3 }}>
+          <Grid key={index} size={{ xs: 6, md: 3 }}>
             <LiquidGlass
               onClick={() => onCategoryClick(category)}
               className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
             >
-              <span className="text-white text-lg">{category.label}</span>
+              <span className="text-white text-lg mobile:text-base">
+                {category.label}
+              </span>
             </LiquidGlass>
           </Grid>
         );
@@ -211,12 +213,12 @@ const Home: FC = () => {
         (subCategory: TSubCategory, index: number) => {
           return (
             subCategory.category_id === selectedCategory?.id && (
-              <Grid key={index} size={{ xs: 3 }}>
+              <Grid key={index} size={{ xs: 6, md: 3 }}>
                 <LiquidGlass
                   onClick={() => onSubCategoryClick(subCategory)}
                   className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
                 >
-                  <span className="text-white text-lg">
+                  <span className="text-white text-lg mobile:text-base">
                     {subCategory.label}
                   </span>
                 </LiquidGlass>
@@ -240,11 +242,11 @@ const Home: FC = () => {
     >
       <div className="flex flex-col gap-5">
         <span className="text-white text-base">{t("addItemDescription")}</span>
-        <div className="flex items-center gap-5 justify-between">
+        <div className="flex items-center gap-5 justify-between mobile:flex-col">
           <LiquidGlass
             onClick={() => onFormDataChange("type", "income")}
             backgroundColor={isIncomeType ? "rgba(255, 255, 255, 0.5)" : ""}
-            className={`p-2 px-10 flex items-center gap-5 transition-all duration-300 ${
+            className={`p-2 px-10 mobile:w-full mobile:justify-center flex items-center gap-5 transition-all duration-300 ${
               isIncomeType
                 ? "cursor-default"
                 : "hover:opacity-50 cursor-pointer"
@@ -256,7 +258,7 @@ const Home: FC = () => {
           <LiquidGlass
             onClick={() => onFormDataChange("type", "exit")}
             backgroundColor={isExitType ? "rgba(255, 255, 255, 0.5)" : ""}
-            className={`p-2 px-10 flex items-center gap-5 transition-all duration-300 ${
+            className={`p-2 px-10 mobile:w-full mobile:justify-center flex items-center gap-5 transition-all duration-300 ${
               isExitType ? "cursor-default" : "hover:opacity-50 cursor-pointer"
             }`}
           >
@@ -264,15 +266,6 @@ const Home: FC = () => {
             <span className="text-white">{t("exit")}</span>
           </LiquidGlass>
         </div>
-        <Input
-          autoFocus
-          type="number"
-          placeholder={t("addItem")}
-          value={formData.value}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange("value", event.target.value)
-          }
-        />
         <Autocomplete
           autoComplete="current-password"
           placeholder={t("month")}
@@ -283,22 +276,32 @@ const Home: FC = () => {
           data={_MONTHS}
           showAllOptions
         />
+        <Input
+          autoFocus
+          type="number"
+          placeholder={t("addItem")}
+          value={formData.value}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange("value", event.target.value)
+          }
+          inputMode="numeric"
+        />
       </div>
     </Modal>
   );
 
   useEffect(() => {
-    getData();
+    userData?.id && getData();
 
     // eslint-disable-next-line
   }, [userData?.id]);
 
   return (
     <>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 mobile:min-h-[150vh]">
         <span className="text-white text-lg">{title}</span>
         {step === 2 && <GoBackButton onClick={() => setStep(step - 1)} />}
-        <LiquidGlass className="p-20 flex flex-col gap-5">
+        <LiquidGlass className="p-20 flex flex-col gap-5 mobile:p-10">
           <div className="flex justify-between gap-5">
             {step === 1
               ? categoryFilterComponent
