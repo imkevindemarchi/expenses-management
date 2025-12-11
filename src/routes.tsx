@@ -9,6 +9,7 @@ import {
   Categories,
   SubCategories,
   SubCategory,
+  Home,
 } from "./pages";
 
 export type TRoute = {
@@ -28,7 +29,7 @@ export const ROUTES: TRoute[] = [
   {
     path: "/",
     name: "",
-    element: <></>,
+    element: <Home />,
     isHidden: true,
   },
   {

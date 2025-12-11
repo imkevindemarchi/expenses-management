@@ -23,7 +23,7 @@ type TInputType = "text" | "password";
 type TInputAutoComplete = "email" | "current-password";
 
 export interface IAutocompleteValue {
-  id: string | null;
+  id: string | number | null;
   label: string;
 }
 
@@ -40,6 +40,7 @@ interface IProps {
   autoComplete?: TInputAutoComplete;
   error?: TValidation;
   data: IAutocompleteValue[];
+  showAllOptions?: boolean;
 }
 
 const Autocomplete: FC<IProps> = ({
@@ -55,6 +56,7 @@ const Autocomplete: FC<IProps> = ({
   autoComplete,
   error = { isValid: true },
   data,
+  showAllOptions,
 }) => {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ const Autocomplete: FC<IProps> = ({
     }
   );
   const elabData: IAutocompleteValue[] =
-    state && state.trim() !== "" ? filteredData : data;
+    state && state.trim() !== "" && !showAllOptions ? filteredData : data;
 
   function onFocus(): void {
     setDropdown(true);

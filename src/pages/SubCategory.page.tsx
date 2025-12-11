@@ -21,19 +21,24 @@ import { Autocomplete, Button, Input, LiquidGlass } from "../components";
 // Contexts
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
+import { AuthContext, TAuthContext } from "../providers/auth.provider";
 
 // Types
 import { THTTPResponse, TCategory, TSubCategory } from "../types";
 import { TValidation } from "../utils/validation.util";
+import { IAutocompleteValue } from "../components/Autocomplete.component";
 
 // Utils
 import { setPageTitle, validateFormField } from "../utils";
-import { IAutocompleteValue } from "../components/Autocomplete.component";
 
-const DEFAULT_STATE: TSubCategory = {
+interface IFormData {
+  label: string;
+  category: TCategory | null;
+}
+
+const DEFAULT_FORM_DATA: IFormData = {
   label: "",
   category: null,
-  id: null,
 };
 
 type TErrors = {
@@ -52,7 +57,7 @@ const ERRORS_DEFAULT_STATE: TErrors = {
 
 const SubCategory: FC = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<TSubCategory>(DEFAULT_STATE);
+  const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { onOpen: openPopup }: TPopupContext = useContext(
     PopupContext
@@ -66,6 +71,7 @@ const SubCategory: FC = () => {
     null
   );
   const [categories, setCategories] = useState<TCategory[]>([]);
+  const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const isEditMode: boolean = categoryId ? true : false;
 
@@ -74,17 +80,18 @@ const SubCategory: FC = () => {
   async function getData(): Promise<void> {
     setIsLoading(true);
 
-    await Promise.all([SUB_CATEGORY_API.getAll(), CATEGORY_API.getAll()]).then(
-      (response: THTTPResponse[]) => {
-        if (response[0] && response[0].hasSuccess)
-          setSubCategories(response[0].data);
-        else openPopup(t("unableLoadSubCategories"), "error");
+    await Promise.all([
+      SUB_CATEGORY_API.getAll(userData?.id as string),
+      CATEGORY_API.getAll(userData?.id as string),
+    ]).then((response: THTTPResponse[]) => {
+      if (response[0] && response[0].hasSuccess)
+        setSubCategories(response[0].data);
+      else openPopup(t("unableLoadSubCategories"), "error");
 
-        if (response[1] && response[1].hasSuccess)
-          setCategories(response[1].data);
-        else openPopup(t("unableLoadCategories"), "error");
-      }
-    );
+      if (response[1] && response[1].hasSuccess)
+        setCategories(response[1].data);
+      else openPopup(t("unableLoadCategories"), "error");
+    });
 
     if (isEditMode)
       await Promise.resolve(SUB_CATEGORY_API.get(categoryId as string)).then(
@@ -98,7 +105,7 @@ const SubCategory: FC = () => {
     setIsLoading(false);
   }
 
-  function onInputChange(propLabel: keyof TSubCategory, value: any): void {
+  function onInputChange(propLabel: keyof IFormData, value: any): void {
     setFormData((prevState: any) => {
       return { ...prevState, [propLabel]: value };
     });
@@ -156,7 +163,8 @@ const SubCategory: FC = () => {
 
       const payload: Partial<TSubCategory> = {
         label: formData.label,
-        category: formData.category,
+        category_id: (formData.category as TCategory)?.id as string,
+        user_id: userData?.id,
       };
 
       if (isEditMode)
@@ -202,7 +210,7 @@ const SubCategory: FC = () => {
   const category = (
     <Autocomplete
       value={formData.category as IAutocompleteValue}
-      onChange={(value: Partial<TCategory>) => onInputChange("category", value)}
+      onChange={(value: IAutocompleteValue) => onInputChange("category", value)}
       placeholder={t("insertCategory")}
       error={errors.category}
       data={categories as IAutocompleteValue[]}
@@ -241,7 +249,7 @@ const SubCategory: FC = () => {
     getData();
 
     // eslint-disable-next-line
-  }, []);
+  }, [userData?.id]);
 
   return (
     <div className="flex flex-col gap-10 pt-10">

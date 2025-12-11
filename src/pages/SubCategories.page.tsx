@@ -8,7 +8,7 @@ import {
 } from "react-router";
 
 // Api
-import { SUB_CATEGORY_API } from "../api";
+import { CATEGORY_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
 import { AddIcon, SearchIcon } from "../assets/icons";
@@ -19,9 +19,10 @@ import { Input, LiquidGlass, Modal, Table } from "../components";
 // Contexts
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { AuthContext, TAuthContext } from "../providers/auth.provider";
 
 // Types
-import { THTTPResponse, TSubCategory } from "../types";
+import { TCategory, THTTPResponse, TSubCategory } from "../types";
 import { IColumn } from "../components/Table.component";
 
 // Utils
@@ -65,6 +66,7 @@ const SubCategories: FC = () => {
   const [deleteModal, setDeleteModal] = useState<IModal>(DEFAULT_DELETE_MODAL);
   const navigate: NavigateFunction = useNavigate();
   const { pathname } = useLocation();
+  const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const talbeColumns: IColumn[] = [
     { key: "label", value: t("name") },
@@ -76,18 +78,32 @@ const SubCategories: FC = () => {
   async function getData(): Promise<void> {
     setIsLoading(true);
 
-    await Promise.resolve(
-      SUB_CATEGORY_API.getAllWithFilters(table.from, table.to, table.label)
-    ).then((response: THTTPResponse) => {
-      if (response && response.hasSuccess) {
-        const data: TSubCategory[] = response.data.map(
+    await Promise.all([
+      SUB_CATEGORY_API.getAllWithFilters(
+        table.from,
+        table.to,
+        table.label,
+        userData?.id as string
+      ),
+      CATEGORY_API.getAll(userData?.id as string),
+    ]).then((response: THTTPResponse[]) => {
+      if (
+        response[0] &&
+        response[0].hasSuccess &&
+        response[1] &&
+        response[1].hasSuccess
+      ) {
+        const data: TSubCategory[] = response[0].data.map(
           (subCategory: TSubCategory) => {
-            return { ...subCategory, category: subCategory.category?.label };
+            const category: TCategory = response[1].data.find(
+              (category: TCategory) => category.id === subCategory.category_id
+            );
+            return { ...subCategory, category: category.label };
           }
         );
         setTableData(data);
         setTable((prevState) => {
-          return { ...prevState, total: response?.totalRecords as number };
+          return { ...prevState, total: response[0]?.totalRecords as number };
         });
       } else openPopup(t("unableLoadSubCategories"), "error");
     });
@@ -218,7 +234,7 @@ const SubCategories: FC = () => {
     getData();
 
     // eslint-disable-next-line
-  }, [table.from, table.to]);
+  }, [table.from, table.to, userData?.id]);
 
   useEffect(() => {
     setSearchParams({

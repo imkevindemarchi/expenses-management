@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useContext } from "react";
 import { useLocation } from "react-router";
 
 // Assets
-import wallpaperImg from "../assets/images/login-wallpaper.jpg";
+import wallpaperImg from "../assets/images/wallpaper.jpg";
 
 // Components
 import Loader from "./Loader.component";

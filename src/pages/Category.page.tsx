@@ -22,6 +22,7 @@ import { Button, Input, LiquidGlass } from "../components";
 // Contexts
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
+import { AuthContext, TAuthContext } from "../providers/auth.provider";
 
 // Types
 import { THTTPResponse, TCategory } from "../types";
@@ -30,7 +31,11 @@ import { TValidation } from "../utils/validation.util";
 // Utils
 import { setPageTitle, validateFormField } from "../utils";
 
-const DEFAULT_STATE: Partial<TCategory> = {
+interface IFormData {
+  label: string;
+}
+
+const DEFAULT_FORM_DATA: IFormData = {
   label: "",
 };
 
@@ -46,7 +51,7 @@ const ERRORS_DEFAULT_STATE: TErrors = {
 
 const Category: FC = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<Partial<TCategory>>(DEFAULT_STATE);
+  const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { onOpen: openPopup }: TPopupContext = useContext(
     PopupContext
@@ -57,6 +62,7 @@ const Category: FC = () => {
   const { categoryId } = useParams();
   const navigate: NavigateFunction = useNavigate();
   const [categories, setCategories] = useState<TCategory[] | null>(null);
+  const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const isEditMode: boolean = categoryId ? true : false;
 
@@ -65,7 +71,7 @@ const Category: FC = () => {
   async function getData(): Promise<void> {
     setIsLoading(true);
 
-    await Promise.resolve(CATEGORY_API.getAll()).then(
+    await Promise.resolve(CATEGORY_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setCategories(response.data);
         else openPopup(t("unableLoadCategories"), "error");
@@ -84,7 +90,7 @@ const Category: FC = () => {
     setIsLoading(false);
   }
 
-  function onInputChange(propLabel: keyof TCategory, value: any): void {
+  function onInputChange(propLabel: keyof IFormData, value: any): void {
     setFormData((prevState: any) => {
       return { ...prevState, [propLabel]: value };
     });
@@ -134,6 +140,7 @@ const Category: FC = () => {
 
       const payload: Partial<TCategory> = {
         label: formData.label,
+        user_id: userData?.id,
       };
 
       if (isEditMode)
@@ -207,7 +214,7 @@ const Category: FC = () => {
     getData();
 
     // eslint-disable-next-line
-  }, []);
+  }, [userData?.id]);
 
   return (
     <div className="flex flex-col gap-10 pt-10">

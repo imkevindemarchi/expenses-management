@@ -13,3 +13,4 @@ export { default as Hamburger } from "./Hamburger.component";
 export { default as Modal } from "./Modal.component";
 export { default as Table } from "./Table.component";
 export { default as Autocomplete } from "./Autocomplete.component";
+export { default as GoBackButton } from "./GoBackButton.component";

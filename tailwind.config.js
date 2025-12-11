@@ -8,6 +8,7 @@ module.exports = {
     colors: {
       primary: "#3Bcc3d",
       white: "#ffffff",
+      red: "#ff0000",
     },
     screens: {
       desktop: { min: "1500px" },

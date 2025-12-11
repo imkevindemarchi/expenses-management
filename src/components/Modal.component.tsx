@@ -16,7 +16,7 @@ interface IProps {
   onCancel: () => void;
   cancelButtonText?: string;
   submitButtonText?: string;
-  onSubmit: () => Promise<void>;
+  onSubmit: () => void;
 }
 
 const Modal: FC<IProps> = ({
