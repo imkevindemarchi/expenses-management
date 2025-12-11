@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   FC,
+  KeyboardEventHandler,
   ReactNode,
   useEffect,
   useRef,
@@ -24,7 +25,7 @@ type TInputMode = "numeric";
 
 interface IProps {
   autoFocus?: boolean;
-  placeholder: string;
+  placeholder?: string;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   type?: TInputType;
@@ -36,6 +37,7 @@ interface IProps {
   error?: TValidation;
   onSearch?: () => Promise<void>;
   inputMode?: TInputMode;
+  onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
 }
 
 const Input: FC<IProps> = ({
@@ -52,6 +54,7 @@ const Input: FC<IProps> = ({
   error = { isValid: true },
   onSearch,
   inputMode,
+  onKeyUp,
 }) => {
   const inputRef = useRef<HTMLDivElement>(null);
   const [isValueChanged, setIsValueChanged] = useState<boolean>(false);
@@ -113,6 +116,7 @@ const Input: FC<IProps> = ({
             }}
             autoComplete={autoComplete}
             inputMode={inputMode}
+            onKeyUp={onKeyUp}
           />
           {endIcon}
           {isLoading && <Spinner size={20} color="#ffffff" className="ml-2" />}

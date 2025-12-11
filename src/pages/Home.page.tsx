@@ -40,6 +40,7 @@ interface IFormData {
   value: number;
   type: TItemType;
   month: IAutocompleteValue | null;
+  year: number;
 }
 
 const Home: FC = () => {
@@ -69,15 +70,16 @@ const Home: FC = () => {
   const DEFAULT_MONTH: IAutocompleteValue = _MONTHS.find(
     (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1
   ) as IAutocompleteValue;
+  const CURRENT_YEAR: number = new Date().getFullYear();
   const DEFAULT_FORM_DATA: IFormData = {
     value: 0,
     type: "exit",
     month: DEFAULT_MONTH,
+    year: CURRENT_YEAR,
   };
   const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [subCategoryFilter, setSubCategoryFilter] = useState<string>("");
-
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const title: string = t(
@@ -144,25 +146,32 @@ const Home: FC = () => {
     step === 1 ? setCategoryFilter("") : step === 2 && setSubCategoryFilter("");
   }
 
+  async function onItemKeyUp(event: any): Promise<void> {
+    if (event.key === "Enter") await onSubmit();
+  }
+
   async function onSubmit(): Promise<void> {
     if (formData.value && formData.value > 0) {
-      const payload: Partial<TItem> = {
-        month_id: (formData.month as IAutocompleteValue).id as number,
-        type: formData.type,
-        value: formData.value,
-        user_id: userData?.id,
-        category_id: (selectedCategory as TCategory).id as string,
-        sub_category_id: (selectedSubCategory as TSubCategory).id as string,
-      };
+      if (formData.year <= CURRENT_YEAR) {
+        const payload: Partial<TItem> = {
+          month_id: (formData.month as IAutocompleteValue).id as number,
+          type: formData.type,
+          value: formData.value,
+          user_id: userData?.id,
+          category_id: (selectedCategory as TCategory).id as string,
+          sub_category_id: (selectedSubCategory as TSubCategory).id as string,
+          year: formData.year,
+        };
 
-      await Promise.resolve(ITEM_API.create(payload)).then(
-        async (response: THTTPResponse) => {
-          if (response && response.hasSuccess) {
-            openPopup(t("itemSuccessfullyAdded"), "success");
-            setFormData({ ...DEFAULT_FORM_DATA, month: formData.month });
-          } else openPopup(t("unableAddItem"), "error");
-        }
-      );
+        await Promise.resolve(ITEM_API.create(payload)).then(
+          async (response: THTTPResponse) => {
+            if (response && response.hasSuccess) {
+              openPopup(t("itemSuccessfullyAdded"), "success");
+              setFormData({ ...DEFAULT_FORM_DATA, month: formData.month });
+            } else openPopup(t("unableAddItem"), "error");
+          }
+        );
+      } else openPopup(t("insertValidYear"), "warning");
     } else openPopup(t("insertItem"), "warning");
   }
 
@@ -283,6 +292,15 @@ const Home: FC = () => {
           value={formData.value}
           onChange={(event: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange("value", event.target.value)
+          }
+          inputMode="numeric"
+          onKeyUp={onItemKeyUp}
+        />
+        <Input
+          type="number"
+          value={formData.year}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange("year", event.target.value)
           }
           inputMode="numeric"
         />

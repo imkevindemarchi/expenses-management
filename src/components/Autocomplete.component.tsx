@@ -29,12 +29,12 @@ export interface IAutocompleteValue {
 
 interface IProps {
   autoFocus?: boolean;
-  placeholder: string;
+  placeholder?: string;
   startIcon?: ReactElement;
   endIcon?: ReactElement;
   type?: TInputType;
   name?: string;
-  value: IAutocompleteValue;
+  value: IAutocompleteValue | undefined;
   onChange: (value: IAutocompleteValue) => void;
   className?: string;
   autoComplete?: TInputAutoComplete;
@@ -61,7 +61,7 @@ const Autocomplete: FC<IProps> = ({
   const { t } = useTranslation();
   const inputRef = useRef<HTMLDivElement>(null);
   const [dropdown, setDropdown] = useState<boolean>(false);
-  const [state, setState] = useState<string | null>(value?.label);
+  const [state, setState] = useState<string | undefined>(value?.label);
 
   const hasOptions: boolean = data && data.length > 0;
 
@@ -93,7 +93,7 @@ const Autocomplete: FC<IProps> = ({
 
   useEffect(() => {
     if (value?.label) setState(value?.label);
-    else setState(null);
+    else setState(undefined);
   }, [value]);
 
   useEffect(() => {
