@@ -104,6 +104,7 @@
     "insertValidYear": "Insert a valid year",
     "unableLoadItems": "Unable load items",
     "exits": "Exits",
-    "incomings": "Incomings"
+    "incomings": "Incomings",
+    "count": "Count"
   }
 }
