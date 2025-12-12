@@ -202,8 +202,6 @@ const Summary = () => {
     const colors: string[] = [];
     const labels: string[] = [];
 
-    console.log("🚀 ~ categories:", categories);
-    console.log("🚀 ~ items:", items);
     categories?.forEach((category: TCategory, index: number) => {
       let total: number = 0;
       items?.forEach((item: TItem) => {
@@ -221,9 +219,6 @@ const Summary = () => {
       total > 0 && labels.push(category.label);
     });
 
-    console.log("🚀 ~ data:", data);
-    console.log("🚀 ~ colors:", colors);
-    console.log("🚀 ~ labels:", labels);
     setDoughnutChartData(data);
     setDoughnutChartColors(colors);
     setDoughnutChartLabels(labels);
