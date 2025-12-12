@@ -36,7 +36,7 @@ const Navbar: FC = () => {
   const { setState: setIsLoading }: TLoaderContext = useContext(
     LoaderContext
   ) as TLoaderContext;
-  const { setIsUserAuthenticated }: TAuthContext = useContext(
+  const { setIsUserAuthenticated, userData }: TAuthContext = useContext(
     AuthContext
   ) as TAuthContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
@@ -152,14 +152,17 @@ const Navbar: FC = () => {
       >
         <LiquidGlass
           borderRadius={30}
-          className="flex flex-col gap-5 justify-center items-center w-40 py-5"
+          className="flex flex-col gap-5 justify-center items-center p-5"
         >
-          <span
+          <span className="text-white underline cursor-default">
+            {userData?.email}
+          </span>
+          {/* <span
             onClick={() => navigate("/profile")}
             className="text-white hover:opacity-50 transition-all duration-300"
           >
             {t("profile")}
-          </span>
+          </span> */}
           <span
             onClick={() => navigate("/password-reset")}
             className="text-white hover:opacity-50 transition-all duration-300"

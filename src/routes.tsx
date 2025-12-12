@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import {
   Category,
   Login,
-  Profile,
+  // Profile,
   PasswordReset,
   Categories,
   SubCategories,
@@ -72,12 +72,12 @@ export const ROUTES: TRoute[] = [
     element: <SubCategory />,
     isHidden: true,
   },
-  {
-    path: "/profile",
-    name: "profile",
-    element: <Profile />,
-    isHidden: true,
-  },
+  // {
+  //   path: "/profile",
+  //   name: "profile",
+  //   element: <Profile />,
+  //   isHidden: true,
+  // },
   {
     path: "/password-reset",
     name: "password-reset",
