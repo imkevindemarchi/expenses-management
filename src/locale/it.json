@@ -104,6 +104,7 @@
     "insertValidYear": "Inserisci un anno valido",
     "unableLoadItems": "Impossibile caricare le voci",
     "exits": "Uscite",
-    "incomings": "Entrate"
+    "incomings": "Entrate",
+    "count": "Conteggio"
   }
 }

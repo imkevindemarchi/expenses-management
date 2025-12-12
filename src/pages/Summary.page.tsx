@@ -9,7 +9,7 @@ import { CATEGORY_API, ITEM_API, SUB_CATEGORY_API } from "../api";
 import { MONTHS } from "../assets";
 
 // Components
-import { Input, LiquidGlass } from "../components";
+import { DoughnutChart, Input, LiquidGlass, ProgressBar } from "../components";
 
 // Contexts
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
@@ -21,6 +21,7 @@ import Autocomplete, {
   IAutocompleteValue,
 } from "../components/Autocomplete.component";
 import { TCategory, THTTPResponse, TItem, TSubCategory } from "../types";
+import { TDoughnutChartData } from "../components/DoughnutChart.component";
 
 // Utils
 import { setPageTitle } from "../utils";
@@ -58,8 +59,27 @@ const Summary = () => {
     null
   );
   const [items, setItems] = useState<TItem[] | null>(null);
+  const [doughnutChartData, setDoughnutChartData] = useState<number[]>([]);
+  const [doughnutChartColors, setDoughnutChartColors] = useState<string[]>([]);
+  const [doughnutChartLabels, setDoughnutChartLabels] = useState<string[]>([]);
+  const DOGHNUT_CART_COLORS: string[] = [
+    "#91FF75",
+    "#75DFFF",
+    "#7C75FF",
+    "#BA75FF",
+    "#FD75FF",
+    "#FF75B1",
+    "#FF8B75",
+    "#FFC375",
+    "#FFED75",
+  ];
 
   const title = t("summary");
+  const elabDoughnutChartData: TDoughnutChartData = {
+    label: t("count"),
+    data: doughnutChartData,
+    backgroundColor: doughnutChartColors,
+  };
 
   setPageTitle(t("summary"));
 
@@ -122,15 +142,15 @@ const Summary = () => {
         Number(item.year) === Number(filters.year) &&
         item.month_id === filters.month.id
       ) {
-        if (item.type === "exit") total += item.value;
-        else if (item.type === "income") total -= item.value;
+        if (item.type === "exit") total -= item.value;
+        else if (item.type === "income") total += item.value;
       }
     });
 
     return total;
   }
 
-  function getTotalsIncomingsLabel(): string {
+  function getTotalsIncomings(): number {
     let total: number = 0;
 
     items?.forEach((item: TItem) => {
@@ -142,23 +162,71 @@ const Summary = () => {
         total += item.value;
     });
 
+    return total;
+  }
+
+  function getTotalsIncomingsLabel(): string {
+    let total: number = getTotalsIncomings();
+
     return `${t("incomings")}: € ${total}`;
   }
 
-  function getTotalsExitsLabel(): string {
+  function getTotalsExits(): number {
     let total: number = 0;
 
     items?.forEach((item: TItem) => {
       if (
         item.month_id === filters.month.id &&
         Number(item.year) === Number(filters.year)
-      ) {
+      )
         if (item.type === "exit") total += item.value;
-        else if (item.type === "income") total -= item.value;
-      }
     });
 
+    return total;
+  }
+
+  function getTotalsExitsLabel(): string {
+    let total: number = getTotalsExits();
+
     return `${t("exits")}: € ${total}`;
+  }
+
+  function calculateProgress(): number {
+    return getTotalsExits()
+      ? (getTotalsExits() / getTotalsIncomings()) * 100
+      : 0;
+  }
+
+  function buildDoughnutChartData(): void {
+    const data: number[] = [];
+    const colors: string[] = [];
+    const labels: string[] = [];
+
+    console.log("🚀 ~ categories:", categories);
+    console.log("🚀 ~ items:", items);
+    categories?.forEach((category: TCategory, index: number) => {
+      let total: number = 0;
+      items?.forEach((item: TItem) => {
+        if (
+          item.category_id === category.id &&
+          item.type === "exit" &&
+          Number(item.year) === Number(filters.year) &&
+          item.month_id === filters.month.id
+        )
+          total += item.value;
+      });
+
+      data.push(total);
+      colors.push(DOGHNUT_CART_COLORS[index]);
+      total > 0 && labels.push(category.label);
+    });
+
+    console.log("🚀 ~ data:", data);
+    console.log("🚀 ~ colors:", colors);
+    console.log("🚀 ~ labels:", labels);
+    setDoughnutChartData(data);
+    setDoughnutChartColors(colors);
+    setDoughnutChartLabels(labels);
   }
 
   const header = (
@@ -189,6 +257,24 @@ const Summary = () => {
     </Grid>
   );
 
+  const progressBar = (
+    <div className="flex items-center gap-5">
+      <ProgressBar progress={calculateProgress()} />
+      <span className="text-white text-3xl">
+        {calculateProgress().toFixed(0)}%
+      </span>
+    </div>
+  );
+
+  const doghnutChart = (
+    <LiquidGlass className="p-10 w-9h-96 h-96 flex justify-center">
+      <DoughnutChart
+        data={elabDoughnutChartData}
+        labels={doughnutChartLabels}
+      />
+    </LiquidGlass>
+  );
+
   const exits = (
     <Grid container spacing={2}>
       {categories?.map((category: TCategory, index: number) => {
@@ -198,7 +284,7 @@ const Summary = () => {
         return (
           <Grid key={index} size={{ xs: 4 }}>
             <div className="flex flex-col gap-5">
-              <span className="text-white font-bold uppercase">
+              <span className="text-white font-bold uppercase text-center">
                 {category.label}
               </span>
               <LiquidGlass className="p-10 flex flex-col gap-2">
@@ -238,11 +324,19 @@ const Summary = () => {
     // eslint-disable-next-line
   }, [userData?.id]);
 
+  useEffect(() => {
+    categories && items && buildDoughnutChartData();
+
+    // eslint-disable-next-line
+  }, [categories, items, filters.year, filters.month]);
+
   return (
     <div className="flex flex-col gap-5">
       {header}
       <span className="text-3xl text-white">{getTotalsIncomingsLabel()}</span>
       <span className="text-3xl text-white">{getTotalsExitsLabel()}</span>
+      {progressBar}
+      {doghnutChart}
       {exits}
     </div>
   );

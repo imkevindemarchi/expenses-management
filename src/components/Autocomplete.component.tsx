@@ -107,7 +107,6 @@ const Autocomplete: FC<IProps> = ({
       <LiquidGlass
         ref={inputRef}
         className={`flex flex-col gap-2 px-5 py-3 ${className}`}
-        zIndex={999}
       >
         <div className="flex flex-row gap-2 items-center relative">
           {startIcon}
