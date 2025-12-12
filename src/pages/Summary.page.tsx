@@ -226,7 +226,7 @@ const Summary = () => {
 
   const header = (
     <Grid container spacing={2}>
-      <Grid size={{ xs: 2 }}>
+      <Grid size={{ xs: 12, md: 2 }}>
         <div className="flex items-center gap-5">
           <span className="text-white text-lg">{title}</span>
           <Input
@@ -239,7 +239,7 @@ const Summary = () => {
           />
         </div>
       </Grid>
-      <Grid size={{ xs: 10 }}>
+      <Grid size={{ xs: 12, md: 10 }}>
         <Autocomplete
           value={filters.month}
           onChange={(value: IAutocompleteValue) =>
@@ -262,12 +262,14 @@ const Summary = () => {
   );
 
   const doghnutChart = (
-    <LiquidGlass className="p-10 w-9h-96 h-96 flex justify-center">
-      <DoughnutChart
-        data={elabDoughnutChartData}
-        labels={doughnutChartLabels}
-      />
-    </LiquidGlass>
+    <div className="flex w-full mobile:justify-center">
+      <LiquidGlass className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-60 mobile:w-60">
+        <DoughnutChart
+          data={elabDoughnutChartData}
+          labels={doughnutChartLabels}
+        />
+      </LiquidGlass>
+    </div>
   );
 
   const exits = (
@@ -277,7 +279,7 @@ const Summary = () => {
           getSubCategories(category);
 
         return (
-          <Grid key={index} size={{ xs: 4 }}>
+          <Grid key={index} size={{ xs: 12, md: 4 }}>
             <div className="flex flex-col gap-5">
               <span className="text-white font-bold uppercase text-center">
                 {category.label}
