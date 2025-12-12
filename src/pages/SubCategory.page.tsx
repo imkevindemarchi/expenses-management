@@ -150,7 +150,8 @@ const SubCategory: FC = () => {
     const subCategoryAlreadyExists: boolean = subCategories?.find(
       (subCategory: TSubCategory) =>
         subCategory.label?.toLowerCase().trim() ===
-        formData.label?.toLowerCase().trim()
+          formData.label?.toLowerCase().trim() &&
+        subCategory.category_id === formData.category?.id
     )
       ? true
       : false;
