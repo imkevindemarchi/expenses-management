@@ -192,9 +192,12 @@ const Summary = () => {
   }
 
   function calculateProgress(): number {
-    return getTotalsExits()
-      ? (getTotalsExits() / getTotalsIncomings()) * 100
-      : 0;
+    const progress: number =
+      getTotalsExits() && getTotalsIncomings()
+        ? (getTotalsExits() / getTotalsIncomings()) * 100
+        : 100;
+
+    return progress;
   }
 
   function buildDoughnutChartData(): void {
