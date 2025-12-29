@@ -105,6 +105,13 @@
     "unableLoadItems": "Unable load items",
     "exits": "Exits",
     "incomings": "Incomings",
-    "count": "Count"
+    "count": "Count",
+    "settings": "Settings",
+    "editSettings": "Edit settings",
+    "insertGoalCurrentYear": "Insert current year goal",
+    "settingsSuccessfullySaved": "Settings successfully saved",
+    "unableSaveSettings": "Unable save settings",
+    "unableLoadSettings": "Unable load settings",
+    "leftToSpend": "Left to spend"
   }
 }

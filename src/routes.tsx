@@ -11,6 +11,7 @@ import {
   SubCategory,
   Home,
   Summary,
+  Settings,
 } from "./pages";
 
 export type TRoute = {
@@ -70,6 +71,12 @@ export const ROUTES: TRoute[] = [
     path: "/sub-categories/edit/:categoryId",
     name: "sub-category",
     element: <SubCategory />,
+    isHidden: true,
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    element: <Settings />,
     isHidden: true,
   },
   // {

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 
 // Api
-import { CATEGORY_API, ITEM_API, SUB_CATEGORY_API } from "../api";
+import { CATEGORY_API, ITEM_API, SETTING_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
 import { MONTHS } from "../assets";
@@ -73,6 +73,7 @@ const Summary = () => {
     "#FFC375",
     "#FFED75",
   ];
+  const [goal, setGoal] = useState<number>(0);
 
   const title = t("summary");
   const elabDoughnutChartData: TDoughnutChartData = {
@@ -104,6 +105,13 @@ const Summary = () => {
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setItems(response.data);
         else openPopup(t("unableLoadItems"), "error");
+      }
+    );
+
+    await Promise.resolve(SETTING_API.get(userData?.id as string)).then(
+      (response: THTTPResponse) => {
+        if (response && response.hasSuccess) setGoal(response.data?.goal ?? 0);
+        else openPopup(t("unableLoadSettings"), "error");
       }
     );
 
@@ -185,10 +193,29 @@ const Summary = () => {
     return total;
   }
 
+  function getYearTotalsExits(): number {
+    let total: number = 0;
+
+    items?.forEach((item: TItem) => {
+      if (Number(item.year) === Number(filters.year))
+        if (item.type === "exit") total += item.value;
+    });
+
+    return total;
+  }
+
   function getTotalsExitsLabel(): string {
     let total: number = getTotalsExits();
 
     return `${t("exits")}: € ${total}`;
+  }
+
+  function getLeftToSpendLabel(): string {
+    let total: number = goal - getYearTotalsExits();
+    const remainsMonths: number = 12 - Number(filters.month.id) + 1;
+    const leftToSpend: number = total / remainsMonths;
+
+    return `${t("leftToSpend")}: € ${leftToSpend}`;
   }
 
   function calculateProgress(): number {
@@ -335,6 +362,9 @@ const Summary = () => {
       {header}
       <span className="text-3xl text-white">{getTotalsIncomingsLabel()}</span>
       <span className="text-3xl text-white">{getTotalsExitsLabel()}</span>
+      {goal && Number(goal) !== 0 ? (
+        <span className="text-xl text-white">{getLeftToSpendLabel()}</span>
+      ) : null}
       {progressBar}
       {doghnutChart}
       {exits}

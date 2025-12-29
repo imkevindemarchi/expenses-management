@@ -157,6 +157,12 @@ const Navbar: FC = () => {
           <span className="text-white underline cursor-default">
             {userData?.email}
           </span>
+          <span
+            onClick={() => navigate("/settings")}
+            className="text-white hover:opacity-50 transition-all duration-300"
+          >
+            {t("settings")}
+          </span>
           {/* <span
             onClick={() => navigate("/profile")}
             className="text-white hover:opacity-50 transition-all duration-300"

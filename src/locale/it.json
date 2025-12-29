@@ -105,6 +105,13 @@
     "unableLoadItems": "Impossibile caricare le voci",
     "exits": "Uscite",
     "incomings": "Entrate",
-    "count": "Conteggio"
+    "count": "Conteggio",
+    "settings": "Impostazioni",
+    "editSettings": "Modifica impostazioni",
+    "insertGoalCurrentYear": "Inserisci l'obiettivo dell' anno corrente",
+    "settingsSuccessfullySaved": "Impostazioni salvate con successo",
+    "unableSaveSettings": "Impossibile salvare le impostazioni",
+    "unableLoadSettings": "Impossibile caricare le impostazioni",
+    "leftToSpend": "Ancora da spendere"
   }
 }
