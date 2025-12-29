@@ -83,7 +83,7 @@ const SubCategory: FC = () => {
     await Promise.all([
       SUB_CATEGORY_API.getAll(userData?.id as string),
       CATEGORY_API.getAll(userData?.id as string),
-    ]).then((response: THTTPResponse[]) => {
+    ]).then(async (response: THTTPResponse[]) => {
       if (response[0] && response[0].hasSuccess)
         setSubCategories(response[0].data);
       else openPopup(t("unableLoadSubCategories"), "error");
@@ -91,16 +91,24 @@ const SubCategory: FC = () => {
       if (response[1] && response[1].hasSuccess)
         setCategories(response[1].data);
       else openPopup(t("unableLoadCategories"), "error");
-    });
 
-    if (isEditMode)
-      await Promise.resolve(SUB_CATEGORY_API.get(categoryId as string)).then(
-        (response: THTTPResponse) => {
-          if (response && response.hasSuccess)
-            setFormData({ ...response.data });
-          else openPopup(t("unableLoadSubCategory"), "error");
-        }
-      );
+      if (isEditMode && response[1] && response[1].hasSuccess)
+        await Promise.resolve(SUB_CATEGORY_API.get(categoryId as string)).then(
+          (subCategoryRes: THTTPResponse) => {
+            if (subCategoryRes && subCategoryRes.hasSuccess) {
+              const category: TCategory = response[1].data.find(
+                (category: TCategory) =>
+                  category.id === subCategoryRes.data?.category_id
+              ) as TCategory;
+
+              setFormData({
+                ...subCategoryRes.data,
+                category,
+              });
+            } else openPopup(t("unableLoadSubCategory"), "error");
+          }
+        );
+    });
 
     setIsLoading(false);
   }

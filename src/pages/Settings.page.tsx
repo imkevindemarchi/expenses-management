@@ -29,12 +29,12 @@ import { TSetting } from "../types/settings.type";
 // Utils
 import { setPageTitle, TValidation, validateFormField } from "../utils";
 
-interface TFormData {
+interface IFormData {
   goal: number;
   id: string;
 }
 
-const DEFAULT_STATE: TFormData = {
+const DEFAULT_STATE: IFormData = {
   goal: 0,
   id: "",
 };
@@ -58,7 +58,7 @@ const Settings = () => {
   const { setState: setIsLoading }: TLoaderContext = useContext(
     LoaderContext
   ) as TLoaderContext;
-  const [formData, setFormData] = useState<TFormData>(DEFAULT_STATE);
+  const [formData, setFormData] = useState<IFormData>(DEFAULT_STATE);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
@@ -139,7 +139,7 @@ const Settings = () => {
     setIsLoading(false);
   }
 
-  function onInputChange(propLabel: keyof TFormData, value: any): void {
+  function onInputChange(propLabel: keyof IFormData, value: any): void {
     setFormData((prevState: any) => {
       return { ...prevState, [propLabel]: value };
     });
