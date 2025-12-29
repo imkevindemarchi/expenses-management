@@ -152,6 +152,12 @@ const Sidebar: FC = () => {
           <span className="text-white underline cursor-default">
             {userData?.email}
           </span>
+          <span
+            onClick={() => onRouteChange("/settings")}
+            className="text-white hover:opacity-50 transition-all duration-300"
+          >
+            {t("settings")}
+          </span>
           {/* <span
             onClick={() => onRouteChange("/profile")}
             className="text-white hover:opacity-50 transition-all duration-300"
