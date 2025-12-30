@@ -30,6 +30,10 @@ const LiquidGlass: FC<IProps> = ({
   blur = 2,
   backgroundColor = "rgba(255, 255, 255, 0.1)",
   borderColor = "rgba(255, 255, 255, 0.25)",
+  // TODO:
+  // Karina's versions
+  // backgroundColor = "rgb(0, 0, 0, 0.1)",
+  // borderColor = "rgb(0, 0, 0, 0.1)",
   zIndex = 0,
   draggable = false,
   onDragStart,
