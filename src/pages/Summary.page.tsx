@@ -160,7 +160,7 @@ const Summary = () => {
     return total;
   }
 
-  function getTotalsIncomings(): number {
+  function getTotalIncomings(): number {
     let total: number = 0;
 
     items?.forEach((item: TItem) => {
@@ -175,13 +175,13 @@ const Summary = () => {
     return total;
   }
 
-  function getTotalsIncomingsLabel(): string {
-    let total: number = getTotalsIncomings();
+  function getTotalIncomingsLabel(): string {
+    let total: number = getTotalIncomings();
 
     return `${t("incomings")}: € ${total}`;
   }
 
-  function getTotalsExits(): number {
+  function getTotalExits(): number {
     let total: number = 0;
 
     items?.forEach((item: TItem) => {
@@ -195,15 +195,15 @@ const Summary = () => {
     return total;
   }
 
-  function getTotalsExitsLabel(): string {
-    let total: number = getTotalsExits();
+  function getTotalExitsLabel(): string {
+    let total: number = getTotalExits();
 
     return `${t("exits")}: € ${total}`;
   }
 
   function getLeftToSpend(): number {
     let leftToSpend: number = 0;
-    leftToSpend = goal - getTotalsExits();
+    leftToSpend = goal - getTotalExits();
 
     return leftToSpend;
   }
@@ -218,8 +218,8 @@ const Summary = () => {
 
   function calculateProgress(): number {
     const progress: number =
-      getTotalsExits() && getTotalsIncomings()
-        ? (getTotalsExits() / getTotalsIncomings()) * 100
+      getTotalExits() && getTotalIncomings()
+        ? (getTotalExits() / getTotalIncomings()) * 100
         : 100;
 
     return progress;
@@ -362,8 +362,8 @@ const Summary = () => {
   return (
     <div className="flex flex-col gap-5">
       {header}
-      <span className="text-3xl text-white">{getTotalsIncomingsLabel()}</span>
-      <span className="text-3xl text-white">{getTotalsExitsLabel()}</span>
+      <span className="text-3xl text-white">{getTotalIncomingsLabel()}</span>
+      <span className="text-3xl text-white">{getTotalExitsLabel()}</span>
       {goal && Number(goal) !== 0 ? (
         <div className="flex flex-row items-center gap-2">
           {getLeftToSpend() > 0 ? (

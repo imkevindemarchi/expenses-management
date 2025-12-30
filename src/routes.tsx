@@ -12,6 +12,7 @@ import {
   Home,
   Summary,
   Settings,
+  YearSummary,
 } from "./pages";
 
 export type TRoute = {
@@ -38,6 +39,11 @@ export const ROUTES: TRoute[] = [
     path: "/summary",
     name: "summary",
     element: <Summary />,
+  },
+  {
+    path: "/year-summary",
+    name: "year-summary",
+    element: <YearSummary />,
   },
   {
     path: "/categories",

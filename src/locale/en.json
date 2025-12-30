@@ -114,6 +114,9 @@
     "unableLoadSettings": "Unable load settings",
     "leftToSpend": "Left to spend",
     "youHaveAlreadyCrossedThreshold": "You have already crossed the threshold",
-    "percentageOfRevenueSpent": "Percentage of revenue spent"
+    "percentageOfRevenueSpent": "Percentage of revenue spent",
+    "unableLoadExpenses": "Unable load expenses",
+    "totalExits": "Total exits",
+    "totalIncomings": "Total incomings"
   }
 }

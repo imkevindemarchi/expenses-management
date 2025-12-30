@@ -114,6 +114,10 @@
     "unableLoadSettings": "Impossibile caricare le impostazioni",
     "leftToSpend": "Ancora da spendere",
     "youHaveAlreadyCrossedThreshold": "Hai già superato la soglia",
-    "percentageOfRevenueSpent": "Percentuale di entrate speso"
+    "percentageOfRevenueSpent": "Percentuale di entrate speso",
+    "year-summary": "Riepilogo annuale",
+    "unableLoadExpenses": "Impossibile caricare le spese",
+    "totalExits": "Totale uscite",
+    "totalIncomings": "Totale entrate"
   }
 }
