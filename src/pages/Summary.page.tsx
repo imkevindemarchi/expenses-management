@@ -229,7 +229,6 @@ const Summary = () => {
     const labels: string[] = [];
 
     categories?.forEach((category: TCategory, index: number) => {
-      console.log("🚀 ~ category:", category);
       let total: number = 0;
       items?.forEach((item: TItem) => {
         if (
