@@ -7,6 +7,7 @@ import { CATEGORY_API, ITEM_API, SETTING_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
 import { MONTHS } from "../assets";
+import { HappyIcon, SadIcon } from "../assets/icons";
 
 // Components
 import { DoughnutChart, Input, LiquidGlass, ProgressBar } from "../components";
@@ -110,7 +111,8 @@ const Summary = () => {
 
     await Promise.resolve(SETTING_API.get(userData?.id as string)).then(
       (response: THTTPResponse) => {
-        if (response && response.hasSuccess) setGoal(response.data?.goal ?? 0);
+        if (response && response.hasSuccess)
+          setGoal(response.data?.month_goal ?? 0);
         else openPopup(t("unableLoadSettings"), "error");
       }
     );
@@ -193,29 +195,25 @@ const Summary = () => {
     return total;
   }
 
-  function getYearTotalsExits(): number {
-    let total: number = 0;
-
-    items?.forEach((item: TItem) => {
-      if (Number(item.year) === Number(filters.year))
-        if (item.type === "exit") total += item.value;
-    });
-
-    return total;
-  }
-
   function getTotalsExitsLabel(): string {
     let total: number = getTotalsExits();
 
     return `${t("exits")}: € ${total}`;
   }
 
-  function getLeftToSpendLabel(): string {
-    let total: number = goal - getYearTotalsExits();
-    const remainsMonths: number = 12 - Number(filters.month.id) + 1;
-    const leftToSpend: number = total / remainsMonths;
+  function getLeftToSpend(): number {
+    let leftToSpend: number = 0;
+    leftToSpend = goal - getTotalsExits();
 
-    return `${t("leftToSpend")}: € ${leftToSpend}`;
+    return leftToSpend;
+  }
+
+  function getLeftToSpendLabel(): string {
+    const leftToSpend: number = getLeftToSpend();
+
+    return leftToSpend > 0
+      ? `${t("leftToSpend")}: € ${leftToSpend}`
+      : t("youHaveAlreadyCrossedThreshold");
   }
 
   function calculateProgress(): number {
@@ -283,7 +281,8 @@ const Summary = () => {
   );
 
   const progressBar = (
-    <div className="flex items-center gap-5">
+    <div className="flex flex-row items-center gap-5 mobile:flex-col">
+      <span className="text-white">{t("percentageOfRevenueSpent")}</span>
       <ProgressBar progress={calculateProgress()} />
       <span className="text-white text-3xl">
         {calculateProgress().toFixed(0)}%
@@ -314,7 +313,10 @@ const Summary = () => {
               <span className="text-white font-bold uppercase text-center">
                 {category.label}
               </span>
-              <LiquidGlass className="p-10 flex flex-col gap-2">
+              <LiquidGlass
+                borderRadius={20}
+                className="p-10 flex flex-col gap-2"
+              >
                 {filteredSubCategories.map(
                   (filteredSubCategory: TSubCategory, index2: number) => {
                     const filteredItems: TItem[] =
@@ -363,7 +365,14 @@ const Summary = () => {
       <span className="text-3xl text-white">{getTotalsIncomingsLabel()}</span>
       <span className="text-3xl text-white">{getTotalsExitsLabel()}</span>
       {goal && Number(goal) !== 0 ? (
-        <span className="text-xl text-white">{getLeftToSpendLabel()}</span>
+        <div className="flex flex-row items-center gap-2">
+          {getLeftToSpend() > 0 ? (
+            <HappyIcon className="text-white text-[3em]" />
+          ) : (
+            <SadIcon className="text-white text-[3em]" />
+          )}
+          <span className="text-xl text-white">{getLeftToSpendLabel()}</span>
+        </div>
       ) : null}
       {progressBar}
       {doghnutChart}

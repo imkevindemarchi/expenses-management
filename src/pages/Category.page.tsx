@@ -203,7 +203,10 @@ const Category: FC = () => {
       onSubmit={onSubmit}
       className="flex flex-col gap-5 justify-center items-center"
     >
-      <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
+      <LiquidGlass
+        // borderRadius={20}
+        className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10"
+      >
         {label}
         {button}
       </LiquidGlass>
