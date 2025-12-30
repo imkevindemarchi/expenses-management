@@ -108,10 +108,12 @@
     "count": "Conteggio",
     "settings": "Impostazioni",
     "editSettings": "Modifica impostazioni",
-    "insertGoalCurrentYear": "Inserisci l'obiettivo dell' anno corrente",
+    "insertMonthGoal": "Inserisci l'obiettivo del mese",
     "settingsSuccessfullySaved": "Impostazioni salvate con successo",
     "unableSaveSettings": "Impossibile salvare le impostazioni",
     "unableLoadSettings": "Impossibile caricare le impostazioni",
-    "leftToSpend": "Ancora da spendere"
+    "leftToSpend": "Ancora da spendere",
+    "youHaveAlreadyCrossedThreshold": "Hai già superato la soglia",
+    "percentageOfRevenueSpent": "Percentuale di entrate speso"
   }
 }

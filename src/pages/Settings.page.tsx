@@ -74,7 +74,10 @@ const Settings = () => {
     await Promise.resolve(SETTING_API.get(userData?.id as string)).then(
       (response: THTTPResponse) => {
         if (response && response.hasSuccess && response.data) {
-          setFormData({ goal: response.data?.goal, id: response.data?.id });
+          setFormData({
+            goal: response.data?.month_goal,
+            id: response.data?.id,
+          });
           setIsEdit(true);
         }
       }
@@ -111,7 +114,7 @@ const Settings = () => {
     const isFormValid: boolean = validateForm();
 
     const payload: Partial<TSetting> = {
-      goal: formData.goal,
+      month_goal: formData.goal,
       user_id: userData?.id,
     };
 
@@ -160,7 +163,7 @@ const Settings = () => {
           rowSpacing={2}
         >
           <Grid size={{ xs: 12, md: 3 }}>
-            <span className="text-white">{t("insertGoalCurrentYear")}</span>
+            <span className="text-white">{t("insertMonthGoal")}</span>
           </Grid>
           <Grid size={{ xs: 12, md: 9 }}>
             <Input

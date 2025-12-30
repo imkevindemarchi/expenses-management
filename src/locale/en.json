@@ -108,10 +108,12 @@
     "count": "Count",
     "settings": "Settings",
     "editSettings": "Edit settings",
-    "insertGoalCurrentYear": "Insert current year goal",
+    "insertMonthGoal": "Insert month goal",
     "settingsSuccessfullySaved": "Settings successfully saved",
     "unableSaveSettings": "Unable save settings",
     "unableLoadSettings": "Unable load settings",
-    "leftToSpend": "Left to spend"
+    "leftToSpend": "Left to spend",
+    "youHaveAlreadyCrossedThreshold": "You have already crossed the threshold",
+    "percentageOfRevenueSpent": "Percentage of revenue spent"
   }
 }
