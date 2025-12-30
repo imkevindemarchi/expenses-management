@@ -35,6 +35,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+ChartJS.defaults.color = "#ffffff";
 
 const BarsChart: FC<IProps> = ({ labels, data }) => {
   const options = {
@@ -43,7 +44,6 @@ const BarsChart: FC<IProps> = ({ labels, data }) => {
         borderWidth: 2,
       },
     },
-    responsive: true,
   };
 
   const dataset = {

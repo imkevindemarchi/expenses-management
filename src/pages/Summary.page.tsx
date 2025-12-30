@@ -61,26 +61,25 @@ const Summary = () => {
   );
   const [items, setItems] = useState<TItem[] | null>(null);
   const [doughnutChartData, setDoughnutChartData] = useState<number[]>([]);
-  const [doughnutChartColors, setDoughnutChartColors] = useState<string[]>([]);
   const [doughnutChartLabels, setDoughnutChartLabels] = useState<string[]>([]);
-  const DOGHNUT_CART_COLORS: string[] = [
-    "#91FF75",
-    "#75DFFF",
-    "#7C75FF",
-    "#BA75FF",
-    "#FD75FF",
-    "#FF75B1",
-    "#FF8B75",
-    "#FFC375",
-    "#FFED75",
-  ];
   const [goal, setGoal] = useState<number>(0);
 
   const title = t("summary");
+
   const elabDoughnutChartData: TDoughnutChartData = {
     label: t("count"),
     data: doughnutChartData,
-    backgroundColor: doughnutChartColors,
+    backgroundColor: [
+      "#91FF75",
+      "#75DFFF",
+      "#7C75FF",
+      "#BA75FF",
+      "#FD75FF",
+      "#FF75B1",
+      "#FF8B75",
+      "#FFC375",
+      "#FFED75",
+    ],
   };
 
   setPageTitle(t("summary"));
@@ -227,10 +226,10 @@ const Summary = () => {
 
   function buildDoughnutChartData(): void {
     const data: number[] = [];
-    const colors: string[] = [];
     const labels: string[] = [];
 
     categories?.forEach((category: TCategory, index: number) => {
+      console.log("🚀 ~ category:", category);
       let total: number = 0;
       items?.forEach((item: TItem) => {
         if (
@@ -243,12 +242,10 @@ const Summary = () => {
       });
 
       data.push(total);
-      colors.push(DOGHNUT_CART_COLORS[index]);
       total > 0 && labels.push(category.label);
     });
 
     setDoughnutChartData(data);
-    setDoughnutChartColors(colors);
     setDoughnutChartLabels(labels);
   }
 
