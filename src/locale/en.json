@@ -117,6 +117,12 @@
     "percentageOfRevenueSpent": "Percentage of revenue spent",
     "unableLoadExpenses": "Unable load expenses",
     "totalExits": "Total exits",
-    "totalIncomings": "Total incomings"
+    "totalIncomings": "Total incomings",
+    "noCategoriesMessage": "It seems you created no category yet.",
+    "noSubCategoriesMessage": "It seems you created no sub-category yet.",
+    "understood": "I understood",
+    "welcomeMessage": "First of all, create the categories (Need/Extra...), then create sub-categories (Subscriptions/Bills...)",
+    "createCategory": "Create category",
+    "createSubCategory": "Create sub-category"
   }
 }

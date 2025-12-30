@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
+import { useNavigate } from "react-router";
 
 // Api
 import { CATEGORY_API, ITEM_API, SUB_CATEGORY_API } from "../api";
@@ -81,6 +82,10 @@ const Home: FC = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [subCategoryFilter, setSubCategoryFilter] = useState<string>("");
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
+  const [welcomeModal, setWelcomeModal] = useState<boolean>(false);
+  const [isFirstTimeOnWebsite, setIsFirstTimeOnWebsite] =
+    useState<boolean>(false);
+  const navigate = useNavigate();
 
   const title: string = t(
     step === 1
@@ -103,25 +108,41 @@ const Home: FC = () => {
         ?.toLowerCase()
         .startsWith(subCategoryFilter?.toLowerCase() as string);
     }) ?? [];
+  const isCloseIconShown: boolean =
+    (categories && categories.length > 0 && step === 1) ||
+    (subCategories && subCategories.length > 0 && step === 2)
+      ? true
+      : false;
 
   setPageTitle(t("home"));
 
   async function getData(): Promise<void> {
     setIsLoading(true);
 
+    let doesCategoriesExist: boolean = false;
+    let doesSubCategoriesExist: boolean = false;
+
     await Promise.resolve(CATEGORY_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
-        if (response && response.hasSuccess) setCategories(response.data);
-        else openPopup(t("unableLoadCategories"), "error");
+        if (response && response.hasSuccess) {
+          setCategories(response.data);
+          if (response.data?.length > 0) doesCategoriesExist = true;
+        } else openPopup(t("unableLoadCategories"), "error");
       }
     );
 
     await Promise.resolve(SUB_CATEGORY_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
-        if (response && response.hasSuccess) setSubCategories(response.data);
-        else openPopup(t("unableLoadSubCategories"), "error");
+        if (response && response.hasSuccess) {
+          setSubCategories(response.data);
+          if (response.data?.length > 0) doesSubCategoriesExist = true;
+        } else openPopup(t("unableLoadSubCategories"), "error");
       }
     );
+
+    !doesCategoriesExist &&
+      !doesSubCategoriesExist &&
+      setIsFirstTimeOnWebsite(true);
 
     setIsLoading(false);
   }
@@ -175,7 +196,7 @@ const Home: FC = () => {
     } else openPopup(t("insertItem"), "warning");
   }
 
-  const categoryFilterComponent = (
+  const categoryFilterComponent = categories && categories.length > 0 && (
     <Input
       placeholder={t("searchForName")}
       type="text"
@@ -186,55 +207,80 @@ const Home: FC = () => {
     />
   );
 
-  const subCategoryFilterComponent = (
-    <Input
-      placeholder={t("searchForName")}
-      type="text"
-      value={subCategoryFilter}
-      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-        setSubCategoryFilter(event.target.value)
-      }
-    />
-  );
+  const subCategoryFilterComponent = subCategories &&
+    subCategories.length > 0 && (
+      <Input
+        placeholder={t("searchForName")}
+        type="text"
+        value={subCategoryFilter}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          setSubCategoryFilter(event.target.value)
+        }
+      />
+    );
 
   const step1Component = (
     <Grid container spacing={2}>
-      {filteredCategories?.map((category: TCategory, index: number) => {
-        return (
-          <Grid key={index} size={{ xs: 6, md: 3 }}>
-            <LiquidGlass
-              onClick={() => onCategoryClick(category)}
-              className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
-            >
-              <span className="text-white text-lg mobile:text-base">
-                {category.label}
-              </span>
-            </LiquidGlass>
-          </Grid>
-        );
-      })}
+      {categories && categories.length > 0 ? (
+        filteredCategories?.map((category: TCategory, index: number) => {
+          return (
+            <Grid key={index} size={{ xs: 6, md: 3 }}>
+              <LiquidGlass
+                onClick={() => onCategoryClick(category)}
+                className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
+              >
+                <span className="text-white text-lg mobile:text-base">
+                  {category.label}
+                </span>
+              </LiquidGlass>
+            </Grid>
+          );
+        })
+      ) : (
+        <div className="flex flex-col gap-2">
+          <span className="text-white">{t("noCategoriesMessage")}</span>
+          <span
+            onClick={() => navigate("/categories/new")}
+            className="text-white underline cursor-pointer w-fit"
+          >
+            {t("createCategory")}
+          </span>
+        </div>
+      )}
     </Grid>
   );
 
   const step2Component = (
     <Grid container spacing={2}>
-      {filteredSubCategories?.map(
-        (subCategory: TSubCategory, index: number) => {
-          return (
-            subCategory.category_id === selectedCategory?.id && (
-              <Grid key={index} size={{ xs: 6, md: 3 }}>
-                <LiquidGlass
-                  onClick={() => onSubCategoryClick(subCategory)}
-                  className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
-                >
-                  <span className="text-white text-lg mobile:text-base">
-                    {subCategory.label}
-                  </span>
-                </LiquidGlass>
-              </Grid>
-            )
-          );
-        }
+      {subCategories && subCategories.length > 0 ? (
+        filteredSubCategories?.map(
+          (subCategory: TSubCategory, index: number) => {
+            return (
+              subCategory.category_id === selectedCategory?.id && (
+                <Grid key={index} size={{ xs: 6, md: 3 }}>
+                  <LiquidGlass
+                    onClick={() => onSubCategoryClick(subCategory)}
+                    className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
+                  >
+                    <span className="text-white text-lg mobile:text-base">
+                      {subCategory.label}
+                    </span>
+                  </LiquidGlass>
+                </Grid>
+              )
+            );
+          }
+        )
+      ) : (
+        <div className="flex flex-col gap-2">
+          <span className="text-white">{t("noSubCategoriesMessage")}</span>
+          <span
+            onClick={() => navigate("/sub-categories/new")}
+            className="text-white underline cursor-pointer w-fit"
+          >
+            {t("createSubCategory")}
+          </span>
+        </div>
       )}
     </Grid>
   );
@@ -308,33 +354,65 @@ const Home: FC = () => {
     </Modal>
   );
 
+  function welcomeModalHandler(): void {
+    setWelcomeModal(false);
+    setIsFirstTimeOnWebsite(false);
+  }
+
+  const welcomeModalComponent = (
+    <Modal
+      title={t("welcome")}
+      isOpen={welcomeModal}
+      onSubmit={welcomeModalHandler}
+      onClose={welcomeModalHandler}
+      submitButtonText={t("understood")}
+    >
+      <span className="text-white">{t("welcomeMessage")}</span>
+    </Modal>
+  );
+
   useEffect(() => {
     userData?.id && getData();
 
     // eslint-disable-next-line
   }, [userData?.id]);
 
+  useEffect(() => {
+    if (isFirstTimeOnWebsite) setWelcomeModal(true);
+  }, [isFirstTimeOnWebsite]);
+
   return (
     <>
       <div className="flex flex-col gap-5 mobile:min-h-[150vh]">
-        <span className="text-white text-lg">{title}</span>
+        {!isFirstTimeOnWebsite && (
+          <span className="text-white text-lg">{title}</span>
+        )}
         {step === 2 && <GoBackButton onClick={() => setStep(step - 1)} />}
-        <LiquidGlass className="p-20 flex flex-col gap-5 mobile:p-10">
-          <div className="flex justify-between gap-5">
-            {step === 1
-              ? categoryFilterComponent
-              : step === 2 && subCategoryFilterComponent}
-            <LiquidGlass
-              onClick={resetFilterHandler}
-              className="p-3 cursor-pointer hover:opacity-50"
-            >
-              <CloseIcon className="text-white text-2xl" />
-            </LiquidGlass>
-          </div>
-          {step === 1 ? step1Component : step === 2 && step2Component}
-        </LiquidGlass>
+        {!isFirstTimeOnWebsite && (
+          <LiquidGlass
+            className={`p-20 flex flex-col mobile:p-10 ${
+              isCloseIconShown ? "gap-5" : ""
+            }`}
+          >
+            <div className="flex justify-between gap-5">
+              {step === 1
+                ? categoryFilterComponent
+                : step === 2 && subCategoryFilterComponent}
+              {isCloseIconShown && (
+                <LiquidGlass
+                  onClick={resetFilterHandler}
+                  className="p-3 cursor-pointer hover:opacity-50"
+                >
+                  <CloseIcon className="text-white text-2xl" />
+                </LiquidGlass>
+              )}
+            </div>
+            {step === 1 ? step1Component : step === 2 && step2Component}
+          </LiquidGlass>
+        )}
       </div>
       {modalComponent}
+      {welcomeModalComponent}
     </>
   );
 };

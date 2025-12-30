@@ -1,6 +1,6 @@
 {
   "translation": {
-    "welcome": "Benvenuto",
+    "welcome": "Benvenuto/a",
     "imgNotFound": "Impossibile visualizzare l'immagine.",
     "logInYourExpensesManagement": "Accedi alla tua gestione spese",
     "enterEmailAndPassword": "Inserire l'e-mail e la password",
@@ -118,6 +118,12 @@
     "year-summary": "Riepilogo annuale",
     "unableLoadExpenses": "Impossibile caricare le spese",
     "totalExits": "Totale uscite",
-    "totalIncomings": "Totale entrate"
+    "totalIncomings": "Totale entrate",
+    "noCategoriesMessage": "Sembra tu non abbia ancora creato nessuna categoria.",
+    "noSubCategoriesMessage": "Sembra tu non abbia ancora creato nessuna sottocategoria.",
+    "understood": "Ho capito",
+    "welcomeMessage": "Prima di tutto, crea le categorie (Necessità/Extra...), poi crea le sotto-categorie (Abbonamenti/Bollette...)",
+    "createCategory": "Crea categoria",
+    "createSubCategory": "Crea sotto-categoria"
   }
 }

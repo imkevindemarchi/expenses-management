@@ -97,7 +97,7 @@ const Sidebar: FC = () => {
   );
 
   const routesComponent = (
-    <div className="flex flex-col justify-center text-center items-center gap-5">
+    <div className="flex flex-col justify-center text-center items-center">
       {ROUTES.map((route: TRoute, index: number) => {
         const isRouteHidden: boolean = route.isHidden ? true : false;
         const routePathSection: string = route.path.split("/")[1];
@@ -188,7 +188,7 @@ const Sidebar: FC = () => {
       }`}
       borderRadius={0}
       borderBottomRadius={50}
-      zIndex={150}
+      zIndex={900}
       blur={10}
     >
       {logo}

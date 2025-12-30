@@ -103,10 +103,10 @@ const Autocomplete: FC<IProps> = ({
   }, []);
 
   return (
-    <div style={{ zIndex: 999 }} className="flex flex-col gap-2 w-full">
+    <div style={{ zIndex: 800 }} className="flex flex-col gap-2 w-full">
       <LiquidGlass
         ref={inputRef}
-        zIndex={999}
+        zIndex={800}
         className={`flex flex-col gap-2 px-5 py-3 ${className}`}
       >
         <div className="flex flex-row gap-2 items-center relative">
@@ -137,7 +137,7 @@ const Autocomplete: FC<IProps> = ({
               <LiquidGlass
                 borderRadius={20}
                 backgroundColor="rgba(255, 255, 255, 0.5)"
-                className="flex flex-col gap-5 justify-center items-center w-full py-2 z-999"
+                className="flex flex-col gap-5 justify-center items-center w-full py-2 z-800"
               >
                 <div className="flex flex-col gap-2 max-h-60 overflow-y-scroll">
                   {elabData && elabData.length > 0 ? (
