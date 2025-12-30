@@ -8,3 +8,4 @@ export { default as SubCategory } from "./SubCategory.page";
 export { default as Home } from "./Home.page";
 export { default as Summary } from "./Summary.page";
 export { default as Settings } from "./Settings.page";
+export { default as YearSummary } from "./YearSummary.page";

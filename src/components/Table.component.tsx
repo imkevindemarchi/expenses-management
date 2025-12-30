@@ -19,12 +19,14 @@ interface IProps {
   data: any[] | null;
   onDelete?: (data: any) => void;
   columns: IColumn[];
-  info: IInfo;
+  info?: IInfo;
   onRowClick?: (data: any) => void;
-  onGoPreviousPage: () => Promise<void>;
-  onGoNextPage: () => Promise<void>;
+  onGoPreviousPage?: () => Promise<void>;
+  onGoNextPage?: () => Promise<void>;
   total: number;
   isLoading: boolean;
+  noFooter?: boolean;
+  smallPadding?: boolean;
 }
 
 function approximateByExcess(number: number): number {
@@ -41,12 +43,55 @@ const Table: FC<IProps> = ({
   onGoNextPage,
   total,
   isLoading,
+  noFooter,
+  smallPadding,
 }) => {
   const { t } = useTranslation();
 
-  const canGoPrevious: boolean = info.page > 1;
-  const totalPages: number = approximateByExcess(info.total / 5);
-  const canGoNext: boolean = info.page < totalPages;
+  const canGoPrevious: boolean = Number(info?.page ?? 0) > 1;
+  const totalPages: number = approximateByExcess(Number(info?.total ?? 0) / 5);
+  const canGoNext: boolean = Number(info?.page ?? 0) < totalPages;
+
+  const footer = !noFooter && (
+    <div className="py-5 px-2 flex justify-between items-center sticky bottom-0 left-0 right-0">
+      <div className="flex gap-1">
+        <span className="text-white opacity-80">{t("total")}:</span>
+        <span className="text-white font-bold">{total}</span>
+      </div>
+      <div className="flex flex-row desktop:w-[7%] w-[12%] justify-between mobile:w-[35%]">
+        <LiquidGlass
+          className={`transition-all duration-300 ${
+            !canGoPrevious ? "opacity-60 cursor-not-allowed" : ""
+          }`}
+        >
+          <button
+            disabled={!canGoPrevious}
+            onClick={async () => onGoPreviousPage && (await onGoPreviousPage())}
+            className={`flex justify-center items-center w-10 h-10 p-2 rounded-lg ${
+              !canGoPrevious ? "opacity-50 cursor-default" : ""
+            }`}
+          >
+            <ArrowLeftIcon className="text-3xl text-white" />
+          </button>
+        </LiquidGlass>
+        <LiquidGlass
+          className={`transition-all duration-300 ${
+            !canGoNext ? "opacity-60 cursor-not-allowed" : ""
+          }`}
+        >
+          <button
+            disabled={!canGoNext}
+            onClick={async () => onGoNextPage && (await onGoNextPage())}
+            className={`flex justify-center items-center w-10 h-10 p-2 rounded-lg ${
+              !canGoNext ? "opacity-50 cursor-default" : ""
+            }`}
+          >
+            <ArrowRightIcon className="text-3xl text-white" />
+          </button>
+        </LiquidGlass>
+      </div>
+    </div>
+  );
 
   return data && data?.length > 0 ? (
     <div className="mobile:overflow-x-scroll relative px-10 py-10">
@@ -67,12 +112,17 @@ const Table: FC<IProps> = ({
         </thead>
         <tbody>
           {data?.map((item: any, index: number) => {
+            const isLastElement: boolean = index === data.length - 1;
+
             return (
               <tr
                 key={index}
                 onClick={() => onRowClick && onRowClick(item)}
                 style={{
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.25)",
+                  borderBottom:
+                    isLastElement && noFooter
+                      ? ""
+                      : "1px solid rgba(255, 255, 255, 0.25)",
                 }}
                 className={`${
                   onRowClick
@@ -109,7 +159,12 @@ const Table: FC<IProps> = ({
                       </LiquidGlass>
                     </td>
                   ) : (
-                    <td key={index2} className="p-5 whitespace-nowrap">
+                    <td
+                      key={index2}
+                      className={`whitespace-nowrap ${
+                        !smallPadding ? "p-5" : "p-3"
+                      }`}
+                    >
                       <span
                         className={`transition-all duration-300 ${
                           isEmail ? "text-primary" : "text-white"
@@ -125,44 +180,7 @@ const Table: FC<IProps> = ({
           })}
         </tbody>
       </table>
-      <div className="py-5 px-2 flex justify-between items-center sticky bottom-0 left-0 right-0">
-        <div className="flex gap-1">
-          <span className="text-white opacity-80">{t("total")}:</span>
-          <span className="text-white font-bold">{total}</span>
-        </div>
-        <div className="flex flex-row desktop:w-[7%] w-[12%] justify-between mobile:w-[35%]">
-          <LiquidGlass
-            className={`transition-all duration-300 ${
-              !canGoPrevious ? "opacity-60 cursor-not-allowed" : ""
-            }`}
-          >
-            <button
-              disabled={!canGoPrevious}
-              onClick={async () => await onGoPreviousPage()}
-              className={`flex justify-center items-center w-10 h-10 p-2 rounded-lg ${
-                !canGoPrevious ? "opacity-50 cursor-default" : ""
-              }`}
-            >
-              <ArrowLeftIcon className="text-3xl text-white" />
-            </button>
-          </LiquidGlass>
-          <LiquidGlass
-            className={`transition-all duration-300 ${
-              !canGoNext ? "opacity-60 cursor-not-allowed" : ""
-            }`}
-          >
-            <button
-              disabled={!canGoNext}
-              onClick={async () => await onGoNextPage()}
-              className={`flex justify-center items-center w-10 h-10 p-2 rounded-lg ${
-                !canGoNext ? "opacity-50 cursor-default" : ""
-              }`}
-            >
-              <ArrowRightIcon className="text-3xl text-white" />
-            </button>
-          </LiquidGlass>
-        </div>
-      </div>
+      {footer}
     </div>
   ) : !isLoading && data ? (
     <div className="flex justify-center p-5">

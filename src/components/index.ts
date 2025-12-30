@@ -16,3 +16,4 @@ export { default as Autocomplete } from "./Autocomplete.component";
 export { default as GoBackButton } from "./GoBackButton.component";
 export { default as ProgressBar } from "./ProgressBar.component";
 export { default as DoughnutChart } from "./DoughnutChart.component";
+export { default as BarsChart } from "./BarsChart.component";
