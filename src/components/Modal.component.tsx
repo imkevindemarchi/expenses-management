@@ -37,7 +37,7 @@ const Modal: FC<IProps> = ({
     <div className="w-full flex justify-between items-center">
       <span className="text-white text-2xl font-bold uppercase">{title}</span>
       <LiquidGlass
-        onClick={onClose}
+        onClick={onClose ?? onCancel}
         className="w-10 h-10 flex justify-center items-center cursor-pointer hover:opacity-50"
       >
         <CloseIcon className="text-white text-2xl" />

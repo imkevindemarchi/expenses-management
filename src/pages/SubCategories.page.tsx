@@ -95,10 +95,10 @@ const SubCategories: FC = () => {
       ) {
         const data: TSubCategory[] = response[0].data.map(
           (subCategory: TSubCategory) => {
-            const category: TCategory = response[1].data.find(
+            const category: TCategory | null = response[1].data.find(
               (category: TCategory) => category.id === subCategory.category_id
             );
-            return { ...subCategory, category: category.label };
+            return { ...subCategory, category: category?.label ?? "" };
           }
         );
         setTableData(data);
