@@ -21,3 +21,4 @@ export { Income as IncomeIcon } from "./income.icon";
 export { Exit as ExitIcon } from "./exit.icon";
 export { Happy as HappyIcon } from "./happy.icon";
 export { Sad as SadIcon } from "./sad.icon";
+export { Neutral as NeutralIcon } from "./neutral.icon";

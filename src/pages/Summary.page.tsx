@@ -7,7 +7,7 @@ import { CATEGORY_API, ITEM_API, SETTING_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
 import { MONTHS } from "../assets";
-import { HappyIcon, SadIcon } from "../assets/icons";
+import { HappyIcon, NeutralIcon, SadIcon } from "../assets/icons";
 
 // Components
 import { DoughnutChart, Input, LiquidGlass, ProgressBar } from "../components";
@@ -366,8 +366,10 @@ const Summary = () => {
       <span className="text-3xl text-white">{getTotalExitsLabel()}</span>
       {goal && Number(goal) !== 0 ? (
         <div className="flex flex-row items-center gap-2">
-          {getLeftToSpend() > 0 ? (
+          {getLeftToSpend() > 100 ? (
             <HappyIcon className="text-white text-[3em]" />
+          ) : getLeftToSpend() > 0 ? (
+            <NeutralIcon className="text-white text-[3em]" />
           ) : (
             <SadIcon className="text-white text-[3em]" />
           )}
