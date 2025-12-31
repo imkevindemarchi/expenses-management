@@ -124,6 +124,7 @@
     "understood": "Ho capito",
     "welcomeMessage": "Prima di tutto, crea le categorie (Necessità/Extra...), poi crea le sotto-categorie (Abbonamenti/Bollette...)",
     "createCategory": "Crea categoria",
-    "createSubCategory": "Crea sotto-categoria"
+    "createSubCategory": "Crea sotto-categoria",
+    "insertNewPassword": "Inserisci nuova password"
   }
 }

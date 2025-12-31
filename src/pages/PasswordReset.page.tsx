@@ -128,7 +128,7 @@ const PasswordReset: FC = () => {
           onChange={(event: ChangeEvent<HTMLInputElement>) =>
             onInputChange("password", event.target.value)
           }
-          placeholder={t("insertPassword")}
+          placeholder={t("insertNewPassword")}
           error={errors.password}
         />
         <Input

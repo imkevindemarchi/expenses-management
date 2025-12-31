@@ -123,6 +123,7 @@
     "understood": "I understood",
     "welcomeMessage": "First of all, create the categories (Need/Extra...), then create sub-categories (Subscriptions/Bills...)",
     "createCategory": "Create category",
-    "createSubCategory": "Create sub-category"
+    "createSubCategory": "Create sub-category",
+    "insertNewPassword": "insert new password"
   }
 }
