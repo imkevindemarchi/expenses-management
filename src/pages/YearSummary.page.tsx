@@ -37,7 +37,6 @@ type TTableItem = {
 
 const YearSummary: FC = () => {
   const { t } = useTranslation();
-  const title: string = t("year-summary");
   const CURRENT_YEAR: number = new Date().getFullYear();
   const DEFAULT_FILTERS: IFilters = {
     year: CURRENT_YEAR,
@@ -56,6 +55,7 @@ const YearSummary: FC = () => {
     []
   );
 
+  const title: string = t("year-summary");
   setPageTitle(title);
 
   async function getData(): Promise<void> {
@@ -120,8 +120,8 @@ const YearSummary: FC = () => {
 
       data.push({
         month: t(month.label),
-        incomings: totalExpensesMonth,
-        exits: totalIncomingsMonth,
+        incomings: totalIncomingsMonth,
+        exits: totalExpensesMonth,
       });
     });
 
