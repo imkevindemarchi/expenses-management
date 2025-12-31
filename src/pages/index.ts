@@ -9,3 +9,4 @@ export { default as Home } from "./Home.page";
 export { default as Summary } from "./Summary.page";
 export { default as Settings } from "./Settings.page";
 export { default as YearSummary } from "./YearSummary.page";
+export { default as Expenses } from "./Expenses.page";

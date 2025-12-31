@@ -124,6 +124,17 @@
     "welcomeMessage": "First of all, create the categories (Need/Extra...), then create sub-categories (Subscriptions/Bills...)",
     "createCategory": "Create category",
     "createSubCategory": "Create sub-category",
-    "insertNewPassword": "insert new password"
+    "insertNewPassword": "insert new password",
+    "expenses": "Expenses",
+    "confirmToDeleteVoice": "Confirm you want to delete the voice?",
+    "itemSuccessfullyDeleted": "Item successfully deleted",
+    "unableDeleteItem": "Unable delete the item",
+    "value": "Value",
+    "subCategory": "Sub-category",
+    "deleteItem": "Delete item",
+    "editItem": "Edit item",
+    "itemSuccessfullyUpdated": "Vocie successfully updated",
+    "unableUpdateVoice": "Unable update the voice",
+    "type": "Type"
   }
 }

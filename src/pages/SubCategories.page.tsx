@@ -140,7 +140,7 @@ const SubCategories: FC = () => {
     });
   }
 
-  function onTableRowClick(rowData: any): void {
+  function onTableRowClick(rowData: TSubCategory): void {
     navigate(`${pathname}/edit/${rowData.id}`);
   }
 
@@ -248,14 +248,16 @@ const SubCategories: FC = () => {
   }, [table.label, table.from, table.to, table.page]);
 
   return (
-    <div className="flex flex-col gap-5">
-      {title}
-      {header}
-      <LiquidGlass blur={100} className="flex flex-col gap-10">
-        {tableComponent}
-      </LiquidGlass>
+    <>
+      <div className="flex flex-col gap-5">
+        {title}
+        {header}
+        <LiquidGlass blur={100} className="flex flex-col gap-10">
+          {tableComponent}
+        </LiquidGlass>
+      </div>
       {modalComponent}
-    </div>
+    </>
   );
 };
 

@@ -125,6 +125,17 @@
     "welcomeMessage": "Prima di tutto, crea le categorie (Necessità/Extra...), poi crea le sotto-categorie (Abbonamenti/Bollette...)",
     "createCategory": "Crea categoria",
     "createSubCategory": "Crea sotto-categoria",
-    "insertNewPassword": "Inserisci nuova password"
+    "insertNewPassword": "Inserisci nuova password",
+    "expenses": "Spese",
+    "confirmToDeleteVoice": "Confermi di voler eliminare la voce?",
+    "itemSuccessfullyDeleted": "Voce eliminata con successo",
+    "unableDeleteItem": "Impossibile eliminare la voce",
+    "value": "Valore",
+    "subCategory": "Sotto-categoria",
+    "deleteItem": "Elimina voce",
+    "editItem": "Modifica voce",
+    "itemSuccessfullyUpdated": "Voce aggiornata con successo",
+    "unableUpdateVoice": "Impossibile eliminare la voce",
+    "type": "Tipo"
   }
 }
