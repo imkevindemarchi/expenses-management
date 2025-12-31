@@ -136,6 +136,7 @@
     "editItem": "Modifica voce",
     "itemSuccessfullyUpdated": "Voce aggiornata con successo",
     "unableUpdateVoice": "Impossibile eliminare la voce",
-    "type": "Tipo"
+    "type": "Tipo",
+    "year": "Anno"
   }
 }

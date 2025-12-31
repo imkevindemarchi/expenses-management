@@ -95,6 +95,7 @@ const Expenses: FC = () => {
   setPageTitle(t("expenses"));
   const talbeColumns: IColumn[] = [
     { key: "type", value: t("type") },
+    { key: "year", value: t("year") },
     { key: "category", value: t("category") },
     { key: "sub-category", value: t("subCategory") },
     { key: "value", value: t("value") },

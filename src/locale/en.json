@@ -135,6 +135,7 @@
     "editItem": "Edit item",
     "itemSuccessfullyUpdated": "Vocie successfully updated",
     "unableUpdateVoice": "Unable update the voice",
-    "type": "Type"
+    "type": "Type",
+    "year": "Year"
   }
 }
