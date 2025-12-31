@@ -23,7 +23,7 @@ interface IProps {
   onRowClick?: (data: any) => void;
   onGoPreviousPage?: () => Promise<void>;
   onGoNextPage?: () => Promise<void>;
-  total: number;
+  total?: number;
   isLoading: boolean;
   noFooter?: boolean;
   smallPadding?: boolean;
@@ -146,6 +146,14 @@ const Table: FC<IProps> = ({
                 {columns.map((column: IColumn, index2: number) => {
                   const isEmail: boolean = column.key === "email";
                   const isImageColumn: boolean = column.key === "image";
+                  const isIncoming: boolean = column.key === "incomings";
+                  const isExit: boolean = column.key === "exits";
+                  const isValueGreatherThanZero: boolean =
+                    Number(item[column.key]) > 0;
+                  const value: string =
+                    (isExit || isIncoming) && isValueGreatherThanZero
+                      ? `€ ${item[column.key]}`
+                      : item[column.key];
 
                   return isImageColumn ? (
                     <td key={index2} className="p-5">
@@ -167,10 +175,16 @@ const Table: FC<IProps> = ({
                     >
                       <span
                         className={`transition-all duration-300 ${
-                          isEmail ? "text-primary" : "text-white"
+                          isEmail
+                            ? "text-primary"
+                            : isIncoming && isValueGreatherThanZero
+                            ? "text-incomings"
+                            : isExit && isValueGreatherThanZero
+                            ? "text-exits"
+                            : "text-white"
                         }`}
                       >
-                        {item[column.key]}
+                        {value}
                       </span>
                     </td>
                   );

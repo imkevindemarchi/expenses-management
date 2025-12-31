@@ -9,6 +9,8 @@ module.exports = {
       primary: "#3Bcc3d",
       white: "#ffffff",
       red: "#ff0000",
+      incomings: "#FFE875",
+      exits: "#FF7575",
     },
     screens: {
       desktop: { min: "1500px" },
