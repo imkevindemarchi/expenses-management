@@ -81,6 +81,8 @@ const Summary = () => {
       "#FFED75",
     ],
   };
+  const isData: boolean =
+    elabDoughnutChartData.data && elabDoughnutChartData.data.length > 0;
 
   setPageTitle(t("summary"));
 
@@ -286,7 +288,7 @@ const Summary = () => {
     </div>
   );
 
-  const doghnutChart = (
+  const doghnutChart = isData && (
     <div className="flex w-full mobile:justify-center">
       <LiquidGlass className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-60 mobile:w-60">
         <DoughnutChart
