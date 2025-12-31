@@ -31,8 +31,8 @@ interface IFilters {
 
 type TTableItem = {
   month: string;
-  incomings: string;
-  exits: string;
+  incomings: number;
+  exits: number;
 };
 
 const YearSummary: FC = () => {
@@ -117,13 +117,11 @@ const YearSummary: FC = () => {
       const totalIncomingsMonth: number = getTotalIncomingsMonth(
         Number(month.id)
       );
-      const totalExpensesMonthLabel: string = `€ ${totalExpensesMonth}`;
-      const totalIncomingsMonthLabel: string = `€ ${totalIncomingsMonth}`;
 
       data.push({
         month: t(month.label),
-        incomings: totalExpensesMonthLabel,
-        exits: totalIncomingsMonthLabel,
+        incomings: totalExpensesMonth,
+        exits: totalIncomingsMonth,
       });
     });
 
@@ -228,12 +226,11 @@ const YearSummary: FC = () => {
   ];
 
   const table = tableData && tableData.length > 0 && (
-    <LiquidGlass>
+    <LiquidGlass blur={100}>
       <Table
         isLoading={isLoading}
         data={tableData}
         columns={columns}
-        total={10}
         noFooter
         smallPadding
       />
@@ -241,7 +238,11 @@ const YearSummary: FC = () => {
   );
 
   const graphs = (
-    <LiquidGlass borderRadius={20} className="p-10 mobile:p-5 h-full">
+    <LiquidGlass
+      blur={100}
+      borderRadius={20}
+      className="p-10 mobile:p-5 h-full"
+    >
       <BarsChart data={barsChartData} labels={barsChartLabels} />
     </LiquidGlass>
   );

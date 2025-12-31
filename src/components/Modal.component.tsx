@@ -69,7 +69,7 @@ const Modal: FC<IProps> = ({
   return isOpen ? (
     <Backdrop>
       <LiquidGlass
-        blur={10}
+        blur={50}
         borderRadius={isMobile ? 20 : 50}
         className="absolute p-10 flex flex-col gap-5 min-w-[35%] mobile:max-w-[90%] mobile:p-5"
       >

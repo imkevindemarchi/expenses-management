@@ -82,7 +82,9 @@ const Summary = () => {
     ],
   };
   const isData: boolean =
-    elabDoughnutChartData.data && elabDoughnutChartData.data.length > 0;
+    elabDoughnutChartData.data &&
+    elabDoughnutChartData.data.length > 0 &&
+    elabDoughnutChartData.data[0] !== 0;
 
   setPageTitle(t("summary"));
 
@@ -312,6 +314,7 @@ const Summary = () => {
                 {category.label}
               </span>
               <LiquidGlass
+                blur={100}
                 borderRadius={20}
                 className="p-10 flex flex-col gap-2"
               >
