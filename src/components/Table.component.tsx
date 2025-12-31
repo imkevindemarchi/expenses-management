@@ -148,10 +148,11 @@ const Table: FC<IProps> = ({
                   const isImageColumn: boolean = column.key === "image";
                   const isIncoming: boolean = column.key === "incomings";
                   const isExit: boolean = column.key === "exits";
+                  const isValue: boolean = column.key === "value";
                   const isValueGreatherThanZero: boolean =
                     Number(item[column.key]) > 0;
                   const value: string =
-                    (isExit || isIncoming) && isValueGreatherThanZero
+                    (isExit || isIncoming || isValue) && isValueGreatherThanZero
                       ? `€ ${item[column.key]}`
                       : item[column.key];
 

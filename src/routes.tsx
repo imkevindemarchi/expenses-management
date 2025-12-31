@@ -13,6 +13,7 @@ import {
   Summary,
   Settings,
   YearSummary,
+  Expenses,
 } from "./pages";
 
 export type TRoute = {
@@ -44,6 +45,11 @@ export const ROUTES: TRoute[] = [
     path: "/year-summary",
     name: "year-summary",
     element: <YearSummary />,
+  },
+  {
+    path: "/expenses",
+    name: "expenses",
+    element: <Expenses />,
   },
   {
     path: "/categories",
