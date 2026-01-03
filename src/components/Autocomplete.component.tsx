@@ -41,6 +41,7 @@ interface IProps {
   error?: TValidation;
   data: IAutocompleteValue[];
   showAllOptions?: boolean;
+  zIndex?: number;
 }
 
 const Autocomplete: FC<IProps> = ({
@@ -57,6 +58,7 @@ const Autocomplete: FC<IProps> = ({
   error = { isValid: true },
   data,
   showAllOptions,
+  zIndex = 800,
 }) => {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLDivElement>(null);
@@ -103,10 +105,10 @@ const Autocomplete: FC<IProps> = ({
   }, []);
 
   return (
-    <div style={{ zIndex: 800 }} className="flex flex-col gap-2 w-full">
+    <div style={{ zIndex }} className="flex flex-col gap-2 w-full">
       <LiquidGlass
         ref={inputRef}
-        zIndex={800}
+        zIndex={zIndex}
         className={`flex flex-col gap-2 px-5 py-3 ${className}`}
       >
         <div className="flex flex-row gap-2 items-center relative">
