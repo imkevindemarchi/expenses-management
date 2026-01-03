@@ -275,6 +275,7 @@ const Summary = () => {
           }
           data={_MONTHS}
           showAllOptions
+          zIndex={0}
         />
       </Grid>
     </Grid>
