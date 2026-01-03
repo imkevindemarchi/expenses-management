@@ -244,7 +244,7 @@ const Summary = () => {
           total += item.value;
       });
 
-      data.push(total);
+      total > 0 && data.push(total);
       total > 0 && labels.push(category.label);
     });
 
@@ -275,7 +275,6 @@ const Summary = () => {
           }
           data={_MONTHS}
           showAllOptions
-          zIndex={0}
         />
       </Grid>
     </Grid>
