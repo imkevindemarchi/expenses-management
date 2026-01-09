@@ -226,7 +226,7 @@ const YearSummary: FC = () => {
   ];
 
   const table = tableData && tableData.length > 0 && (
-    <LiquidGlass blur={100}>
+    <LiquidGlass>
       <Table
         isLoading={isLoading}
         data={tableData}

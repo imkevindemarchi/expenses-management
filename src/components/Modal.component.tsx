@@ -18,6 +18,7 @@ interface IProps {
   submitButtonText?: string;
   onSubmit?: () => void;
   onClose?: () => void;
+  className?: string;
 }
 
 const Modal: FC<IProps> = ({
@@ -29,6 +30,7 @@ const Modal: FC<IProps> = ({
   submitButtonText = "save",
   onSubmit,
   onClose,
+  className,
 }) => {
   const { t } = useTranslation();
   const isMobile: boolean = window.matchMedia("(max-width: 768px)").matches;
@@ -71,7 +73,7 @@ const Modal: FC<IProps> = ({
       <LiquidGlass
         blur={50}
         borderRadius={isMobile ? 20 : 50}
-        className="absolute p-10 flex flex-col gap-5 min-w-[35%] mobile:max-w-[90%] mobile:p-5"
+        className={`absolute p-10 flex flex-col gap-5 min-w-[35%] mobile:max-w-[90%] mobile:p-5 ${className}`}
       >
         {header}
         {children}

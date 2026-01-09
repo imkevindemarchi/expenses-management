@@ -249,6 +249,7 @@ const SubCategory: FC = () => {
       <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
         {label}
         {category}
+        <span>ciao</span>
         {button}
       </LiquidGlass>
     </form>

@@ -252,6 +252,27 @@ const Summary = () => {
     setDoughnutChartLabels(labels);
   }
 
+  function checkCategoryHasValues(category: TCategory): boolean {
+    let categoryHasValues: boolean = false;
+
+    items?.forEach((item: TItem) => {
+      if (item.category_id === category.id && item.value !== 0)
+        categoryHasValues = true;
+    });
+
+    return categoryHasValues;
+  }
+
+  function getCategoryTotal(category: TCategory): string {
+    let total: number = 0;
+
+    items?.forEach((item: TItem) => {
+      if (item.category_id === category.id) total += item.value;
+    });
+
+    return `(€${total})`;
+  }
+
   const header = (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, md: 2 }}>
@@ -293,7 +314,7 @@ const Summary = () => {
 
   const doghnutChart = isData && (
     <div className="flex w-full mobile:justify-center">
-      <LiquidGlass className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-60 mobile:w-60">
+      <LiquidGlass className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-full mobile:w-full">
         <DoughnutChart
           data={elabDoughnutChartData}
           labels={doughnutChartLabels}
@@ -307,43 +328,49 @@ const Summary = () => {
       {categories?.map((category: TCategory, index: number) => {
         const filteredSubCategories: TSubCategory[] =
           getSubCategories(category);
+        const isCategoryVisible: boolean = checkCategoryHasValues(category);
+        const label: string = `${category.label} ${getCategoryTotal(category)}`;
 
         return (
-          <Grid key={index} size={{ xs: 12, md: 4 }}>
-            <div className="flex flex-col gap-5">
-              <span className="text-white font-bold uppercase text-center">
-                {category.label}
-              </span>
-              <LiquidGlass
-                blur={100}
-                borderRadius={20}
-                className="p-10 flex flex-col gap-2"
-              >
-                {filteredSubCategories.map(
-                  (filteredSubCategory: TSubCategory, index2: number) => {
-                    const filteredItems: TItem[] =
-                      getItems(filteredSubCategory);
-                    const itemsTotal: number = getItemsTotal(filteredItems);
-                    const itemsTotalString: string = `€${itemsTotal}`;
+          isCategoryVisible && (
+            <Grid key={index} size={{ xs: 12, md: 4 }}>
+              <div className="flex flex-col gap-5">
+                <span className="text-white font-bold uppercase text-center">
+                  {label}
+                </span>
+                <LiquidGlass
+                  borderRadius={20}
+                  className="p-10 flex flex-col gap-2"
+                >
+                  {filteredSubCategories.map(
+                    (filteredSubCategory: TSubCategory, index2: number) => {
+                      const filteredItems: TItem[] =
+                        getItems(filteredSubCategory);
+                      const itemsTotal: number = getItemsTotal(filteredItems);
+                      const itemsTotalString: string = `€${itemsTotal}`;
+                      const isItemVisible: boolean = itemsTotal !== 0;
 
-                    return (
-                      <LiquidGlass
-                        key={index2}
-                        className="flex justify-between px-5 py-2"
-                      >
-                        <span className="text-white">
-                          {filteredSubCategory.label}
-                        </span>
-                        <span className="text-wrap font-bold text-white">
-                          {itemsTotalString}
-                        </span>
-                      </LiquidGlass>
-                    );
-                  }
-                )}
-              </LiquidGlass>
-            </div>
-          </Grid>
+                      return (
+                        isItemVisible && (
+                          <LiquidGlass
+                            key={index2}
+                            className="flex justify-between px-5 py-2"
+                          >
+                            <span className="text-white">
+                              {filteredSubCategory.label}
+                            </span>
+                            <span className="text-wrap font-bold text-white">
+                              {itemsTotalString}
+                            </span>
+                          </LiquidGlass>
+                        )
+                      );
+                    }
+                  )}
+                </LiquidGlass>
+              </div>
+            </Grid>
+          )
         );
       })}
     </Grid>

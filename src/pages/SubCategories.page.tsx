@@ -252,7 +252,7 @@ const SubCategories: FC = () => {
       <div className="flex flex-col gap-5">
         {title}
         {header}
-        <LiquidGlass blur={100} className="flex flex-col gap-10">
+        <LiquidGlass className="flex flex-col gap-10">
           {tableComponent}
         </LiquidGlass>
       </div>

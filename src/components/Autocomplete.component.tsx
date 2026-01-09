@@ -130,45 +130,41 @@ const Autocomplete: FC<IProps> = ({
           />
           {endIcon}
           {hasOptions && (
-            <div
+            <LiquidGlass
+              zIndex={999}
               style={{ left: "50%", transform: "translate(-50%, 0)" }}
-              className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
+              blur={100}
+              borderRadius={50}
+              backgroundColor="rgba(255, 255, 255, 0.5)"
+              className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center w-full py-2 z-800 min-w-40 ${
                 dropdown && "top-12 opacity-100 pointer-events-auto"
               }`}
             >
-              <LiquidGlass
-                borderRadius={20}
-                backgroundColor="rgba(255, 255, 255, 0.5)"
-                className="flex flex-col gap-5 justify-center items-center w-full py-2 z-800"
-              >
-                <div className="flex flex-col gap-2 max-h-60 overflow-y-scroll">
-                  {elabData && elabData.length > 0 ? (
-                    elabData.map(
-                      (element: IAutocompleteValue, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            onClick={() => {
-                              onChange(element);
-                              setDropdown(false);
-                            }}
-                            className="cursor-pointer px-5 py-2 hover:opacity-50 transition-all duration-300"
-                          >
-                            <span className="text-white whitespace-nowrap">
-                              {element.label}
-                            </span>
-                          </div>
-                        );
-                      }
-                    )
-                  ) : (
-                    <span className="text-white whitespace-nowrap px-5 py-2">
-                      {t("noResultFound")}
-                    </span>
-                  )}
-                </div>
-              </LiquidGlass>
-            </div>
+              <div className="flex flex-col gap-2 max-h-60 overflow-y-scroll">
+                {elabData && elabData.length > 0 ? (
+                  elabData.map((element: IAutocompleteValue, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          onChange(element);
+                          setDropdown(false);
+                        }}
+                        className="cursor-pointer px-5 py-2 hover:opacity-50 transition-all duration-300"
+                      >
+                        <span className="text-white whitespace-nowrap">
+                          {element.label}
+                        </span>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <span className="text-white whitespace-nowrap px-5 py-2">
+                    {t("noResultFound")}
+                  </span>
+                )}
+              </div>
+            </LiquidGlass>
           )}
         </div>
       </LiquidGlass>

@@ -12,7 +12,7 @@ export type TLoaderContext = {
 export const LoaderContext = createContext<TLoaderContext | null>(null);
 
 export const LoaderProvider = ({ children }: IProps): JSX.Element => {
-  const [state, setState] = useState<boolean>(false);
+  const [state, setState] = useState<boolean>(true);
 
   return (
     <LoaderContext.Provider value={{ state, setState }}>

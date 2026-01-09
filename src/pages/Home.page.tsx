@@ -117,8 +117,6 @@ const Home: FC = () => {
   setPageTitle(t("home"));
 
   async function getData(): Promise<void> {
-    setIsLoading(true);
-
     let doesCategoriesExist: boolean = false;
     let doesSubCategoriesExist: boolean = false;
 
@@ -224,12 +222,12 @@ const Home: FC = () => {
       {categories && categories.length > 0 ? (
         filteredCategories?.map((category: TCategory, index: number) => {
           return (
-            <Grid key={index} size={{ xs: 6, md: 3 }}>
+            <Grid key={index} size={{ xs: 12, md: 3 }}>
               <LiquidGlass
                 onClick={() => onCategoryClick(category)}
                 className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
               >
-                <span className="text-white text-lg mobile:text-base">
+                <span className="text-white text-lg">
                   {category.label}
                 </span>
               </LiquidGlass>
@@ -257,12 +255,12 @@ const Home: FC = () => {
           (subCategory: TSubCategory, index: number) => {
             return (
               subCategory.category_id === selectedCategory?.id && (
-                <Grid key={index} size={{ xs: 6, md: 3 }}>
+                <Grid key={index} size={{ xs: 12, md: 3 }}>
                   <LiquidGlass
                     onClick={() => onSubCategoryClick(subCategory)}
                     className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
                   >
-                    <span className="text-white text-lg mobile:text-base">
+                    <span className="text-white text-lg">
                       {subCategory.label}
                     </span>
                   </LiquidGlass>
@@ -294,6 +292,7 @@ const Home: FC = () => {
         setFormData(DEFAULT_FORM_DATA);
       }}
       onSubmit={onSubmit}
+      className="mobile:mt-10"
     >
       <div className="flex flex-col gap-5">
         <span className="text-white text-base">{t("addItemDescription")}</span>
@@ -383,7 +382,7 @@ const Home: FC = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-5 mobile:min-h-[150vh]">
+      <div className="flex flex-col gap-5">
         {!isFirstTimeOnWebsite && (
           <span className="text-white text-lg">{title}</span>
         )}

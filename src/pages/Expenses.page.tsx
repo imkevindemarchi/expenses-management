@@ -279,6 +279,7 @@ const Expenses: FC = () => {
       title={t("editItem")}
       onCancel={() => setEditModal(DEFAULT_EDIT_MODAL)}
       onSubmit={onEdit}
+      className="mobile:mt-10"
     >
       <div className="flex flex-col gap-5">
         <span className="text-white text-base">{t("addItemDescription")}</span>
@@ -376,7 +377,7 @@ const Expenses: FC = () => {
     <>
       <div className="flex flex-col gap-5">
         {title}
-        <LiquidGlass blur={100} className="flex flex-col gap-10">
+        <LiquidGlass className="flex flex-col gap-10">
           {tableComponent}
         </LiquidGlass>
       </div>
