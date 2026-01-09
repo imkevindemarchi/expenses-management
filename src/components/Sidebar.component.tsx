@@ -91,7 +91,7 @@ const Sidebar: FC = () => {
       <img
         src={logoImg}
         alt={t("imgNotFound")}
-        className="w-28 h-28 hover:opacity-50 transition-all duration-300 cursor-pointer"
+        className="w-24 h-24 hover:opacity-50 transition-all duration-300 cursor-pointer"
       />
     </LiquidGlass>
   );
@@ -147,7 +147,7 @@ const Sidebar: FC = () => {
       >
         <LiquidGlass
           borderRadius={30}
-          className="flex flex-col gap-5 justify-center items-center p-5"
+          className="flex flex-col gap-2 justify-center items-center p-5"
         >
           <span className="text-white underline cursor-default">
             {userData?.email}

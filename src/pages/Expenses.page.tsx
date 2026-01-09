@@ -244,7 +244,7 @@ const Expenses: FC = () => {
     if (event.key === "Enter") await onEdit();
   }
 
-  const title = <span className="text-white text-2xl">{t("expenses")}</span>;
+  const title = <span className="text-white text-2xl mobile:text-center">{t("expenses")}</span>;
 
   const tableComponent = (
     <Table

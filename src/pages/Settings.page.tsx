@@ -151,6 +151,12 @@ const Settings = () => {
     });
   }
 
+  const title = (
+    <span className="text-white text-2xl mobile:text-center">
+      {t("settings")}
+    </span>
+  );
+
   const form = (
     <form
       onSubmit={onSubmit}
@@ -197,7 +203,7 @@ const Settings = () => {
 
   return (
     <div className="flex flex-col gap-10 pt-10">
-      <span className="text-lg text-white">{t("editSettings")}</span>
+      {title}
       {form}
     </div>
   );

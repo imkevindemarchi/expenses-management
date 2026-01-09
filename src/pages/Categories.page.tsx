@@ -147,7 +147,11 @@ const Categories: FC = () => {
     navigate(`${pathname}/new`);
   }
 
-  const title = <span className="text-white text-2xl">{t("categories")}</span>;
+  const title = (
+    <span className="text-white text-2xl mobile:text-center">
+      {t("categories")}
+    </span>
+  );
 
   const header = (
     <div className="w-full flex justify-between items-center gap-5">

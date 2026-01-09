@@ -203,10 +203,7 @@ const Category: FC = () => {
       onSubmit={onSubmit}
       className="flex flex-col gap-5 justify-center items-center"
     >
-      <LiquidGlass
-        // borderRadius={20}
-        className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10"
-      >
+      <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
         {label}
         {button}
       </LiquidGlass>
@@ -221,7 +218,7 @@ const Category: FC = () => {
 
   return (
     <div className="flex flex-col gap-10 pt-10">
-      <span className="text-lg text-white">
+      <span className="text-lg text-white mobile:text-center">
         {t(
           isEditMode
             ? "compileFormToUpdateCategory"

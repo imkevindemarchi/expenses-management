@@ -227,9 +227,7 @@ const Home: FC = () => {
                 onClick={() => onCategoryClick(category)}
                 className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
               >
-                <span className="text-white text-lg">
-                  {category.label}
-                </span>
+                <span className="text-white text-lg">{category.label}</span>
               </LiquidGlass>
             </Grid>
           );
@@ -384,7 +382,7 @@ const Home: FC = () => {
     <>
       <div className="flex flex-col gap-5">
         {!isFirstTimeOnWebsite && (
-          <span className="text-white text-lg">{title}</span>
+          <span className="text-white text-lg mobile:text-center">{title}</span>
         )}
         {step === 2 && <GoBackButton onClick={() => setStep(step - 1)} />}
         {!isFirstTimeOnWebsite && (

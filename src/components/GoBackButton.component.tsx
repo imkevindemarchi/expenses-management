@@ -21,11 +21,10 @@ const GoBackButton: FC<IProps> = ({ onClick }) => {
   return (
     <LiquidGlass
       borderRadius={100}
-      className="w-10 h-10 flex justify-center items-center "
+      className="w-10 h-10 flex justify-center items-center cursor-pointer hover:opacity-50"
+      onClick={() => (onClick ? onClick() : onGoBack())}
     >
-      <button type="button" onClick={() => (onClick ? onClick() : onGoBack())}>
-        <ArrowLeftIcon className="text-white text-2xl" />
-      </button>
+      <ArrowLeftIcon className="text-white text-2xl" />
     </LiquidGlass>
   );
 };

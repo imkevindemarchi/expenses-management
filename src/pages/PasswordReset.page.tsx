@@ -151,7 +151,7 @@ const PasswordReset: FC = () => {
 
   return (
     <div className="flex flex-col gap-10 pt-10">
-      <span className="text-lg text-white">
+      <span className="text-lg text-white mobile:text-center">
         {t("compileFormToResetPassword")}
       </span>
       {form}

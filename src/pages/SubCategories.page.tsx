@@ -165,7 +165,9 @@ const SubCategories: FC = () => {
   }
 
   const title = (
-    <span className="text-white text-2xl">{t("subCategories")}</span>
+    <span className="text-white text-2xl mobile:text-center">
+      {t("subCategories")}
+    </span>
   );
 
   const header = (
