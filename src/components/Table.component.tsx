@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 // Assets
 import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon } from "../assets/icons";
 import LiquidGlass from "./LiquidGlass.component";
+import { format, parse } from "date-fns";
 
 export interface IColumn {
   key: string;
@@ -144,48 +145,154 @@ const Table: FC<IProps> = ({
                   </td>
                 )}
                 {columns.map((column: IColumn, index2: number) => {
-                  const isEmail: boolean = column.key === "email";
+                  const isEmailColumn: boolean = column.key === "email";
+                  const isDateColumn: boolean = column.key === "date";
                   const isImageColumn: boolean = column.key === "image";
-                  const isIncoming: boolean = column.key === "incomings";
-                  const isExit: boolean = column.key === "exits";
-                  const isValue: boolean = column.key === "value";
-                  const isValueGreatherThanZero: boolean =
-                    Number(item[column.key]) > 0;
-                  const value: string =
-                    (isExit || isIncoming || isValue) && isValueGreatherThanZero
-                      ? `€ ${item[column.key]}`
-                      : item[column.key];
+                  const isIncomingColumn: boolean = column.key === "incomings";
+                  const isExitColumn: boolean = column.key === "exits";
+                  const isValueZero: boolean = Number(item[column.key]) === 0;
+                  const isTypeColumn: boolean = column.key === "type";
+                  const isValueColumn: boolean = column.key === "value";
+                  const isMonthColumn: boolean = column.key === "month";
 
-                  return isImageColumn ? (
-                    <td key={index2} className="p-5">
-                      <LiquidGlass className="w-40 flex justify-center items-center p-5">
-                        <img
-                          src={`${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/images/${item?.id}`}
-                          alt={t("imgNotFound")}
-                          style={{ borderRadius: 30 }}
-                          className="h-24 w-full object-cover"
-                        />
-                      </LiquidGlass>
-                    </td>
-                  ) : (
+                  if (isEmailColumn) {
+                    const value: string = item[column.key];
+                    return (
+                      <td
+                        key={index2}
+                        className={`whitespace-nowrap ${
+                          !smallPadding ? "p-5" : "p-3"
+                        }`}
+                      >
+                        <span className="transition-all duration-300 text-primary">
+                          <LiquidGlass
+                            backgroundColor="rgba(0, 0, 0, 0.5)"
+                            className="flex justify-center items-center w-fit px-5 py-2"
+                          >
+                            {value}
+                          </LiquidGlass>
+                        </span>
+                      </td>
+                    );
+                  }
+
+                  if (isDateColumn) {
+                    const dateValue: Date = parse(
+                      item[column.key],
+                      "yyyy-MM-dd",
+                      new Date()
+                    );
+                    const elabDate: string = format(dateValue, "dd/MM/yyyy");
+
+                    return (
+                      <td>
+                        <span className="text-white">{elabDate}</span>
+                      </td>
+                    );
+                  }
+
+                  if (isImageColumn)
+                    return (
+                      <td key={index2} className="p-5">
+                        <LiquidGlass className="w-40 flex justify-center items-center p-5">
+                          <img
+                            src={`${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/images/${item?.id}`}
+                            alt={t("imgNotFound")}
+                            style={{ borderRadius: 30 }}
+                            className="h-24 w-full object-cover"
+                          />
+                        </LiquidGlass>
+                      </td>
+                    );
+
+                  if (isIncomingColumn)
+                    return isValueZero ? (
+                      <td />
+                    ) : (
+                      <td
+                        className={`whitespace-nowrap ${
+                          !smallPadding ? "p-5" : "p-3"
+                        }`}
+                      >
+                        <LiquidGlass
+                          backgroundColor="rgba(0, 0, 0, 0.5)"
+                          className="flex justify-center items-center w-fit px-5 py-2"
+                        >
+                          <span className="text-incomings">
+                            {`€ ${item[column.key]}`}
+                          </span>
+                        </LiquidGlass>
+                      </td>
+                    );
+
+                  if (isExitColumn)
+                    return isValueZero ? (
+                      <td />
+                    ) : (
+                      <td
+                        className={`whitespace-nowrap ${
+                          !smallPadding ? "p-5" : "p-3"
+                        }`}
+                      >
+                        <LiquidGlass
+                          backgroundColor="rgba(0, 0, 0, 0.5)"
+                          className="flex justify-center items-center w-fit px-5 py-2"
+                        >
+                          <span className="text-exits">
+                            {`€ ${item[column.key]}`}
+                          </span>
+                        </LiquidGlass>
+                      </td>
+                    );
+
+                  if (isTypeColumn) {
+                    return (
+                      <td
+                        className={`whitespace-nowrap ${
+                          !smallPadding ? "p-5" : "p-3"
+                        }`}
+                      >
+                        <LiquidGlass
+                          backgroundColor="rgba(0, 0, 0, 0.5)"
+                          className="flex justify-center items-center w-fit px-5 py-2"
+                        >
+                          <span
+                            className={`${
+                              item[column.key] === "Entrata"
+                                ? "text-incomings"
+                                : "text-exits"
+                            } `}
+                          >
+                            {item[column.key]}
+                          </span>
+                        </LiquidGlass>
+                      </td>
+                    );
+                  }
+
+                  if (isMonthColumn)
+                    return (
+                      <td
+                        className={`whitespace-nowrap ${
+                          !smallPadding ? "p-5" : "p-3"
+                        }`}
+                      >
+                        <span className="text-white">
+                          {t(item[column.key])}
+                        </span>
+                      </td>
+                    );
+
+                  return (
                     <td
-                      key={index2}
                       className={`whitespace-nowrap ${
                         !smallPadding ? "p-5" : "p-3"
                       }`}
                     >
-                      <span
-                        className={`transition-all duration-300 ${
-                          isEmail
-                            ? "text-primary"
-                            : isIncoming && isValueGreatherThanZero
-                            ? "text-incomings"
-                            : isExit && isValueGreatherThanZero
-                            ? "text-exits"
-                            : "text-white"
-                        }`}
-                      >
-                        {value}
+                      <span className="text-white">
+                        {isValueColumn
+                          ? `€ ${item[column.key]}`
+                          : item[column.key]}
                       </span>
                     </td>
                   );

@@ -100,6 +100,8 @@ const Expenses: FC = () => {
   setPageTitle(t("expenses"));
   const talbeColumns: IColumn[] = [
     { key: "type", value: t("type") },
+    { key: "date", value: t("creationDate") },
+    { key: "month", value: t("month") },
     { key: "year", value: t("year") },
     { key: "category", value: t("category") },
     { key: "sub-category", value: t("subCategory") },
@@ -127,7 +129,7 @@ const Expenses: FC = () => {
                   )
                 ).then((itemsRes: THTTPResponse) => {
                   if (itemsRes && itemsRes.hasSuccess) {
-                    const items: any[] = itemsRes.data.map((item: TItem) => {
+                    const items: TItem[] = itemsRes.data.map((item: TItem) => {
                       const category: TCategory = categoriesRes.data.find(
                         (category: TCategory) =>
                           category.id === item.category_id
@@ -137,12 +139,17 @@ const Expenses: FC = () => {
                           (subCategory: TSubCategory) =>
                             subCategory.id === item.sub_category_id
                         ) as TSubCategory;
+                      const month = MONTHS.find(
+                        (month: IAutocompleteValue) =>
+                          month.id === item.month_id
+                      );
 
                       return {
                         ...item,
                         type: t(item.type),
                         category: category?.label,
                         "sub-category": subCategory?.label,
+                        month: month?.label,
                       };
                     });
                     setTableData(items);
@@ -174,12 +181,16 @@ const Expenses: FC = () => {
               (subCategory: TSubCategory) =>
                 subCategory.id === item.sub_category_id
             ) as TSubCategory;
+            const month = MONTHS.find(
+              (month: IAutocompleteValue) => month.id === item.month_id
+            );
 
             return {
               ...item,
               type: t(item.type),
               category: category?.label,
               "sub-category": subCategory?.label,
+              month: month?.label,
             };
           });
           setTableData(items);

@@ -287,8 +287,8 @@ const YearSummary: FC = () => {
       <span className="text-3xl text-white">{getTotalExpensesLabel()}</span>
       <span className="text-3xl text-white">{getTotalIncomingsLabel()}</span>
       <Grid container columnSpacing={5} rowSpacing={5}>
-        <Grid size={{ xs: 12, md: 9 }}>{graphs}</Grid>
-        <Grid size={{ xs: 12, md: 3 }}>{table}</Grid>
+        <Grid size={{ xs: 12, md: 8 }}>{graphs}</Grid>
+        <Grid size={{ xs: 12, md: 4 }}>{table}</Grid>
       </Grid>
     </div>
   );
