@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: IProps): JSX.Element => {
     onLoad();
 
     // eslint-disable-next-line
-  }, []);
+  }, [isUserAuthenticated]);
 
   return (
     <AuthContext.Provider

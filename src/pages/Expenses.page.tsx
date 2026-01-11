@@ -111,7 +111,6 @@ const Expenses: FC = () => {
   async function getData(): Promise<void> {
     setIsLoading(true);
 
-    console.log("🚀 ~ isFirstLoad:", isFirstLoad);
     if (isFirstLoad)
       await Promise.resolve(CATEGORY_API.getAll(userData?.id as string)).then(
         async (categoriesRes: THTTPResponse) => {
