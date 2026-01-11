@@ -11,6 +11,7 @@ import Navbar from "./Navbar.component";
 import Sidebar from "./Sidebar.component";
 import Hamburger from "./Hamburger.component";
 import Breadcrumb from "./Breadcrumb.component";
+import BackToTopButton from "./BackToTopButton.component";
 
 // Contexts
 import { SidebarContext, TSidebarContext } from "../providers/sidebar.provider";
@@ -63,11 +64,14 @@ const Layout: FC<IProps> = ({ children }) => {
     </div>
   );
 
+  const backToTopButton = <BackToTopButton />;
+
   return (
     <div className="w-full h-full relative">
       {isLoginPage ? loginLayout : layout}
       {loader}
       {popup}
+      {backToTopButton}
     </div>
   );
 };
