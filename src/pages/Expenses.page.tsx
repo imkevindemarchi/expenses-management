@@ -91,6 +91,11 @@ const Expenses: FC = () => {
   const DEFAULT_MONTH: IAutocompleteValue = _MONTHS.find(
     (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1
   ) as IAutocompleteValue;
+  const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
+  const [categories, setCategories] = useState<TCategory[] | null>(null);
+  const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
+    null
+  );
 
   setPageTitle(t("expenses"));
   const talbeColumns: IColumn[] = [
@@ -106,52 +111,87 @@ const Expenses: FC = () => {
   async function getData(): Promise<void> {
     setIsLoading(true);
 
-    await Promise.resolve(CATEGORY_API.getAll(userData?.id as string)).then(
-      async (categoriesRes: THTTPResponse) => {
-        if (categoriesRes && categoriesRes.hasSuccess)
-          await Promise.resolve(
-            SUB_CATEGORY_API.getAll(userData?.id as string)
-          ).then(async (subCategoriesRes: THTTPResponse) => {
-            if (subCategoriesRes && subCategoriesRes.hasSuccess)
-              await Promise.resolve(
-                ITEM_API.getAllWithFilters(
-                  table.from,
-                  table.to,
-                  userData?.id as string
-                )
-              ).then((itemsRes: THTTPResponse) => {
-                if (itemsRes && itemsRes.hasSuccess) {
-                  const items: any[] = itemsRes.data.map((item: TItem) => {
-                    const category: TCategory = categoriesRes.data.find(
-                      (category: TCategory) => category.id === item.category_id
-                    ) as TCategory;
-                    const subCategory: TSubCategory =
-                      subCategoriesRes.data.find(
-                        (subCategory: TSubCategory) =>
-                          subCategory.id === item.sub_category_id
-                      ) as TSubCategory;
+    console.log("🚀 ~ isFirstLoad:", isFirstLoad);
+    if (isFirstLoad)
+      await Promise.resolve(CATEGORY_API.getAll(userData?.id as string)).then(
+        async (categoriesRes: THTTPResponse) => {
+          if (categoriesRes && categoriesRes.hasSuccess) {
+            await Promise.resolve(
+              SUB_CATEGORY_API.getAll(userData?.id as string)
+            ).then(async (subCategoriesRes: THTTPResponse) => {
+              if (subCategoriesRes && subCategoriesRes.hasSuccess) {
+                await Promise.resolve(
+                  ITEM_API.getAllWithFilters(
+                    table.from,
+                    table.to,
+                    userData?.id as string
+                  )
+                ).then((itemsRes: THTTPResponse) => {
+                  if (itemsRes && itemsRes.hasSuccess) {
+                    const items: any[] = itemsRes.data.map((item: TItem) => {
+                      const category: TCategory = categoriesRes.data.find(
+                        (category: TCategory) =>
+                          category.id === item.category_id
+                      ) as TCategory;
+                      const subCategory: TSubCategory =
+                        subCategoriesRes.data.find(
+                          (subCategory: TSubCategory) =>
+                            subCategory.id === item.sub_category_id
+                        ) as TSubCategory;
 
-                    return {
-                      ...item,
-                      type: t(item.type),
-                      category: category?.label,
-                      "sub-category": subCategory?.label,
-                    };
-                  });
-                  setTableData(items);
-                  setTable((prevState) => {
-                    return {
-                      ...prevState,
-                      total: itemsRes?.totalRecords as number,
-                    };
-                  });
-                } else openPopup(t("unableLoadItems"), "error");
-              });
-            else openPopup(t("unableLoadSubCategories"), "error");
+                      return {
+                        ...item,
+                        type: t(item.type),
+                        category: category?.label,
+                        "sub-category": subCategory?.label,
+                      };
+                    });
+                    setTableData(items);
+                    setTable((prevState) => {
+                      return {
+                        ...prevState,
+                        total: itemsRes?.totalRecords as number,
+                      };
+                    });
+                  } else openPopup(t("unableLoadItems"), "error");
+                });
+                setSubCategories(subCategoriesRes.data);
+              } else openPopup(t("unableLoadSubCategories"), "error");
+            });
+            setCategories(categoriesRes.data);
+          } else openPopup(t("unableLoadCategories"), "error");
+        }
+      );
+    else
+      await Promise.resolve(
+        ITEM_API.getAllWithFilters(table.from, table.to, userData?.id as string)
+      ).then((itemsRes: THTTPResponse) => {
+        if (itemsRes && itemsRes.hasSuccess) {
+          const items: any[] = itemsRes.data.map((item: TItem) => {
+            const category: TCategory = categories?.find(
+              (category: TCategory) => category.id === item.category_id
+            ) as TCategory;
+            const subCategory: TSubCategory = subCategories?.find(
+              (subCategory: TSubCategory) =>
+                subCategory.id === item.sub_category_id
+            ) as TSubCategory;
+
+            return {
+              ...item,
+              type: t(item.type),
+              category: category?.label,
+              "sub-category": subCategory?.label,
+            };
           });
-        else openPopup(t("unableLoadCategories"), "error");
-      }
-    );
+          setTableData(items);
+          setTable((prevState) => {
+            return {
+              ...prevState,
+              total: itemsRes?.totalRecords as number,
+            };
+          });
+        } else openPopup(t("unableLoadItems"), "error");
+      });
 
     setIsLoading(false);
   }
@@ -244,7 +284,11 @@ const Expenses: FC = () => {
     if (event.key === "Enter") await onEdit();
   }
 
-  const title = <span className="text-white text-2xl mobile:text-center">{t("expenses")}</span>;
+  const title = (
+    <span className="text-white text-2xl mobile:text-center">
+      {t("expenses")}
+    </span>
+  );
 
   const tableComponent = (
     <Table
@@ -341,7 +385,10 @@ const Expenses: FC = () => {
   );
 
   useEffect(() => {
-    userData?.id && getData();
+    if (userData?.id) {
+      getData();
+      setIsFirstLoad(false);
+    }
 
     // eslint-disable-next-line
   }, [table.from, table.to, userData?.id]);
