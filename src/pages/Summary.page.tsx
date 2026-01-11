@@ -256,7 +256,12 @@ const Summary = () => {
     let categoryHasValues: boolean = false;
 
     items?.forEach((item: TItem) => {
-      if (item.category_id === category.id && item.value !== 0)
+      if (
+        item.category_id === category.id &&
+        item.value !== 0 &&
+        Number(item.year) === Number(filters.year) &&
+        item.month_id === filters.month.id
+      )
         categoryHasValues = true;
     });
 
@@ -267,7 +272,12 @@ const Summary = () => {
     let total: number = 0;
 
     items?.forEach((item: TItem) => {
-      if (item.category_id === category.id) total += item.value;
+      if (
+        item.category_id === category.id &&
+        Number(item.year) === Number(filters.year) &&
+        item.month_id === filters.month.id
+      )
+        total += item.value;
     });
 
     return `(€${total})`;
@@ -314,7 +324,10 @@ const Summary = () => {
 
   const doghnutChart = isData && (
     <div className="flex w-full mobile:justify-center">
-      <LiquidGlass className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-full mobile:w-full">
+      <LiquidGlass
+        hasBlur={false}
+        className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-full mobile:w-full"
+      >
         <DoughnutChart
           data={elabDoughnutChartData}
           labels={doughnutChartLabels}

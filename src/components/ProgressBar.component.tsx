@@ -9,7 +9,10 @@ interface IProps {
 
 const ProgressBar: FC<IProps> = ({ progress }) => {
   return (
-    <LiquidGlass className="w-[300px] h-4 rounded-full overflow-hidden">
+    <LiquidGlass
+      hasBlur={false}
+      className="w-[300px] h-4 rounded-full overflow-hidden"
+    >
       <div
         className="h-full bg-white transition-all"
         style={{ width: `${progress}%` }}

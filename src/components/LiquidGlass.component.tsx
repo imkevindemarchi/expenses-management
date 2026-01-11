@@ -17,6 +17,7 @@ interface IProps {
   onDragOver?: (event: any) => void;
   onDrop?: () => void;
   style?: any;
+  hasBlur?: boolean;
 }
 
 const LiquidGlass: FC<IProps> = ({
@@ -34,12 +35,13 @@ const LiquidGlass: FC<IProps> = ({
   // Karina's versions
   // backgroundColor = "rgb(0, 0, 0, 0.1)",
   // borderColor = "rgb(0, 0, 0, 0.1)",
-  zIndex = 0,
+  zIndex,
   draggable = false,
   onDragStart,
   onDragOver,
   onDrop,
   style,
+  hasBlur = true,
   ...props
 }) => {
   return (
@@ -54,7 +56,7 @@ const LiquidGlass: FC<IProps> = ({
         background: backgroundColor,
         border: noBorder ? "" : `1px solid ${borderColor}`,
         borderRadius,
-        backdropFilter: `blur(${blur}px)`,
+        backdropFilter: hasBlur && `blur(${blur}px)`,
         borderBottomLeftRadius: borderBottomRadius || borderRadius,
         borderBottomRightRadius: borderBottomRadius || borderRadius,
         zIndex,

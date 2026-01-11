@@ -136,11 +136,11 @@ const Autocomplete: FC<IProps> = ({
               blur={100}
               borderRadius={50}
               backgroundColor="rgba(0, 0, 0, 0.8)"
-              className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center w-full py-2 z-800 min-w-40 ${
+              className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center w-full py-2 z-800 min-w-40 overflow-y-scroll ${
                 dropdown && "top-12 opacity-100 pointer-events-auto"
               }`}
             >
-              <div className="flex flex-col gap-2 max-h-60 overflow-y-scroll">
+              <div className="flex flex-col gap-2 max-h-60">
                 {elabData && elabData.length > 0 ? (
                   elabData.map((element: IAutocompleteValue, index: number) => {
                     return (
