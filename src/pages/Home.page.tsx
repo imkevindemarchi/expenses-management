@@ -180,6 +180,7 @@ const Home: FC = () => {
           category_id: (selectedCategory as TCategory).id as string,
           sub_category_id: (selectedSubCategory as TSubCategory).id as string,
           year: formData.year,
+          date: new Date(),
         };
 
         await Promise.resolve(ITEM_API.create(payload)).then(

@@ -135,6 +135,8 @@
     "itemSuccessfullyUpdated": "Vocie successfully updated",
     "unableUpdateVoice": "Unable update the voice",
     "type": "Type",
-    "year": "Year"
+    "year": "Year",
+    "date": "Date",
+    "creationDate": "Creation date"
   }
 }

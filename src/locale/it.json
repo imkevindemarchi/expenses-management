@@ -136,6 +136,7 @@
     "itemSuccessfullyUpdated": "Voce aggiornata con successo",
     "unableUpdateVoice": "Impossibile eliminare la voce",
     "type": "Tipo",
-    "year": "Anno"
+    "year": "Anno",
+    "creationDate": "Data creazione"
   }
 }
