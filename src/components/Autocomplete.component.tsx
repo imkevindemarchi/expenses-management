@@ -135,7 +135,7 @@ const Autocomplete: FC<IProps> = ({
               style={{ left: "50%", transform: "translate(-50%, 0)" }}
               blur={100}
               borderRadius={50}
-              backgroundColor="rgba(255, 255, 255, 0.5)"
+              backgroundColor="rgba(0, 0, 0, 0.8)"
               className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center w-full py-2 z-800 min-w-40 ${
                 dropdown && "top-12 opacity-100 pointer-events-auto"
               }`}
