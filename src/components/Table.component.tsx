@@ -177,12 +177,14 @@ const Table: FC<IProps> = ({
                   }
 
                   if (isDateColumn) {
-                    const dateValue: Date = parse(
-                      item[column.key],
-                      "yyyy-MM-dd",
-                      new Date()
-                    );
-                    const elabDate: string = format(dateValue, "dd/MM/yyyy");
+                    const dateValue: Date | null = item[column.key]?.includes(
+                      "-"
+                    )
+                      ? parse(item[column.key], "yyyy-MM-dd", new Date())
+                      : null;
+                    const elabDate: string | null = dateValue
+                      ? format(dateValue, "dd/MM/yyyy")
+                      : null;
 
                     return (
                       <td>
