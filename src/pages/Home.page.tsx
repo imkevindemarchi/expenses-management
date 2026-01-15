@@ -97,17 +97,25 @@ const Home: FC = () => {
   const isIncomeType: boolean = formData.type === "income";
   const isExitType: boolean = formData.type === "exit";
   const filteredCategories: TCategory[] =
-    categories?.filter((element: TCategory) => {
-      return element?.label
-        ?.toLowerCase()
-        .startsWith(categoryFilter?.toLowerCase() as string);
-    }) ?? [];
+    categories
+      ?.filter((element: TCategory) => {
+        return element?.label
+          ?.toLowerCase()
+          .startsWith(categoryFilter?.toLowerCase() as string);
+      })
+      .sort((a: TCategory, b: TCategory) =>
+        (a.label ?? "").localeCompare(b.label ?? "")
+      ) ?? [];
   const filteredSubCategories: TSubCategory[] =
-    subCategories?.filter((element: TSubCategory) => {
-      return element?.label
-        ?.toLowerCase()
-        .startsWith(subCategoryFilter?.toLowerCase() as string);
-    }) ?? [];
+    subCategories
+      ?.filter((element: TSubCategory) => {
+        return element?.label
+          ?.toLowerCase()
+          .startsWith(subCategoryFilter?.toLowerCase() as string);
+      })
+      .sort((a: TSubCategory, b: TSubCategory) =>
+        (a.label ?? "").localeCompare(b.label ?? "")
+      ) ?? [];
   const isCloseIconShown: boolean =
     (categories && categories.length > 0 && step === 1) ||
     (subCategories && subCategories.length > 0 && step === 2)
