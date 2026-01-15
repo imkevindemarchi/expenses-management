@@ -225,7 +225,7 @@ const Summary = () => {
         ? (getTotalExits() / getTotalIncomings()) * 100
         : 100;
 
-    return progress;
+    return getTotalExits() > getTotalIncomings() ? 100 : progress;
   }
 
   function buildDoughnutChartData(): void {
