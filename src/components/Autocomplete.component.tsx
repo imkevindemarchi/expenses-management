@@ -17,6 +17,7 @@ import { useClickOutside } from "../hooks";
 
 // Types
 import { TValidation } from "../utils/validation.util";
+import { Z_INDEX } from "../assets/constants";
 
 type TInputType = "text" | "password";
 
@@ -41,7 +42,7 @@ interface IProps {
   error?: TValidation;
   data: IAutocompleteValue[];
   showAllOptions?: boolean;
-  zIndex?: number;
+  noFullOptionsWidth?: boolean;
 }
 
 const Autocomplete: FC<IProps> = ({
@@ -58,7 +59,7 @@ const Autocomplete: FC<IProps> = ({
   error = { isValid: true },
   data,
   showAllOptions,
-  zIndex = 800,
+  noFullOptionsWidth = false,
 }) => {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLDivElement>(null);
@@ -105,10 +106,10 @@ const Autocomplete: FC<IProps> = ({
   }, []);
 
   return (
-    <div style={{ zIndex }} className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full">
       <LiquidGlass
         ref={inputRef}
-        zIndex={zIndex}
+        zIndex={Z_INDEX.AUTOCOMPLETE}
         className={`flex flex-col gap-2 px-5 py-3 ${className}`}
       >
         <div className="flex flex-row gap-2 items-center relative">
@@ -131,14 +132,13 @@ const Autocomplete: FC<IProps> = ({
           {endIcon}
           {hasOptions && (
             <LiquidGlass
-              zIndex={999}
               style={{ left: "50%", transform: "translate(-50%, 0)" }}
               blur={100}
               borderRadius={50}
               backgroundColor="rgba(0, 0, 0, 0.8)"
-              className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center w-full py-2 z-800 min-w-40 overflow-y-scroll ${
+              className={`absolute text-center top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center py-2 z-800 min-w-40 overflow-y-scroll ${
                 dropdown && "top-12 opacity-100 pointer-events-auto"
-              }`}
+              } ${noFullOptionsWidth ? "w-96 text-center" : "w-full"}`}
             >
               <div className="flex flex-col gap-2 max-h-60">
                 {elabData && elabData.length > 0 ? (
@@ -173,7 +173,6 @@ const Autocomplete: FC<IProps> = ({
           className="py-2 px-3"
           backgroundColor="rgba(255, 41, 0, 0.3)"
           borderColor="rgba(255, 41, 0, 0.3)"
-          zIndex={-1}
         >
           <span className="text-white">{error?.message}</span>
         </LiquidGlass>

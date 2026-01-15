@@ -137,6 +137,11 @@
     "type": "Type",
     "year": "Year",
     "date": "Date",
-    "creationDate": "Creation date"
+    "creationDate": "Creation date",
+    "searchForSubCategory": "Search for sub-category...",
+    "searchForMonth": "Search for month...",
+    "filters": "Filters",
+    "noOne": "No one",
+    "cancelFilters": "Cancel filters"
   }
 }

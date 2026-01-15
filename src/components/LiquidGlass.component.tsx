@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, RefObject } from "react";
 
 interface IProps {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   ref?: RefObject<HTMLDivElement | null>;
   onClick?: (event: any) => void;
@@ -11,13 +11,13 @@ interface IProps {
   blur?: number;
   backgroundColor?: string;
   borderColor?: string;
-  zIndex?: number;
   draggable?: boolean;
   onDragStart?: () => void;
   onDragOver?: (event: any) => void;
   onDrop?: () => void;
   style?: any;
   hasBlur?: boolean;
+  zIndex?: number;
 }
 
 const LiquidGlass: FC<IProps> = ({
@@ -35,13 +35,13 @@ const LiquidGlass: FC<IProps> = ({
   // Karina's versions
   // backgroundColor = "rgb(0, 0, 0, 0.1)",
   // borderColor = "rgb(0, 0, 0, 0.1)",
-  zIndex,
   draggable = false,
   onDragStart,
   onDragOver,
   onDrop,
   style,
   hasBlur = true,
+  zIndex,
   ...props
 }) => {
   return (

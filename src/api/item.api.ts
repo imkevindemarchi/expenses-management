@@ -2,7 +2,7 @@
 import { supabase } from "../supabase";
 
 // Types
-import { THTTPResponse, TItem } from "../types";
+import { THTTPResponse, TItem, TItemType } from "../types";
 
 const TABLE = "items";
 
@@ -34,18 +34,26 @@ export const ITEM_API = {
   getAllWithFilters: async (
     from: number,
     to: number,
+    subCategoryId: string,
+    year: number,
+    type: TItemType | string,
+    month: string,
     userId: string
   ): Promise<THTTPResponse> => {
     try {
-      const {
-        data,
-        count: totalRecords,
-        error,
-      } = await supabase
+      let query = supabase
         .from(TABLE)
         .select("*", { count: "exact" })
         .range(from, to)
+        .eq("year", year.toString())
         .eq("user_id", userId);
+
+      if (subCategoryId?.trim() !== "")
+        query = query.eq("sub_category_id", subCategoryId);
+      if (type?.trim() !== "") query = query.eq("type", type);
+      if (month?.trim() !== "") query = query.eq("month_id", month);
+
+      const { data, count: totalRecords, error } = await query;
 
       if (!data || error)
         return {

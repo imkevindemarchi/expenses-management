@@ -137,6 +137,11 @@
     "unableUpdateVoice": "Impossibile eliminare la voce",
     "type": "Tipo",
     "year": "Anno",
-    "creationDate": "Data creazione"
+    "creationDate": "Data creazione",
+    "searchForSubCategory": "Cerca per sotto-categoria...",
+    "searchForMonth": "Cerca per mese...",
+    "filters": "Filtri",
+    "noOne": "Nessuna",
+    "cancelFilters": "Cancella filtri"
   }
 }
