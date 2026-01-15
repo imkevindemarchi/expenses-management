@@ -23,3 +23,4 @@ export { Happy as HappyIcon } from "./happy.icon";
 export { Sad as SadIcon } from "./sad.icon";
 export { Neutral as NeutralIcon } from "./neutral.icon";
 export { ArrowUp as ArrowUpIcon } from "./arrow-up.icon";
+export { Filters as FiltersIcon } from "./filters.icon";

@@ -14,6 +14,7 @@ interface IProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   icon?: any;
   className?: string;
+  zIndex?: number;
 }
 
 const Button: FC<IProps> = ({
@@ -23,11 +24,12 @@ const Button: FC<IProps> = ({
   onClick,
   icon,
   className,
+  zIndex,
 }) => {
   switch (variant) {
     case "liquid-glass": {
       return (
-        <LiquidGlass className={`w-fit ${className}`}>
+        <LiquidGlass zIndex={zIndex} className={`w-fit ${className}`}>
           <button
             onClick={onClick}
             type={type}
@@ -44,6 +46,7 @@ const Button: FC<IProps> = ({
         <button
           onClick={onClick}
           type={type}
+          style={{ zIndex }}
           className="bg-primary rounded-full px-5 py-3 hover:opacity-50 transition-all duration-300"
         >
           <span className="text-base text-white">{text}</span>

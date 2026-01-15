@@ -4,6 +4,7 @@ import { NavigateFunction, useLocation, useNavigate } from "react-router";
 
 // Api
 import { AUTH_API } from "../api";
+import { Z_INDEX } from "../assets/constants";
 
 // Assets
 import logoImg from "../assets/images/logo.png";
@@ -18,13 +19,15 @@ import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 
+// Hooks
+import { useClickOutside } from "../hooks";
+
 // Types
 import { ROUTES, TRoute } from "../routes";
 import { THTTPResponse } from "../types";
 
 // Utils
 import { removeFromStorage, setToStorage } from "../utils";
-import { useClickOutside } from "../hooks";
 
 const Navbar: FC = () => {
   const {
@@ -189,10 +192,10 @@ const Navbar: FC = () => {
       borderRadius={0}
       borderBottomRadius={50}
       blur={10}
-      style={{ zIndex: 100 }}
       className={`w-full fixed flex items-center px-20 justify-between mobile:hidden ${
         isOnTopOfPage ? "h-36" : "h-16"
       }`}
+      zIndex={Z_INDEX.NAVBAR}
     >
       <div className="flex items-center gap-5">
         {logo}

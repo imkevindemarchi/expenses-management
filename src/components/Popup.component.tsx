@@ -21,7 +21,6 @@ const Popup: FC = () => {
 
   return (
     <LiquidGlass
-      zIndex={100}
       className={`fixed top-5 max-w-[70%] ${
         isOpen ? "right-5 opacity-100" : "-right-96 opacity-0"
       }`}

@@ -28,6 +28,7 @@ import { THTTPResponse } from "../types";
 
 // Utils
 import { removeFromStorage, setToStorage } from "../utils";
+import { Z_INDEX } from "../assets/constants";
 
 const Sidebar: FC = () => {
   const {
@@ -188,8 +189,8 @@ const Sidebar: FC = () => {
       }`}
       borderRadius={0}
       borderBottomRadius={50}
-      zIndex={900}
       blur={10}
+      zIndex={Z_INDEX.SIDEBAR}
     >
       {logo}
       {routesComponent}
