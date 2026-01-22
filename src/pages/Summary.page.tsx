@@ -179,12 +179,6 @@ const Summary = () => {
     return total;
   }
 
-  function getTotalIncomingsLabel(): string {
-    let total: number = getTotalIncomings();
-
-    return `${t("incomings")}: € ${total}`;
-  }
-
   function getTotalExits(): number {
     let total: number = 0;
 
@@ -197,12 +191,6 @@ const Summary = () => {
     });
 
     return total;
-  }
-
-  function getTotalExitsLabel(): string {
-    let total: number = getTotalExits();
-
-    return `${t("exits")}: € ${total}`;
   }
 
   function getLeftToSpend(): number {
@@ -312,6 +300,30 @@ const Summary = () => {
     </Grid>
   );
 
+  const incomingsTotal = (
+    <div className="flex items-center gap-5">
+      <span className="text-3xl text-white">{t("incomings")}:</span>
+      <LiquidGlass
+        backgroundColor="rgba(0, 0, 0, 0.5)"
+        className="flex justify-center items-center w-fit px-5 py-2"
+      >
+        <span className="text-incomings text-3xl">€ {getTotalIncomings()}</span>
+      </LiquidGlass>
+    </div>
+  );
+
+  const exitsTotal = (
+    <div className="flex items-center gap-5">
+      <span className="text-3xl text-white">{t("exits")}:</span>
+      <LiquidGlass
+        backgroundColor="rgba(0, 0, 0, 0.5)"
+        className="flex justify-center items-center w-fit px-5 py-2"
+      >
+        <span className="text-exits text-3xl">€ {getTotalExits()}</span>
+      </LiquidGlass>
+    </div>
+  );
+
   const progressBar = (
     <div className="flex flex-row items-center gap-5 mobile:flex-col">
       <span className="text-white">{t("percentageOfRevenueSpent")}</span>
@@ -367,6 +379,7 @@ const Summary = () => {
                         isItemVisible && (
                           <LiquidGlass
                             key={index2}
+                            backgroundColor="rgba(0, 0, 0, 0.5)"
                             className="flex justify-between px-5 py-2"
                           >
                             <span className="text-white">
@@ -417,8 +430,8 @@ const Summary = () => {
   return (
     <div className="flex flex-col gap-5">
       {header}
-      <span className="text-3xl text-white">{getTotalIncomingsLabel()}</span>
-      <span className="text-3xl text-white">{getTotalExitsLabel()}</span>
+      {incomingsTotal}
+      {exitsTotal}
       {goal && Number(goal) !== 0 && isSamePeriod ? (
         <div className="flex flex-row items-center gap-2">
           {getLeftToSpend() > 100 ? (
