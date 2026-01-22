@@ -37,10 +37,10 @@ const Summary = () => {
   const _MONTHS: IAutocompleteValue[] = MONTHS.map(
     (month: IAutocompleteValue) => {
       return { id: month.id, label: t(month.label) };
-    }
+    },
   );
   const DEFAULT_MONTH: IAutocompleteValue = _MONTHS.find(
-    (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1
+    (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1,
   ) as IAutocompleteValue;
   const CURRENT_YEAR: number = new Date().getFullYear();
   const DEFAULT_FILTERS: IFilters = {
@@ -50,19 +50,20 @@ const Summary = () => {
   const [filters, setFilters] = useState<IFilters>(DEFAULT_FILTERS);
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const [categories, setCategories] = useState<TCategory[] | null>(null);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
-    null
+    null,
   );
   const [items, setItems] = useState<TItem[] | null>(null);
   const [doughnutChartData, setDoughnutChartData] = useState<number[]>([]);
   const [doughnutChartLabels, setDoughnutChartLabels] = useState<string[]>([]);
   const [goal, setGoal] = useState<number>(0);
+  const [isSamePeriod, setIsSamePeriod] = useState<boolean>(true);
 
   const title = t("summary");
 
@@ -95,21 +96,21 @@ const Summary = () => {
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setCategories(response.data);
         else openPopup(t("unableLoadCategories"), "error");
-      }
+      },
     );
 
     await Promise.resolve(SUB_CATEGORY_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setSubCategories(response.data);
         else openPopup(t("unableLoadSubCategories"), "error");
-      }
+      },
     );
 
     await Promise.resolve(ITEM_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setItems(response.data);
         else openPopup(t("unableLoadItems"), "error");
-      }
+      },
     );
 
     await Promise.resolve(SETTING_API.get(userData?.id as string)).then(
@@ -117,7 +118,7 @@ const Summary = () => {
         if (response && response.hasSuccess)
           setGoal(response.data?.month_goal ?? 0);
         else openPopup(t("unableLoadSettings"), "error");
-      }
+      },
     );
 
     setIsLoading(false);
@@ -133,7 +134,7 @@ const Summary = () => {
     const filteredSubCategories: TSubCategory[] = [
       ...(subCategories ?? []),
     ].filter(
-      (subCategory: TSubCategory) => subCategory.category_id === category.id
+      (subCategory: TSubCategory) => subCategory.category_id === category.id,
     );
 
     return filteredSubCategories;
@@ -141,7 +142,7 @@ const Summary = () => {
 
   function getItems(subCategory: TSubCategory): TItem[] {
     const filteredItems: TItem[] = [...(items ?? [])].filter(
-      (item: TItem) => item.sub_category_id === subCategory.id
+      (item: TItem) => item.sub_category_id === subCategory.id,
     );
 
     return filteredItems;
@@ -377,7 +378,7 @@ const Summary = () => {
                           </LiquidGlass>
                         )
                       );
-                    }
+                    },
                   )}
                 </LiquidGlass>
               </div>
@@ -400,12 +401,25 @@ const Summary = () => {
     // eslint-disable-next-line
   }, [categories, items, filters.year, filters.month]);
 
+  useEffect(() => {
+    const CURRENT_MONTH: number = new Date().getMonth() + 1;
+
+    if (
+      CURRENT_YEAR === Number(filters.year) &&
+      CURRENT_MONTH === filters.month.id
+    )
+      setIsSamePeriod(true);
+    else setIsSamePeriod(false);
+
+    // eslint-disable-next-line
+  }, [filters.month, filters.year]);
+
   return (
     <div className="flex flex-col gap-5">
       {header}
       <span className="text-3xl text-white">{getTotalIncomingsLabel()}</span>
       <span className="text-3xl text-white">{getTotalExitsLabel()}</span>
-      {goal && Number(goal) !== 0 ? (
+      {goal && Number(goal) !== 0 && isSamePeriod ? (
         <div className="flex flex-row items-center gap-2">
           {getLeftToSpend() > 100 ? (
             <HappyIcon className="text-white text-[3em]" />
