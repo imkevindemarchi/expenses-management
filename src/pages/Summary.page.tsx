@@ -435,13 +435,36 @@ const Summary = () => {
       {goal && Number(goal) !== 0 && isSamePeriod ? (
         <div className="flex flex-row items-center gap-2">
           {getLeftToSpend() > 100 ? (
-            <HappyIcon className="text-white text-[3em]" />
+            <LiquidGlass
+              backgroundColor="rgba(0, 0, 0, 0.5)"
+              className="p-2 pr-5 flex items-center gap-5"
+            >
+              <HappyIcon className="text-green text-[3em]" />
+              <span className="text-xl text-green">
+                {getLeftToSpendLabel()}
+              </span>
+            </LiquidGlass>
           ) : getLeftToSpend() > 0 ? (
-            <NeutralIcon className="text-white text-[3em]" />
+            <LiquidGlass
+              backgroundColor="rgba(0, 0, 0, 0.5)"
+              className="p-2 pr-5 flex items-center gap-5"
+            >
+              <NeutralIcon className="text-neutral text-[3em]" />
+              <span className="text-xl text-neutral">
+                {getLeftToSpendLabel()}
+              </span>
+            </LiquidGlass>
           ) : (
-            <SadIcon className="text-white text-[3em]" />
+            <LiquidGlass
+              backgroundColor="rgba(0, 0, 0, 0.5)"
+              className="p-2 pr-5 flex items-center gap-5"
+            >
+              <SadIcon className="text-exits text-[3em]" />
+              <span className="text-xl text-exits">
+                {getLeftToSpendLabel()}
+              </span>
+            </LiquidGlass>
           )}
-          <span className="text-xl text-white">{getLeftToSpendLabel()}</span>
         </div>
       ) : null}
       {progressBar}

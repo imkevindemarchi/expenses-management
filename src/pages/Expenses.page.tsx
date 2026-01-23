@@ -590,7 +590,6 @@ const Expenses: FC = () => {
               <div className="flex items-center justify-between"></div>
             </Grid>
           </Grid>
-
           <Grid size={{ xs: 12, md: 6 }}>
             <div>
               <Autocomplete
