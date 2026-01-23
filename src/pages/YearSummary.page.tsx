@@ -47,12 +47,12 @@ const YearSummary: FC = () => {
     useContext(LoaderContext) as TLoaderContext;
   const [items, setItems] = useState<TItem[]>([]);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [tableData, setTableData] = useState<TTableItem[]>([]);
   const [barsChartLabels, setBarsChartLabels] = useState<string[]>([]);
   const [barsChartData, setBarsChartDataset] = useState<TBarsChartDataset[]>(
-    []
+    [],
   );
 
   const title: string = t("year-summary");
@@ -65,7 +65,7 @@ const YearSummary: FC = () => {
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setItems(response.data);
         else openPopup(t("unableLoadExpenses"), "error");
-      }
+      },
     );
 
     setIsLoading(false);
@@ -112,10 +112,10 @@ const YearSummary: FC = () => {
 
     MONTHS.forEach((month: IAutocompleteValue) => {
       const totalExpensesMonth: number = getTotalExpensesMonth(
-        Number(month.id)
+        Number(month.id),
       );
       const totalIncomingsMonth: number = getTotalIncomingsMonth(
-        Number(month.id)
+        Number(month.id),
       );
 
       data.push({
@@ -153,13 +153,13 @@ const YearSummary: FC = () => {
   function getTotalExpensesLabel(): string {
     let total: number = getTotalExpenses();
 
-    return `${t("totalExits")}: € ${total}`;
+    return `${t("exits")}: € ${total}`;
   }
 
   function getTotalIncomingsLabel(): string {
     let total: number = getTotalIncomings();
 
-    return `${t("totalIncomings")}: € ${total}`;
+    return `${t("incomings")}: € ${total}`;
   }
 
   function getEachMonthExits(): number[] {
@@ -260,7 +260,7 @@ const YearSummary: FC = () => {
     const barsChartLabels: string[] = MONTHS.map(
       (month: IAutocompleteValue) => {
         return t(month.label);
-      }
+      },
     );
     setBarsChartLabels(barsChartLabels);
     const barsChartDataset: TBarsChartDataset[] = [
