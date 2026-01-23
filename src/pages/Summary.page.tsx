@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 
@@ -31,6 +31,9 @@ interface IFilters {
   month: IAutocompleteValue;
   year: number;
 }
+
+type TLeftToSpendType = "positive" | "neutral" | "negative";
+type TLeftToSpendColor = "text-exits" | "text-green" | "text-neutral";
 
 const Summary = () => {
   const { t } = useTranslation();
@@ -204,7 +207,7 @@ const Summary = () => {
     const leftToSpend: number = getLeftToSpend();
 
     return leftToSpend > 0
-      ? `${t("leftToSpend")}: € ${leftToSpend}`
+      ? `${t("leftToSpend")}: €${leftToSpend}`
       : t("youHaveAlreadyCrossedThreshold");
   }
 
@@ -402,6 +405,50 @@ const Summary = () => {
     </Grid>
   );
 
+  const LeftToSpend: FC = () => {
+    function getLeftToSpendType(): TLeftToSpendType {
+      return getLeftToSpend() > 100
+        ? "positive"
+        : getLeftToSpend() > 0
+          ? "neutral"
+          : "negative";
+    }
+
+    const isPositive: boolean = getLeftToSpendType() === "positive";
+    const isNeutral: boolean = getLeftToSpendType() === "neutral";
+    const isNegative: boolean = getLeftToSpendType() === "negative";
+
+    function getLeftToSpendColor(): TLeftToSpendColor {
+      return isPositive
+        ? "text-green"
+        : isNeutral
+          ? "text-neutral"
+          : "text-exits";
+    }
+
+    return (
+      <div className="mobile:flex mobile:justify-center mobile:items-center mobile:w-full">
+        <LiquidGlass
+          backgroundColor="rgba(0, 0, 0, 0.5)"
+          className="p-2 pr-5 flex items-center gap-5"
+        >
+          {isPositive && (
+            <HappyIcon className={`text-[3em] ${getLeftToSpendColor()}`} />
+          )}
+          {isNeutral && (
+            <NeutralIcon className={`text-[3em] ${getLeftToSpendColor()}`} />
+          )}
+          {isNegative && (
+            <SadIcon className={`text-[3em] ${getLeftToSpendColor()}`} />
+          )}
+          <span className={`text-xl mobile:text-lg ${getLeftToSpendColor()}`}>
+            {getLeftToSpendLabel()}
+          </span>
+        </LiquidGlass>
+      </div>
+    );
+  };
+
   useEffect(() => {
     userData?.id && getData();
 
@@ -434,37 +481,7 @@ const Summary = () => {
       {exitsTotal}
       {goal && Number(goal) !== 0 && isSamePeriod ? (
         <div className="flex flex-row items-center gap-2">
-          {getLeftToSpend() > 100 ? (
-            <LiquidGlass
-              backgroundColor="rgba(0, 0, 0, 0.5)"
-              className="p-2 pr-5 flex items-center gap-5"
-            >
-              <HappyIcon className="text-green text-[3em]" />
-              <span className="text-xl text-green">
-                {getLeftToSpendLabel()}
-              </span>
-            </LiquidGlass>
-          ) : getLeftToSpend() > 0 ? (
-            <LiquidGlass
-              backgroundColor="rgba(0, 0, 0, 0.5)"
-              className="p-2 pr-5 flex items-center gap-5"
-            >
-              <NeutralIcon className="text-neutral text-[3em]" />
-              <span className="text-xl text-neutral">
-                {getLeftToSpendLabel()}
-              </span>
-            </LiquidGlass>
-          ) : (
-            <LiquidGlass
-              backgroundColor="rgba(0, 0, 0, 0.5)"
-              className="p-2 pr-5 flex items-center gap-5"
-            >
-              <SadIcon className="text-exits text-[3em]" />
-              <span className="text-xl text-exits">
-                {getLeftToSpendLabel()}
-              </span>
-            </LiquidGlass>
-          )}
+          <LeftToSpend />
         </div>
       ) : null}
       {progressBar}
