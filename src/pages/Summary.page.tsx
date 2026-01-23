@@ -324,7 +324,7 @@ const Summary = () => {
     </div>
   );
 
-  const progressBar = (
+  const progressBar = getTotalExits() !== 0 && (
     <div className="flex flex-row items-center gap-5 mobile:flex-col">
       <span className="text-white">{t("percentageOfRevenueSpent")}</span>
       <ProgressBar progress={calculateProgress()} />
