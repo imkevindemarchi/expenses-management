@@ -2,6 +2,7 @@ import React, { FC, useContext } from "react";
 
 // Assets
 import { CheckIcon, CloseIcon, ErrorIcon, WarningIcon } from "../assets/icons";
+import { Z_INDEX } from "../assets/constants";
 
 // Components
 import LiquidGlass from "./LiquidGlass.component";
@@ -11,7 +12,7 @@ import { PopupContext, TPopupContext } from "../providers/popup.provider";
 
 const Popup: FC = () => {
   const { state, onClose }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const { message, isOpen, type } = state;
 
@@ -26,16 +27,17 @@ const Popup: FC = () => {
       }`}
       noBorder
       blur={2}
+      zIndex={Z_INDEX.POPUP}
     >
       <div
         style={{
           backgroundColor: isSuccess
             ? `rgb(0, 128, 0, 0.6)`
             : isWarning
-            ? "rgb(255, 165, 0, 0.6)"
-            : isError
-            ? "rgb(255, 0, 0, 0.6)"
-            : "",
+              ? "rgb(255, 165, 0, 0.6)"
+              : isError
+                ? "rgb(255, 0, 0, 0.6)"
+                : "",
         }}
         className="px-5 py-2 rounded-full flex items-center gap-2"
       >

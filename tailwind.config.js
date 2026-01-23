@@ -11,6 +11,8 @@ module.exports = {
       red: "#ff0000",
       incomings: "#FFE875",
       exits: "#FF7575",
+      green: "#75FF7C",
+      neutral: "#FFCA75",
     },
     screens: {
       desktop: { min: "1500px" },

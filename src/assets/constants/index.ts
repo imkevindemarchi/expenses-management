@@ -2,4 +2,5 @@ export const Z_INDEX = {
   NAVBAR: 100,
   AUTOCOMPLETE: 20,
   SIDEBAR: 200,
+  POPUP: 150,
 };
