@@ -375,7 +375,8 @@ const Summary = () => {
                       const filteredItems: TItem[] =
                         getItems(filteredSubCategory);
                       const itemsTotal: number = getItemsTotal(filteredItems);
-                      const itemsTotalString: string = `€${itemsTotal}`;
+                      const itemsTotalString: string =
+                        `€${itemsTotal}`.replaceAll("-", "");
                       const isItemVisible: boolean = itemsTotal !== 0;
 
                       return (
