@@ -88,22 +88,22 @@ const Expenses: FC = () => {
     useContext(LoaderContext) as TLoaderContext;
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [formData, setFormData] = useState<IFormData | null>();
   const CURRENT_YEAR: number = new Date().getFullYear();
   const _MONTHS: IAutocompleteValue[] = MONTHS.map(
     (month: IAutocompleteValue) => {
       return { id: month.id, label: t(month.label) };
-    }
+    },
   );
   const DEFAULT_MONTH: IAutocompleteValue = _MONTHS.find(
-    (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1
+    (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1,
   ) as IAutocompleteValue;
   const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
   const [categories, setCategories] = useState<TCategory[] | null>(null);
   const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
-    null
+    null,
   );
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
 
@@ -130,7 +130,7 @@ const Expenses: FC = () => {
         async (categoriesRes: THTTPResponse) => {
           if (categoriesRes && categoriesRes.hasSuccess) {
             await Promise.resolve(
-              SUB_CATEGORY_API.getAll(userData?.id as string)
+              SUB_CATEGORY_API.getAll(userData?.id as string),
             ).then(async (subCategoriesRes: THTTPResponse) => {
               if (subCategoriesRes && subCategoriesRes.hasSuccess) {
                 await Promise.resolve(
@@ -141,23 +141,23 @@ const Expenses: FC = () => {
                     table.year,
                     tableType,
                     table.month,
-                    userData?.id as string
-                  )
+                    userData?.id as string,
+                  ),
                 ).then((itemsRes: THTTPResponse) => {
                   if (itemsRes && itemsRes.hasSuccess) {
                     const items: TItem[] = itemsRes.data.map((item: TItem) => {
                       const category: TCategory = categoriesRes.data.find(
                         (category: TCategory) =>
-                          category.id === item.category_id
+                          category.id === item.category_id,
                       ) as TCategory;
                       const subCategory: TSubCategory =
                         subCategoriesRes.data.find(
                           (subCategory: TSubCategory) =>
-                            subCategory.id === item.sub_category_id
+                            subCategory.id === item.sub_category_id,
                         ) as TSubCategory;
                       const month = MONTHS.find(
                         (month: IAutocompleteValue) =>
-                          month.id === item.month_id
+                          month.id === item.month_id,
                       );
 
                       return {
@@ -182,7 +182,7 @@ const Expenses: FC = () => {
             });
             setCategories(categoriesRes.data);
           } else openPopup(t("unableLoadCategories"), "error");
-        }
+        },
       );
     else
       await Promise.resolve(
@@ -193,20 +193,20 @@ const Expenses: FC = () => {
           table.year,
           tableType,
           table.month,
-          userData?.id as string
-        )
+          userData?.id as string,
+        ),
       ).then((itemsRes: THTTPResponse) => {
         if (itemsRes && itemsRes.hasSuccess) {
           const items: any[] = itemsRes.data.map((item: TItem) => {
             const category: TCategory = categories?.find(
-              (category: TCategory) => category.id === item.category_id
+              (category: TCategory) => category.id === item.category_id,
             ) as TCategory;
             const subCategory: TSubCategory = subCategories?.find(
               (subCategory: TSubCategory) =>
-                subCategory.id === item.sub_category_id
+                subCategory.id === item.sub_category_id,
             ) as TSubCategory;
             const month = MONTHS.find(
-              (month: IAutocompleteValue) => month.id === item.month_id
+              (month: IAutocompleteValue) => month.id === item.month_id,
             );
 
             return {
@@ -269,7 +269,7 @@ const Expenses: FC = () => {
           openPopup(t("itemSuccessfullyDeleted"), "success");
           getData();
         } else openPopup(t("unableDeleteItem"), "error");
-      }
+      },
     );
 
     setIsLoading(false);
@@ -293,7 +293,7 @@ const Expenses: FC = () => {
         };
 
         await Promise.resolve(
-          ITEM_API.update(payload, editModal.item?.id as string)
+          ITEM_API.update(payload, editModal.item?.id as string),
         ).then(async (response: THTTPResponse) => {
           if (response && response.hasSuccess) {
             setEditModal(DEFAULT_EDIT_MODAL);
@@ -321,7 +321,14 @@ const Expenses: FC = () => {
   function getAutocompleteSubCategories(): IAutocompleteValue[] {
     return (
       subCategories?.map((subCategory: TSubCategory) => {
-        return { id: subCategory.id, label: subCategory.label };
+        const category: TCategory = categories?.find(
+          (category: TCategory) => category.id === subCategory.category_id,
+        ) as TCategory;
+
+        return {
+          id: subCategory.id,
+          label: `${subCategory.label} - ${category.label.toUpperCase()}`,
+        };
       }) ?? []
     );
   }
@@ -336,14 +343,14 @@ const Expenses: FC = () => {
 
   function getSelectedSubCategory(): IAutocompleteValue {
     return getAutocompleteSubCategories().find(
-      (subCategory: IAutocompleteValue) => subCategory.id === table.subCategory
+      (subCategory: IAutocompleteValue) => subCategory.id === table.subCategory,
     ) as IAutocompleteValue;
   }
 
   function getSelectedMonth(): IAutocompleteValue {
     return getAutocompleteMonths().find(
       (month: IAutocompleteValue) =>
-        month.id?.toString() === table.month.toString()
+        month.id?.toString() === table.month.toString(),
     ) as IAutocompleteValue;
   }
 
@@ -645,7 +652,7 @@ const Expenses: FC = () => {
   useEffect(() => {
     if (editModal.item) {
       const month: IAutocompleteValue = _MONTHS.find(
-        (month: IAutocompleteValue) => month.id === editModal.item?.month_id
+        (month: IAutocompleteValue) => month.id === editModal.item?.month_id,
       ) as IAutocompleteValue;
 
       setFormData({
