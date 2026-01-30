@@ -178,7 +178,7 @@ const Table: FC<IProps> = ({
 
                   if (isDateColumn) {
                     const dateValue: Date | null = item[column.key]?.includes(
-                      "-"
+                      "-",
                     )
                       ? parse(item[column.key], "yyyy-MM-dd", new Date())
                       : null;
@@ -218,7 +218,7 @@ const Table: FC<IProps> = ({
                       >
                         <LiquidGlass
                           backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center w-fit px-5 py-2"
+                          className="flex justify-center items-center w-fit px-3 py-2"
                         >
                           <span className="text-incomings">
                             {`€ ${item[column.key]}`}
@@ -238,7 +238,7 @@ const Table: FC<IProps> = ({
                       >
                         <LiquidGlass
                           backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center w-fit px-5 py-2"
+                          className="flex justify-center items-center w-fit px-3 py-2"
                         >
                           <span className="text-exits">
                             {`€ ${item[column.key]}`}

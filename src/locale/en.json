@@ -110,7 +110,6 @@
     "insertMonthGoal": "Insert month goal",
     "settingsSuccessfullySaved": "Settings successfully saved",
     "unableSaveSettings": "Unable save settings",
-    "unableLoadSettings": "Unable load settings",
     "leftToSpend": "Left to spend",
     "youHaveAlreadyCrossedThreshold": "You have already crossed the threshold",
     "percentageOfRevenueSpent": "Percentage of revenue spent",
@@ -142,6 +141,7 @@
     "searchForMonth": "Search for month...",
     "filters": "Filters",
     "noOne": "No one",
-    "cancelFilters": "Cancel filters"
+    "cancelFilters": "Cancel filters",
+    "unableLoadData": "Unable load data"
   }
 }

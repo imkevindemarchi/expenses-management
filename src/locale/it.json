@@ -110,7 +110,6 @@
     "insertMonthGoal": "Inserisci l'obiettivo del mese",
     "settingsSuccessfullySaved": "Impostazioni salvate con successo",
     "unableSaveSettings": "Impossibile salvare le impostazioni",
-    "unableLoadSettings": "Impossibile caricare le impostazioni",
     "leftToSpend": "Ancora da spendere",
     "youHaveAlreadyCrossedThreshold": "Hai già superato la soglia",
     "percentageOfRevenueSpent": "Percentuale di entrate speso",
@@ -142,6 +141,7 @@
     "searchForMonth": "Cerca per mese...",
     "filters": "Filtri",
     "noOne": "Nessuna",
-    "cancelFilters": "Cancella filtri"
+    "cancelFilters": "Cancella filtri",
+    "unableLoadData": "Impossibile caricare i dati"
   }
 }
