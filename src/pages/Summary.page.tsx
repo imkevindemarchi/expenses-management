@@ -216,8 +216,10 @@ const Summary: FC = () => {
     const chartLabels: string[] = [];
 
     data?.forEach((category: TCategoryItem) => {
-      category?.total > 0 && chartData.push(category?.total ?? 0);
-      category?.total && chartLabels.push(category.label);
+      getCategoryTotal(category, items as TItem[]) &&
+        chartData.push(category?.total ?? 0);
+      getCategoryTotal(category, items as TItem[]) &&
+        chartLabels.push(category.label);
     });
 
     setDoughnutChartData(chartData);
@@ -398,7 +400,8 @@ const Summary: FC = () => {
   const exits = (
     <Grid container spacing={2}>
       {filteredData()?.map((category: TCategoryItem, index: number) => {
-        const isCategoryVisible: boolean = category?.total > 0;
+        const isCategoryVisible: boolean =
+          getCategoryTotal(category, items as TItem[]) > 0;
 
         return (
           isCategoryVisible && (
@@ -488,7 +491,7 @@ const Summary: FC = () => {
       {header}
       {incomingsTotal}
       {exitsTotal}
-      {goal && Number(goal) !== 0 && isSamePeriod && leftToSpend}
+      {goal && Number(goal) !== 0 && isSamePeriod ? leftToSpend : null}
       {progressBar}
       {doghnutChart}
       {exits}
