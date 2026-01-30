@@ -252,7 +252,8 @@ const Summary: FC = () => {
 
   function filteredData(): TCategoryItem[] {
     return data?.sort(
-      (a: TCategoryItem, b: TCategoryItem) => b.total - a.total,
+      (a: TCategoryItem, b: TCategoryItem) =>
+        b.subCategories.length - a.subCategories.length,
     ) as TCategoryItem[];
   }
 
