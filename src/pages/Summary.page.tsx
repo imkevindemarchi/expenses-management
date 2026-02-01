@@ -217,7 +217,7 @@ const Summary: FC = () => {
 
     data?.forEach((category: TCategoryItem) => {
       getCategoryTotal(category, items as TItem[]) &&
-        chartData.push(category?.total ?? 0);
+        chartData.push(getCategoryTotal(category, items as TItem[]) ?? 0);
       getCategoryTotal(category, items as TItem[]) &&
         chartLabels.push(category.label);
     });
