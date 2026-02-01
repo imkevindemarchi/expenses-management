@@ -17,7 +17,7 @@ import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 
 // Types
-import { THTTPResponse, TItem } from "../types";
+import { THTTPResponse, TItem, TItemType } from "../types";
 import { IColumn } from "../components/Table.component";
 import { IAutocompleteValue } from "../components/Autocomplete.component";
 import { TBarsChartDataset } from "../components/BarsChart.component";
@@ -128,40 +128,6 @@ const YearSummary: FC = () => {
     return data;
   }
 
-  function getTotalExpenses(): number {
-    let total: number = 0;
-
-    items?.forEach((item: TItem) => {
-      if (Number(item.year) === Number(filters.year) && item.type === "exit")
-        total += item.value;
-    });
-
-    return total;
-  }
-
-  function getTotalIncomings(): number {
-    let total: number = 0;
-
-    items?.forEach((item: TItem) => {
-      if (Number(item.year) === Number(filters.year) && item.type === "income")
-        total += item.value;
-    });
-
-    return total;
-  }
-
-  function getTotalExpensesLabel(): string {
-    let total: number = getTotalExpenses();
-
-    return `${t("exits")}: € ${total}`;
-  }
-
-  function getTotalIncomingsLabel(): string {
-    let total: number = getTotalIncomings();
-
-    return `${t("incomings")}: € ${total}`;
-  }
-
   function getEachMonthExits(): number[] {
     const eachMonthExit: number[] = [];
 
@@ -202,6 +168,17 @@ const YearSummary: FC = () => {
     });
 
     return eachMonthExit;
+  }
+
+  function getTotal(type: TItemType): number {
+    let total: number = 0;
+
+    items?.forEach((item: TItem) => {
+      if (Number(item.year) === Number(filters.year) && item.type === type)
+        total += item.value;
+    });
+
+    return total;
   }
 
   const header = (
@@ -247,6 +224,30 @@ const YearSummary: FC = () => {
     </LiquidGlass>
   );
 
+  const incomingsTotal = (
+    <div className="flex items-center gap-5">
+      <span className="text-3xl text-white">{t("incomings")}:</span>
+      <LiquidGlass
+        backgroundColor="rgba(0, 0, 0, 0.5)"
+        className="flex justify-center items-center w-fit px-5 py-2"
+      >
+        <span className="text-incomings text-3xl">€ {getTotal("income")}</span>
+      </LiquidGlass>
+    </div>
+  );
+
+  const exitsTotal = (
+    <div className="flex items-center gap-5">
+      <span className="text-3xl text-white">{t("exits")}:</span>
+      <LiquidGlass
+        backgroundColor="rgba(0, 0, 0, 0.5)"
+        className="flex justify-center items-center w-fit px-5 py-2"
+      >
+        <span className="text-exits text-3xl">€ {getTotal("exit")}</span>
+      </LiquidGlass>
+    </div>
+  );
+
   useEffect(() => {
     userData?.id && getData();
 
@@ -284,8 +285,8 @@ const YearSummary: FC = () => {
   return (
     <div className="flex flex-col gap-5">
       {header}
-      <span className="text-3xl text-white">{getTotalExpensesLabel()}</span>
-      <span className="text-3xl text-white">{getTotalIncomingsLabel()}</span>
+      {incomingsTotal}
+      {exitsTotal}
       <Grid container columnSpacing={5} rowSpacing={5}>
         <Grid size={{ xs: 12, md: 8 }}>{graphs}</Grid>
         <Grid size={{ xs: 12, md: 4 }}>{table}</Grid>
