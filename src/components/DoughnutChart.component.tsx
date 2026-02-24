@@ -51,8 +51,6 @@ const DoughnutChart: FC<IProps> = ({ labels, data }) => {
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            console.log("🚀 ~ context:", context);
-
             return ` €${context.parsed}`;
           },
         },
