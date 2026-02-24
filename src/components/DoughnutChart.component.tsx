@@ -4,6 +4,7 @@ import {
   ArcElement,
   CategoryScale,
   Chart as ChartJS,
+  ChartOptions,
   Legend,
   LinearScale,
   LineElement,
@@ -20,7 +21,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
 );
 
 export type TDoughnutChartData = {
@@ -40,11 +41,20 @@ const DoughnutChart: FC<IProps> = ({ labels, data }) => {
     datasets: [data],
   };
 
-  const options: any = {
+  const options: ChartOptions<any> = {
     plugins: {
       legend: {
         labels: {
           color: "#ffffff",
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            console.log("🚀 ~ context:", context);
+
+            return ` €${context.parsed}`;
+          },
         },
       },
     },

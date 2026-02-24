@@ -214,7 +214,7 @@ const YearSummary: FC = () => {
     </LiquidGlass>
   );
 
-  const graphs = (
+  const graph = (
     <LiquidGlass
       blur={100}
       borderRadius={20}
@@ -266,14 +266,14 @@ const YearSummary: FC = () => {
     setBarsChartLabels(barsChartLabels);
     const barsChartDataset: TBarsChartDataset[] = [
       {
-        backgroundColor: "#FF7575",
-        data: getEachMonthExits(),
-        label: t("exits"),
-      },
-      {
         backgroundColor: "#FFE875",
         data: getEachMonthIncomings(),
         label: t("incomings"),
+      },
+      {
+        backgroundColor: "#FF7575",
+        data: getEachMonthExits(),
+        label: t("exits"),
       },
     ];
 
@@ -288,7 +288,7 @@ const YearSummary: FC = () => {
       {incomingsTotal}
       {exitsTotal}
       <Grid container columnSpacing={5} rowSpacing={5}>
-        <Grid size={{ xs: 12, md: 8 }}>{graphs}</Grid>
+        <Grid size={{ xs: 12, md: 8 }}>{graph}</Grid>
         <Grid size={{ xs: 12, md: 4 }}>{table}</Grid>
       </Grid>
     </div>
