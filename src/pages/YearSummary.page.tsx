@@ -20,7 +20,10 @@ import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { THTTPResponse, TItem, TItemType } from "../types";
 import { IColumn } from "../components/Table.component";
 import { IAutocompleteValue } from "../components/Autocomplete.component";
-import { TBarsChartDataset } from "../components/BarsChart.component";
+import {
+  IBarsChartTooltip,
+  TBarsChartDataset,
+} from "../components/BarsChart.component";
 
 // Utils
 import { setPageTitle } from "../utils";
@@ -214,13 +217,29 @@ const YearSummary: FC = () => {
     </LiquidGlass>
   );
 
+  function graphTooltipTitle(context: IBarsChartTooltip[]): string {
+    const type: string = context[0].dataset.label;
+    const month: string = context[0].label;
+
+    return `${type} ${month}`;
+  }
+
+  function graphTooltipLabel(context: IBarsChartTooltip): string {
+    return ` €${context?.formattedValue}`;
+  }
+
   const graph = (
     <LiquidGlass
       blur={100}
       borderRadius={20}
       className="p-10 mobile:p-5 h-full"
     >
-      <BarsChart data={barsChartData} labels={barsChartLabels} />
+      <BarsChart
+        data={barsChartData}
+        labels={barsChartLabels}
+        customTooltipTitle={graphTooltipTitle}
+        customTooltipLabel={graphTooltipLabel}
+      />
     </LiquidGlass>
   );
 

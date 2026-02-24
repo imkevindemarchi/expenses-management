@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
 } from "chart.js";
 
 export type TBarsChartData = {
@@ -22,9 +23,21 @@ export type TBarsChartDataset = {
   backgroundColor: string;
 };
 
+export interface IBarsChartTooltip {
+  formattedValue: string;
+  label: string;
+  dataset: {
+    backgroundColor: string;
+    data: number[];
+    label: string;
+  };
+}
+
 interface IProps {
   labels: string[];
   data: TBarsChartDataset[];
+  customTooltipTitle?: (context: IBarsChartTooltip[]) => string;
+  customTooltipLabel?: (context: IBarsChartTooltip) => string;
 }
 
 ChartJS.register(
@@ -33,15 +46,28 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 ChartJS.defaults.color = "#ffffff";
 
-const BarsChart: FC<IProps> = ({ labels, data }) => {
-  const options = {
+const BarsChart: FC<IProps> = ({
+  labels,
+  data,
+  customTooltipTitle,
+  customTooltipLabel,
+}) => {
+  const options: ChartOptions<any> = {
     elements: {
       bar: {
         borderWidth: 2,
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: customTooltipTitle,
+          label: customTooltipLabel,
+        },
       },
     },
   };
