@@ -32,7 +32,10 @@ import {
   TSubCategory,
 } from "../types";
 import { IAutocompleteValue } from "../components/Autocomplete.component";
-import { TDoughnutChartData } from "../components/DoughnutChart.component";
+import {
+  IDoughnutChartTooltip,
+  TDoughnutChartData,
+} from "../components/DoughnutChart.component";
 
 interface IFilters {
   month: IAutocompleteValue;
@@ -257,6 +260,10 @@ const Summary: FC = () => {
     ) as TCategoryItem[];
   }
 
+  function graphTooltipLabel(context: IDoughnutChartTooltip): string {
+    return ` €${context?.formattedValue}`;
+  }
+
   const header = (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, md: 2 }}>
@@ -393,6 +400,7 @@ const Summary: FC = () => {
         <DoughnutChart
           data={elabDoughnutChartData}
           labels={doughnutChartLabels}
+          customTooltipLabel={graphTooltipLabel}
         />
       </LiquidGlass>
     </div>

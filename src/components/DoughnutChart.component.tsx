@@ -30,12 +30,23 @@ export type TDoughnutChartData = {
   backgroundColor: string[];
 };
 
+export interface IDoughnutChartTooltip {
+  formattedValue: string;
+  label: string;
+  dataset: {
+    backgroundColor: string;
+    data: number[];
+    label: string;
+  };
+}
+
 interface IProps {
   labels: string[];
   data: TDoughnutChartData;
+  customTooltipLabel?: (context: IDoughnutChartTooltip) => string;
 }
 
-const DoughnutChart: FC<IProps> = ({ labels, data }) => {
+const DoughnutChart: FC<IProps> = ({ labels, data, customTooltipLabel }) => {
   const dataset = {
     labels,
     datasets: [data],
@@ -50,9 +61,7 @@ const DoughnutChart: FC<IProps> = ({ labels, data }) => {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => {
-            return ` €${context.parsed}`;
-          },
+          label: customTooltipLabel,
         },
       },
     },
