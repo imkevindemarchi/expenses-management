@@ -218,7 +218,7 @@ const Table: FC<IProps> = ({
                       >
                         <LiquidGlass
                           backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center w-fit px-3 py-2"
+                          className="flex justify-center items-center min-w-20 px-3 py-2"
                         >
                           <span className="text-incomings">
                             {`€ ${item[column.key]}`}
@@ -238,7 +238,7 @@ const Table: FC<IProps> = ({
                       >
                         <LiquidGlass
                           backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center w-fit px-3 py-2"
+                          className="flex justify-center items-center min-w-20 px-3 py-2"
                         >
                           <span className="text-exits">
                             {`€ ${item[column.key]}`}
