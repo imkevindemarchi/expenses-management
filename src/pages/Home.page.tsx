@@ -47,18 +47,18 @@ interface IFormData {
 const Home: FC = () => {
   const { t } = useTranslation();
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [categories, setCategories] = useState<TCategory[] | null>(null);
   const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
-    null
+    null,
   );
   const [step, setStep] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
-    null
+    null,
   );
   const [selectedSubCategory, setSelectedSubCategory] =
     useState<TSubCategory | null>(null);
@@ -66,10 +66,10 @@ const Home: FC = () => {
   const _MONTHS: IAutocompleteValue[] = MONTHS.map(
     (month: IAutocompleteValue) => {
       return { id: month.id, label: t(month.label) };
-    }
+    },
   );
   const DEFAULT_MONTH: IAutocompleteValue = _MONTHS.find(
-    (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1
+    (month: IAutocompleteValue) => month.id === new Date().getMonth() + 1,
   ) as IAutocompleteValue;
   const CURRENT_YEAR: number = new Date().getFullYear();
   const DEFAULT_FORM_DATA: IFormData = {
@@ -91,8 +91,8 @@ const Home: FC = () => {
     step === 1
       ? "selectACategoryToProceed"
       : step === 2
-      ? "selectASubCategoryToProceed"
-      : ""
+        ? "selectASubCategoryToProceed"
+        : "",
   );
   const isIncomeType: boolean = formData.type === "income";
   const isExitType: boolean = formData.type === "exit";
@@ -104,7 +104,7 @@ const Home: FC = () => {
           .startsWith(categoryFilter?.toLowerCase() as string);
       })
       .sort((a: TCategory, b: TCategory) =>
-        (a.label ?? "").localeCompare(b.label ?? "")
+        (a.label ?? "").localeCompare(b.label ?? ""),
       ) ?? [];
   const filteredSubCategories: TSubCategory[] =
     subCategories
@@ -114,7 +114,7 @@ const Home: FC = () => {
           .startsWith(subCategoryFilter?.toLowerCase() as string);
       })
       .sort((a: TSubCategory, b: TSubCategory) =>
-        (a.label ?? "").localeCompare(b.label ?? "")
+        (a.label ?? "").localeCompare(b.label ?? ""),
       ) ?? [];
   const isCloseIconShown: boolean =
     (categories && categories.length > 0 && step === 1) ||
@@ -134,7 +134,7 @@ const Home: FC = () => {
           setCategories(response.data);
           if (response.data?.length > 0) doesCategoriesExist = true;
         } else openPopup(t("unableLoadCategories"), "error");
-      }
+      },
     );
 
     await Promise.resolve(SUB_CATEGORY_API.getAll(userData?.id as string)).then(
@@ -143,7 +143,7 @@ const Home: FC = () => {
           setSubCategories(response.data);
           if (response.data?.length > 0) doesSubCategoriesExist = true;
         } else openPopup(t("unableLoadSubCategories"), "error");
-      }
+      },
     );
 
     !doesCategoriesExist &&
@@ -197,8 +197,11 @@ const Home: FC = () => {
               openPopup(t("itemSuccessfullyAdded"), "success");
               setFormData({ ...DEFAULT_FORM_DATA, month: formData.month });
             } else openPopup(t("unableAddItem"), "error");
-          }
+          },
         );
+
+        setStep(1);
+        setModal(false);
       } else openPopup(t("insertValidYear"), "warning");
     } else openPopup(t("insertItem"), "warning");
   }
@@ -274,7 +277,7 @@ const Home: FC = () => {
                 </Grid>
               )
             );
-          }
+          },
         )
       ) : (
         <div className="flex flex-col gap-2">
