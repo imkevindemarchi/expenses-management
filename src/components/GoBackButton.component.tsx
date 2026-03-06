@@ -1,31 +1,23 @@
 import React, { FC } from "react";
-import { useNavigate } from "react-router";
 
 // Assets
 import { ArrowLeftIcon } from "../assets/icons";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
+import IconButton from "./IconButton.component";
 
 interface IProps {
-  onClick?: Function;
+  onGoBack: (event: any) => void;
 }
 
-const GoBackButton: FC<IProps> = ({ onClick }) => {
-  const navigate = useNavigate();
-
-  function onGoBack(): void {
-    navigate(-1);
-  }
-
+const GoBackButton: FC<IProps> = ({ onGoBack }) => {
   return (
-    <LiquidGlass
-      borderRadius={100}
-      className="w-10 h-10 flex justify-center items-center cursor-pointer hover:opacity-50"
-      onClick={() => (onClick ? onClick() : onGoBack())}
-    >
-      <ArrowLeftIcon className="text-white text-2xl" />
-    </LiquidGlass>
+    <IconButton
+      onClick={onGoBack}
+      icon={<ArrowLeftIcon className="text-black text-2xl" />}
+      className="bg-lightgray"
+      noShadow
+    />
   );
 };
 

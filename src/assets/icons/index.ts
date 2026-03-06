@@ -24,3 +24,7 @@ export { Sad as SadIcon } from "./sad.icon";
 export { Neutral as NeutralIcon } from "./neutral.icon";
 export { ArrowUp as ArrowUpIcon } from "./arrow-up.icon";
 export { Filters as FiltersIcon } from "./filters.icon";
+export { Euro as EuroIcon } from "./euro.icon";
+export { Settings as SettingsIcon } from "./settings.icon";
+export { Calendar as CalendarIcon } from "./calendar.icon";
+export { Expense as ExpenseIcon } from "./expense.icon";

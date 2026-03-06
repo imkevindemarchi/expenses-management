@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { CATEGORY_API, ITEM_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
-import { CloseIcon, ExitIcon, IncomeIcon } from "../assets/icons";
+import { CloseIcon, ExitIcon, IncomeIcon, SearchIcon } from "../assets/icons";
 import { MONTHS } from "../assets";
 
 // Components
@@ -15,8 +15,8 @@ import {
   Autocomplete,
   GoBackButton,
   Input,
-  LiquidGlass,
   Modal,
+  ShadowBox,
 } from "../components";
 
 // Contexts
@@ -30,7 +30,7 @@ import {
   THTTPResponse,
   TItem,
   TItemType,
-  TSubCategory,
+  TSubcategory,
 } from "../types";
 import { IAutocompleteValue } from "../components/Autocomplete.component";
 
@@ -53,15 +53,15 @@ const Home: FC = () => {
     PopupContext,
   ) as TPopupContext;
   const [categories, setCategories] = useState<TCategory[] | null>(null);
-  const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
+  const [subcategories, setSubcategories] = useState<TSubcategory[] | null>(
     null,
   );
   const [step, setStep] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
     null,
   );
-  const [selectedSubCategory, setSelectedSubCategory] =
-    useState<TSubCategory | null>(null);
+  const [selectedSubcategory, setSelectedSubcategory] =
+    useState<TSubcategory | null>(null);
   const [modal, setModal] = useState<boolean>(false);
   const _MONTHS: IAutocompleteValue[] = MONTHS.map(
     (month: IAutocompleteValue) => {
@@ -80,19 +80,15 @@ const Home: FC = () => {
   };
   const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-  const [subCategoryFilter, setSubCategoryFilter] = useState<string>("");
+  const [subcategoryFilter, setSubcategoryFilter] = useState<string>("");
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
   const [welcomeModal, setWelcomeModal] = useState<boolean>(false);
   const [isFirstTimeOnWebsite, setIsFirstTimeOnWebsite] =
     useState<boolean>(false);
   const navigate = useNavigate();
 
-  const title: string = t(
-    step === 1
-      ? "selectACategoryToProceed"
-      : step === 2
-        ? "selectASubCategoryToProceed"
-        : "",
+  const titleLabel: string = t(
+    step === 1 ? "selectACategory" : step === 2 ? "selectASubcategory" : "",
   );
   const isIncomeType: boolean = formData.type === "income";
   const isExitType: boolean = formData.type === "exit";
@@ -106,27 +102,22 @@ const Home: FC = () => {
       .sort((a: TCategory, b: TCategory) =>
         (a.label ?? "").localeCompare(b.label ?? ""),
       ) ?? [];
-  const filteredSubCategories: TSubCategory[] =
-    subCategories
-      ?.filter((element: TSubCategory) => {
+  const filteredSubcategories: TSubcategory[] =
+    subcategories
+      ?.filter((element: TSubcategory) => {
         return element?.label
           ?.toLowerCase()
-          .startsWith(subCategoryFilter?.toLowerCase() as string);
+          .startsWith(subcategoryFilter?.toLowerCase() as string);
       })
-      .sort((a: TSubCategory, b: TSubCategory) =>
+      .sort((a: TSubcategory, b: TSubcategory) =>
         (a.label ?? "").localeCompare(b.label ?? ""),
       ) ?? [];
-  const isCloseIconShown: boolean =
-    (categories && categories.length > 0 && step === 1) ||
-    (subCategories && subCategories.length > 0 && step === 2)
-      ? true
-      : false;
 
   setPageTitle(t("home"));
 
   async function getData(): Promise<void> {
     let doesCategoriesExist: boolean = false;
-    let doesSubCategoriesExist: boolean = false;
+    let doesSubcategoriesExist: boolean = false;
 
     await Promise.resolve(CATEGORY_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
@@ -140,14 +131,14 @@ const Home: FC = () => {
     await Promise.resolve(SUB_CATEGORY_API.getAll(userData?.id as string)).then(
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) {
-          setSubCategories(response.data);
-          if (response.data?.length > 0) doesSubCategoriesExist = true;
-        } else openPopup(t("unableLoadSubCategories"), "error");
+          setSubcategories(response.data);
+          if (response.data?.length > 0) doesSubcategoriesExist = true;
+        } else openPopup(t("unableLoadSubcategories"), "error");
       },
     );
 
     !doesCategoriesExist &&
-      !doesSubCategoriesExist &&
+      !doesSubcategoriesExist &&
       setIsFirstTimeOnWebsite(true);
 
     setIsLoading(false);
@@ -158,8 +149,8 @@ const Home: FC = () => {
     setStep(step + 1);
   }
 
-  function onSubCategoryClick(subCategory: TSubCategory): void {
-    setSelectedSubCategory(subCategory);
+  function onSubcategoryClick(subcategory: TSubcategory): void {
+    setSelectedSubcategory(subcategory);
     setModal(true);
   }
 
@@ -170,7 +161,7 @@ const Home: FC = () => {
   }
 
   function resetFilterHandler(): void {
-    step === 1 ? setCategoryFilter("") : step === 2 && setSubCategoryFilter("");
+    step === 1 ? setCategoryFilter("") : step === 2 && setSubcategoryFilter("");
   }
 
   async function onItemKeyUp(event: any): Promise<void> {
@@ -186,7 +177,7 @@ const Home: FC = () => {
           value: formData.value,
           user_id: userData?.id,
           category_id: (selectedCategory as TCategory).id as string,
-          sub_category_id: (selectedSubCategory as TSubCategory).id as string,
+          sub_category_id: (selectedSubcategory as TSubcategory).id as string,
           year: formData.year,
           date: new Date(),
         };
@@ -206,41 +197,68 @@ const Home: FC = () => {
     } else openPopup(t("insertItem"), "warning");
   }
 
+  const title = (
+    <span className="text-black text-[2.5em] mobile:text-2xl">
+      {titleLabel}
+    </span>
+  );
+
   const categoryFilterComponent = categories && categories.length > 0 && (
     <Input
-      placeholder={t("searchForName")}
+      placeholder={t("searchForCategory")}
       type="text"
       value={categoryFilter}
       onChange={(event: ChangeEvent<HTMLInputElement>) =>
         setCategoryFilter(event.target.value)
       }
+      className="w-full"
+      startIcon={<SearchIcon className="text-darkgray text-3xl" />}
+      endIcon={
+        <div
+          onClick={resetFilterHandler}
+          className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+        >
+          <CloseIcon className="text-darkgray text-2xl" />
+        </div>
+      }
     />
   );
 
-  const subCategoryFilterComponent = subCategories &&
-    subCategories.length > 0 && (
+  const subcategoryFilterComponent = subcategories &&
+    subcategories.length > 0 && (
       <Input
-        placeholder={t("searchForName")}
+        placeholder={t("searchForSubcategory")}
         type="text"
-        value={subCategoryFilter}
+        value={subcategoryFilter}
         onChange={(event: ChangeEvent<HTMLInputElement>) =>
-          setSubCategoryFilter(event.target.value)
+          setSubcategoryFilter(event.target.value)
+        }
+        className="w-full"
+        startIcon={<SearchIcon className="text-darkgray text-3xl" />}
+        endIcon={
+          <div
+            onClick={resetFilterHandler}
+            className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+          >
+            <CloseIcon className="text-darkgray text-2xl" />
+          </div>
         }
       />
     );
 
   const step1Component = (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{ width: "100%" }}>
       {categories && categories.length > 0 ? (
         filteredCategories?.map((category: TCategory, index: number) => {
           return (
             <Grid key={index} size={{ xs: 12, md: 3 }}>
-              <LiquidGlass
+              <ShadowBox
                 onClick={() => onCategoryClick(category)}
-                className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
+                className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300 bg-primary"
+                noShadow
               >
                 <span className="text-white text-lg">{category.label}</span>
-              </LiquidGlass>
+              </ShadowBox>
             </Grid>
           );
         })
@@ -259,21 +277,22 @@ const Home: FC = () => {
   );
 
   const step2Component = (
-    <Grid container spacing={2}>
-      {subCategories && subCategories.length > 0 ? (
-        filteredSubCategories?.map(
-          (subCategory: TSubCategory, index: number) => {
+    <Grid container spacing={2} sx={{ width: "100%" }}>
+      {subcategories && subcategories.length > 0 ? (
+        filteredSubcategories?.map(
+          (subcategory: TSubcategory, index: number) => {
             return (
-              subCategory.category_id === selectedCategory?.id && (
+              subcategory.category_id === selectedCategory?.id && (
                 <Grid key={index} size={{ xs: 12, md: 3 }}>
-                  <LiquidGlass
-                    onClick={() => onSubCategoryClick(subCategory)}
-                    className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300"
+                  <ShadowBox
+                    onClick={() => onSubcategoryClick(subcategory)}
+                    className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300 bg-primary"
+                    noShadow
                   >
                     <span className="text-white text-lg">
-                      {subCategory.label}
+                      {subcategory.label}
                     </span>
-                  </LiquidGlass>
+                  </ShadowBox>
                 </Grid>
               )
             );
@@ -281,12 +300,12 @@ const Home: FC = () => {
         )
       ) : (
         <div className="flex flex-col gap-2">
-          <span className="text-white">{t("noSubCategoriesMessage")}</span>
+          <span className="text-white">{t("noSubcategoriesMessage")}</span>
           <span
-            onClick={() => navigate("/sub-categories/new")}
+            onClick={() => navigate("/subcategories/new")}
             className="text-white underline cursor-pointer w-fit"
           >
-            {t("createSubCategory")}
+            {t("createSubcategory")}
           </span>
         </div>
       )}
@@ -305,30 +324,44 @@ const Home: FC = () => {
       className="mobile:mt-10"
     >
       <div className="flex flex-col gap-5">
-        <span className="text-white text-base">{t("addItemDescription")}</span>
+        <span className="text-darkgray text-base">
+          {t("addItemDescription")}
+        </span>
         <div className="flex items-center gap-5 justify-between mobile:flex-col">
-          <LiquidGlass
+          <ShadowBox
             onClick={() => onFormDataChange("type", "income")}
-            backgroundColor={isIncomeType ? "rgba(255, 255, 255, 0.5)" : ""}
             className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
               isIncomeType
-                ? "cursor-default"
+                ? "cursor-default opacity-70 bg-success-popup"
                 : "hover:opacity-50 cursor-pointer"
             }`}
           >
-            <IncomeIcon className="text-[3em] text-primary" />
-            <span className="text-white">{t("income")}</span>
-          </LiquidGlass>
-          <LiquidGlass
+            <IncomeIcon
+              className={`text-[3em] ${isIncomeType ? "text-primary" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isIncomeType ? "text-white" : "text-gray"}`}
+            >
+              {t("income")}
+            </span>
+          </ShadowBox>
+          <ShadowBox
             onClick={() => onFormDataChange("type", "exit")}
-            backgroundColor={isExitType ? "rgba(255, 255, 255, 0.5)" : ""}
             className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
-              isExitType ? "cursor-default" : "hover:opacity-50 cursor-pointer"
+              isExitType
+                ? "cursor-default opacity-70 bg-error-popup"
+                : "hover:opacity-50 cursor-pointer"
             }`}
           >
-            <ExitIcon className="text-[3em] text-red" />
-            <span className="text-white">{t("exit")}</span>
-          </LiquidGlass>
+            <ExitIcon
+              className={`text-[3em] ${isExitType ? "text-primary-red" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isExitType ? "text-white" : "text-gray"}`}
+            >
+              {t("exit")}
+            </span>
+          </ShadowBox>
         </div>
         <Autocomplete
           autoComplete="current-password"
@@ -339,6 +372,7 @@ const Home: FC = () => {
           }
           data={_MONTHS}
           showAllOptions
+          noFullOptionsWidth
         />
         <Input
           autoFocus
@@ -374,9 +408,10 @@ const Home: FC = () => {
       isOpen={welcomeModal}
       onSubmit={welcomeModalHandler}
       onClose={welcomeModalHandler}
-      submitButtonText={t("understood")}
+      submitButtonText="understood"
+      hideSubmitIcon
     >
-      <span className="text-white">{t("welcomeMessage")}</span>
+      <span className="text-black">{t("welcomeMessage")}</span>
     </Modal>
   );
 
@@ -392,32 +427,22 @@ const Home: FC = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 justify-center items-center">
         {!isFirstTimeOnWebsite && (
-          <span className="text-white text-lg mobile:text-center">{title}</span>
+          <div className="flex items-center gap-5">
+            {step !== 1 && <GoBackButton onGoBack={() => setStep(step - 1)} />}
+            {title}
+          </div>
         )}
-        {step === 2 && <GoBackButton onClick={() => setStep(step - 1)} />}
         {!isFirstTimeOnWebsite && (
-          <LiquidGlass
-            className={`p-20 flex flex-col mobile:p-10 ${
-              isCloseIconShown ? "gap-5" : ""
-            }`}
-          >
-            <div className="flex justify-between gap-5">
+          <div className="w-full flex flex-col gap-5 justify-center items-center px-80 mobile:px-0">
+            <div className="flex justify-between gap-5 w-full">
               {step === 1
                 ? categoryFilterComponent
-                : step === 2 && subCategoryFilterComponent}
-              {isCloseIconShown && (
-                <LiquidGlass
-                  onClick={resetFilterHandler}
-                  className="p-3 cursor-pointer hover:opacity-50"
-                >
-                  <CloseIcon className="text-white text-2xl" />
-                </LiquidGlass>
-              )}
+                : step === 2 && subcategoryFilterComponent}
             </div>
             {step === 1 ? step1Component : step === 2 && step2Component}
-          </LiquidGlass>
+          </div>
         )}
       </div>
       {modalComponent}

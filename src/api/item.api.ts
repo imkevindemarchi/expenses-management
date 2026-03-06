@@ -34,11 +34,12 @@ export const ITEM_API = {
   getAllWithFilters: async (
     from: number,
     to: number,
-    subCategoryId: string,
+    subcategoryId: string,
     year: number,
     type: TItemType | string,
     month: string,
-    userId: string
+    value: number,
+    userId: string,
   ): Promise<THTTPResponse> => {
     try {
       let query = supabase
@@ -48,10 +49,11 @@ export const ITEM_API = {
         .eq("year", year.toString())
         .eq("user_id", userId);
 
-      if (subCategoryId?.trim() !== "")
-        query = query.eq("sub_category_id", subCategoryId);
+      if (subcategoryId?.trim() !== "")
+        query = query.eq("sub_category_id", subcategoryId);
       if (type?.trim() !== "") query = query.eq("type", type);
       if (month?.trim() !== "") query = query.eq("month_id", month);
+      if (value !== 0) query = query.eq("value", value);
 
       const { data, count: totalRecords, error } = await query;
 

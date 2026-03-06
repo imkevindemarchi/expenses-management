@@ -1,0 +1,1 @@
+export { MdEuroSymbol as Euro } from "react-icons/md";

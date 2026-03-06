@@ -5,7 +5,7 @@ import { CheckIcon, CloseIcon, ErrorIcon, WarningIcon } from "../assets/icons";
 import { Z_INDEX } from "../assets/constants";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
+import ShadowBox from "./ShadowBox.component";
 
 // Contexts
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
@@ -21,25 +21,14 @@ const Popup: FC = () => {
   const isWarning: boolean = type === "warning";
 
   return (
-    <LiquidGlass
+    <ShadowBox
       className={`fixed top-5 max-w-[70%] ${
         isOpen ? "right-5 opacity-100" : "-right-96 opacity-0"
       }`}
-      noBorder
-      blur={2}
       zIndex={Z_INDEX.POPUP}
     >
       <div
-        style={{
-          backgroundColor: isSuccess
-            ? `rgb(0, 128, 0, 0.6)`
-            : isWarning
-              ? "rgb(255, 165, 0, 0.6)"
-              : isError
-                ? "rgb(255, 0, 0, 0.6)"
-                : "",
-        }}
-        className="px-5 py-2 rounded-full flex items-center gap-2"
+        className={`px-5 py-2 rounded-full flex items-center gap-2 ${isSuccess ? "bg-success-popup" : isWarning ? "bg-warning-popup" : "bg-error-popup"}`}
       >
         {isSuccess && <CheckIcon className="text-2xl text-white" />}
         {isWarning && <WarningIcon className="text-2xl text-white" />}
@@ -50,7 +39,7 @@ const Popup: FC = () => {
           onClick={onClose}
         />
       </div>
-    </LiquidGlass>
+    </ShadowBox>
   );
 };
 

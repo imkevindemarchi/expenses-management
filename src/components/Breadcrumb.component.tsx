@@ -5,9 +5,6 @@ import { NavigateFunction, useLocation, useNavigate } from "react-router";
 // Assets
 import { ArrowRightIcon } from "../assets/icons";
 
-// Components
-import LiquidGlass from "./LiquidGlass.component";
-
 const Breadcrumb = () => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
@@ -15,7 +12,7 @@ const Breadcrumb = () => {
 
   const splittedPathname = pathname.split("/").slice(1);
   const hasEdit: boolean = splittedPathname.find(
-    (path: string) => path === "edit"
+    (path: string) => path === "edit",
   )
     ? true
     : false;
@@ -37,20 +34,18 @@ const Breadcrumb = () => {
         const isLastElement: boolean = index === splittedPathname.length - 1;
 
         return isLastElement ? (
-          <LiquidGlass key={index} className="px-5 h-full">
-            <span key={index} className="text-white">
-              {t(path)}
-            </span>
-          </LiquidGlass>
+          <span key={index} className="text-black">
+            {t(path)}
+          </span>
         ) : (
           <div key={index} className="flex flex-row items-center gap-3">
             <span
               onClick={onGoToPreviousPage}
-              className="transition-all duration-300 hover:underline cursor-pointer text-white opacity-80"
+              className="transition-all duration-300 hover:underline cursor-pointer text-darkgray opacity-80"
             >
               {t(path)}
             </span>
-            <ArrowRightIcon className="text-white" />
+            <ArrowRightIcon className="text-black" />
           </div>
         );
       })}

@@ -56,7 +56,7 @@ const DoughnutChart: FC<IProps> = ({ labels, data, customTooltipLabel }) => {
     plugins: {
       legend: {
         labels: {
-          color: "#ffffff",
+          color: "#000000",
         },
       },
       tooltip: {
@@ -68,7 +68,7 @@ const DoughnutChart: FC<IProps> = ({ labels, data, customTooltipLabel }) => {
     scales: {},
   };
 
-  return <Pie data={dataset} options={options} width={250} height={250} />;
+  return <Pie data={dataset} options={options} />;
 };
 
 export default DoughnutChart;

@@ -18,10 +18,11 @@ const Hamburger: FC<IProps> = ({ onClick, isActive }) => {
         <div
           key={line}
           style={{ transformOrigin: "1px" }}
-          className={`w-10 h-1 relative rounded-sm first:rotate-0 even:opacity-1 even:translate-x-0 last:rotate-0 transition-all duration-300 bg-white
+          className={`w-10 h-1 relative rounded-sm first:rotate-0 even:opacity-1 even:translate-x-0 last:rotate-0 transition-all duration-300
             ${
-              isActive &&
-              "bg-white opacity-100 first:rotate-45 even:opacity-0 even:translate-x-20 last:rotate-[-45deg]"
+              isActive
+                ? "bg-primary opacity-100 first:rotate-45 even:opacity-0 even:translate-x-20 last:rotate-[-45deg]"
+                : "bg-black"
             } ${isActive ? "opacity-100" : "opacity-50"}`}
         />
       ))}

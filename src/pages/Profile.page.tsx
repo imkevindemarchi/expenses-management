@@ -64,10 +64,10 @@ const Profile: FC = () => {
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
   const [formData, setFormData] = useState<TProfile & TImage>(DEFAULT_STATE);
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [isImageUpdated, setIsImageUpdated] = useState<boolean>(false);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
@@ -152,17 +152,17 @@ const Profile: FC = () => {
                             });
                             openPopup(
                               t("profileSuccessfullyUpdated"),
-                              "success"
+                              "success",
                             );
                           } else openPopup(t("unableUpdateImage"), "error");
-                        }
-                      )
+                        },
+                      ),
                     );
                   } else openPopup(t("unableRemoveImage"), "error");
-                }
+                },
               );
           }
-        }
+        },
       );
     } else openPopup(t("invalidData"), "error");
 
@@ -171,7 +171,7 @@ const Profile: FC = () => {
 
   function onInputChange(
     propLabel: keyof TProfile | keyof TImage,
-    value: any
+    value: any,
   ): void {
     setFormData((prevState: any) => {
       return { ...prevState, [propLabel]: value };
@@ -246,12 +246,10 @@ const Profile: FC = () => {
           setErrors(ERRORS_DEFAULT_STATE);
         }}
         type="button"
-        variant="liquid-glass"
         text={t("cancel")}
       />
       <Button
         type="submit"
-        variant="liquid-glass"
         text={t("save")}
         icon={<SaveIcon className="text-xl text-white" />}
       />

@@ -1,56 +1,56 @@
 import React, { FC, MouseEvent } from "react";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
-
-type TVariant = "primary" | "liquid-glass";
+import ShadowBox from "./ShadowBox.component";
 
 type TButtonType = "button" | "submit" | "reset";
 
+type TButtonVariant = "primary" | "secondary";
+
 interface IProps {
-  variant: TVariant;
   text: string;
   type?: TButtonType;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   icon?: any;
   className?: string;
   zIndex?: number;
+  variant?: TButtonVariant;
+  readOnly?: boolean;
 }
 
 const Button: FC<IProps> = ({
-  variant = "primary",
   type = "button",
   text,
   onClick,
   icon,
   className,
   zIndex,
+  variant = "primary",
+  readOnly = false,
 }) => {
   switch (variant) {
-    case "liquid-glass": {
+    case "primary": {
       return (
-        <LiquidGlass zIndex={zIndex} className={`w-fit ${className}`}>
+        <ShadowBox zIndex={zIndex} className={`w-fit ${className}`}>
           <button
-            onClick={onClick}
+            onClick={(event: any) => !readOnly && onClick && onClick(event)}
             type={type}
-            className="px-10 py-3 w-full flex justify-center items-center gap-1 hover:opacity-50 transition-all duration-300"
+            className={`px-5 py-2 w-full flex justify-center items-center gap-1 ${!readOnly ? "hover:opacity-50 transition-all duration-300 cursor-pointer" : "cursor-default"}`}
           >
             {icon && icon}
             <span className="text-base text-white">{text}</span>
           </button>
-        </LiquidGlass>
+        </ShadowBox>
       );
     }
-    default: {
+    case "secondary": {
       return (
-        <button
+        <span
           onClick={onClick}
-          type={type}
-          style={{ zIndex }}
-          className="bg-primary rounded-full px-5 py-3 hover:opacity-50 transition-all duration-300"
+          className="text-base text-darkgray underline-offset-4 underline cursor-pointer hover:opacity-50 transition-all duration-300"
         >
-          <span className="text-base text-white">{text}</span>
-        </button>
+          {text}
+        </span>
       );
     }
   }

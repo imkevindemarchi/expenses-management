@@ -1,16 +1,24 @@
 import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
+import { Grid } from "@mui/material";
 
 // Api
 import { CATEGORY_API, ITEM_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
 import { MONTHS } from "../assets";
-import { ExitIcon, FiltersIcon, IncomeIcon } from "../assets/icons";
+import {
+  CalendarIcon,
+  EuroIcon,
+  ExitIcon,
+  FiltersIcon,
+  IncomeIcon,
+} from "../assets/icons";
+import { Z_INDEX } from "../assets/constants";
 
 // Components
-import { Input, LiquidGlass, Modal, Table } from "../components";
+import { Button, Input, Modal, ShadowBox, Table } from "../components";
 
 // Contexts
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
@@ -23,7 +31,7 @@ import {
   THTTPResponse,
   TItem,
   TItemType,
-  TSubCategory,
+  TSubcategory,
 } from "../types";
 import { IColumn } from "../components/Table.component";
 import Autocomplete, {
@@ -32,17 +40,17 @@ import Autocomplete, {
 
 // Utils
 import { setPageTitle } from "../utils";
-import { Grid } from "@mui/material";
 
 interface ITableData {
   from: number;
   to: number;
   total: number;
   page: number;
-  subCategory: string;
+  subcategory: string;
   year: number;
   type: string;
   month: string;
+  value: number;
 }
 
 interface IModal {
@@ -76,10 +84,11 @@ const Expenses: FC = () => {
     to: parseInt(searchParams.get("to") as string) || 4,
     total: parseInt(searchParams.get("total") as string) || 0,
     page: parseInt(searchParams.get("page") as string) || 1,
-    subCategory: searchParams.get("sub-category") || "",
+    subcategory: searchParams.get("subcategory") || "",
     year: Number(searchParams.get("year")) || new Date().getFullYear(),
     type: searchParams.get("type") || "",
     month: searchParams.get("month") || "",
+    value: parseInt(searchParams.get("value") as string) || 0,
   };
   const [table, setTable] = useState<ITableData>(TABLE_DEFAULT_STATE);
   const [deleteModal, setDeleteModal] = useState<IModal>(DEFAULT_DELETE_MODAL);
@@ -102,7 +111,7 @@ const Expenses: FC = () => {
   ) as IAutocompleteValue;
   const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
   const [categories, setCategories] = useState<TCategory[] | null>(null);
-  const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
+  const [subcategries, setSubcategories] = useState<TSubcategory[] | null>(
     null,
   );
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
@@ -114,14 +123,14 @@ const Expenses: FC = () => {
     { key: "month", value: t("month") },
     { key: "year", value: t("year") },
     { key: "category", value: t("category") },
-    { key: "sub-category", value: t("subCategory") },
+    { key: "subcategory", value: t("subcategory") },
     { key: "value", value: t("value") },
   ];
   const isIncomeType: boolean = formData?.type === "income";
   const isExitType: boolean = formData?.type === "exit";
   const tableType: TItemType | string =
     table?.type === "1" ? "income" : table?.type === "2" ? "exit" : "";
-
+  const isMobile: boolean = window.innerWidth <= 800;
   async function getData(): Promise<void> {
     setIsLoading(true);
 
@@ -131,16 +140,17 @@ const Expenses: FC = () => {
           if (categoriesRes && categoriesRes.hasSuccess) {
             await Promise.resolve(
               SUB_CATEGORY_API.getAll(userData?.id as string),
-            ).then(async (subCategoriesRes: THTTPResponse) => {
-              if (subCategoriesRes && subCategoriesRes.hasSuccess) {
+            ).then(async (subcategoriesRes: THTTPResponse) => {
+              if (subcategoriesRes && subcategoriesRes.hasSuccess) {
                 await Promise.resolve(
                   ITEM_API.getAllWithFilters(
                     table.from,
                     table.to,
-                    table.subCategory,
+                    table.subcategory,
                     table.year,
                     tableType,
                     table.month,
+                    table.value,
                     userData?.id as string,
                   ),
                 ).then((itemsRes: THTTPResponse) => {
@@ -150,11 +160,11 @@ const Expenses: FC = () => {
                         (category: TCategory) =>
                           category.id === item.category_id,
                       ) as TCategory;
-                      const subCategory: TSubCategory =
-                        subCategoriesRes.data.find(
-                          (subCategory: TSubCategory) =>
-                            subCategory.id === item.sub_category_id,
-                        ) as TSubCategory;
+                      const subcategory: TSubcategory =
+                        subcategoriesRes.data.find(
+                          (subcategory: TSubcategory) =>
+                            subcategory.id === item.sub_category_id,
+                        ) as TSubcategory;
                       const month = MONTHS.find(
                         (month: IAutocompleteValue) =>
                           month.id === item.month_id,
@@ -164,7 +174,7 @@ const Expenses: FC = () => {
                         ...item,
                         type: t(item.type),
                         category: category?.label,
-                        "sub-category": subCategory?.label,
+                        subcategory: subcategory?.label,
                         month: month?.label,
                       };
                     });
@@ -177,8 +187,8 @@ const Expenses: FC = () => {
                     });
                   } else openPopup(t("unableLoadItems"), "error");
                 });
-                setSubCategories(subCategoriesRes.data);
-              } else openPopup(t("unableLoadSubCategories"), "error");
+                setSubcategories(subcategoriesRes.data);
+              } else openPopup(t("unableLoadSubcategories"), "error");
             });
             setCategories(categoriesRes.data);
           } else openPopup(t("unableLoadCategories"), "error");
@@ -189,10 +199,11 @@ const Expenses: FC = () => {
         ITEM_API.getAllWithFilters(
           table.from,
           table.to,
-          table.subCategory,
+          table.subcategory,
           table.year,
           tableType,
           table.month,
+          table.value,
           userData?.id as string,
         ),
       ).then((itemsRes: THTTPResponse) => {
@@ -201,10 +212,10 @@ const Expenses: FC = () => {
             const category: TCategory = categories?.find(
               (category: TCategory) => category.id === item.category_id,
             ) as TCategory;
-            const subCategory: TSubCategory = subCategories?.find(
-              (subCategory: TSubCategory) =>
-                subCategory.id === item.sub_category_id,
-            ) as TSubCategory;
+            const subcategory: TSubcategory = subcategries?.find(
+              (subcategory: TSubcategory) =>
+                subcategory.id === item.sub_category_id,
+            ) as TSubcategory;
             const month = MONTHS.find(
               (month: IAutocompleteValue) => month.id === item.month_id,
             );
@@ -213,7 +224,7 @@ const Expenses: FC = () => {
               ...item,
               type: t(item.type),
               category: category?.label,
-              "sub-category": subCategory?.label,
+              subcategory: subcategory?.label,
               month: month?.label,
             };
           });
@@ -318,16 +329,16 @@ const Expenses: FC = () => {
     if (event.key === "Enter") await onEdit();
   }
 
-  function getAutocompleteSubCategories(): IAutocompleteValue[] {
+  function getAutocompleteSubcategories(): IAutocompleteValue[] {
     return (
-      subCategories?.map((subCategory: TSubCategory) => {
+      subcategries?.map((subcategory: TSubcategory) => {
         const category: TCategory = categories?.find(
-          (category: TCategory) => category.id === subCategory.category_id,
+          (category: TCategory) => category.id === subcategory.category_id,
         ) as TCategory;
 
         return {
-          id: subCategory.id,
-          label: `${subCategory.label} - ${category.label.toUpperCase()}`,
+          id: subcategory.id,
+          label: `${subcategory.label} (${category.label})`,
         };
       }) ?? []
     );
@@ -341,9 +352,9 @@ const Expenses: FC = () => {
     );
   }
 
-  function getSelectedSubCategory(): IAutocompleteValue {
-    return getAutocompleteSubCategories().find(
-      (subCategory: IAutocompleteValue) => subCategory.id === table.subCategory,
+  function getSelectedSubcategory(): IAutocompleteValue {
+    return getAutocompleteSubcategories().find(
+      (subcategory: IAutocompleteValue) => subcategory.id === table.subcategory,
     ) as IAutocompleteValue;
   }
 
@@ -357,43 +368,47 @@ const Expenses: FC = () => {
   async function onResetFilters(): Promise<void> {
     setTable({
       ...table,
-      subCategory: "",
+      subcategory: "",
       year: new Date().getFullYear(),
       type: "",
       month: "",
+      value: 0,
     });
   }
 
   const title = (
-    <span className="text-white text-2xl mobile:text-center">
+    <span className="text-black text-[2.5em] mobile:text-2xl">
       {t("expenses")}
     </span>
   );
 
   const filters = (
-    <div className="flex items-center gap-5">
-      <LiquidGlass
+    <div className="w-full flex justify-start">
+      <ShadowBox
         onClick={() => setIsFiltersModalOpen(true)}
-        className="w-fit p-2 hover:opacity-50 transition-all duration-300 cursor-pointer"
+        className="flex items-center gap-5 px-5 w-fit p-2 hover:opacity-50 transition-all duration-300 cursor-pointer bg-lightgray"
+        noShadow
       >
-        <FiltersIcon className="text-white text-3xl" />
-      </LiquidGlass>
-      <span className="text-white">Apri filtri</span>
+        <FiltersIcon className="text-black text-xl" />
+        <span className="text-darkgray">{t("openFilters")}</span>
+      </ShadowBox>
     </div>
   );
 
   const tableComponent = (
-    <Table
-      data={tableData}
-      columns={talbeColumns}
-      total={table.total}
-      onGoPreviousPage={onTableGoPreviousPage}
-      onGoNextPage={onTableGoNextPage}
-      info={table}
-      isLoading={isLoading}
-      onDelete={onTableDelete}
-      onRowClick={onTableRowClick}
-    />
+    <div className="min-w-[30%] mobile:w-full">
+      <Table
+        data={tableData}
+        columns={talbeColumns}
+        total={table.total}
+        onGoPreviousPage={onTableGoPreviousPage}
+        onGoNextPage={onTableGoNextPage}
+        info={table}
+        isLoading={isLoading}
+        onDelete={onTableDelete}
+        onRowClick={onTableRowClick}
+      />
+    </div>
   );
 
   const deleteModalComponent = (
@@ -405,43 +420,54 @@ const Expenses: FC = () => {
       cancelButtonText="no"
       submitButtonText="yes"
     >
-      <span className="text-white opacity-80">{t("confirmToDeleteVoice")}</span>
+      <span className="text-black opacity-80">{t("confirmToDeleteVoice")}</span>
     </Modal>
   );
 
   const editModalComponent = (
     <Modal
-      isOpen={editModal.show}
       title={t("editItem")}
+      isOpen={editModal.show}
       onCancel={() => setEditModal(DEFAULT_EDIT_MODAL)}
       onSubmit={onEdit}
       className="mobile:mt-10"
     >
       <div className="flex flex-col gap-5">
-        <span className="text-white text-base">{t("addItemDescription")}</span>
         <div className="flex items-center gap-5 justify-between mobile:flex-col">
-          <LiquidGlass
+          <ShadowBox
             onClick={() => onFormDataChange("type", "income")}
-            backgroundColor={isIncomeType ? "rgba(255, 255, 255, 0.5)" : ""}
             className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
               isIncomeType
-                ? "cursor-default"
+                ? "cursor-default opacity-70 bg-success-popup"
                 : "hover:opacity-50 cursor-pointer"
             }`}
           >
-            <IncomeIcon className="text-[3em] text-primary" />
-            <span className="text-white">{t("income")}</span>
-          </LiquidGlass>
-          <LiquidGlass
+            <IncomeIcon
+              className={`text-[3em] ${isIncomeType ? "text-primary" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isIncomeType ? "text-white" : "text-gray"}`}
+            >
+              {t("income")}
+            </span>
+          </ShadowBox>
+          <ShadowBox
             onClick={() => onFormDataChange("type", "exit")}
-            backgroundColor={isExitType ? "rgba(255, 255, 255, 0.5)" : ""}
             className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
-              isExitType ? "cursor-default" : "hover:opacity-50 cursor-pointer"
+              isExitType
+                ? "cursor-default opacity-70 bg-error-popup"
+                : "hover:opacity-50 cursor-pointer"
             }`}
           >
-            <ExitIcon className="text-[3em] text-red" />
-            <span className="text-white">{t("exit")}</span>
-          </LiquidGlass>
+            <ExitIcon
+              className={`text-[3em] ${isExitType ? "text-primary-red" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isExitType ? "text-white" : "text-gray"}`}
+            >
+              {t("exit")}
+            </span>
+          </ShadowBox>
         </div>
         <Autocomplete
           autoComplete="current-password"
@@ -452,6 +478,7 @@ const Expenses: FC = () => {
           }
           data={_MONTHS}
           showAllOptions
+          noFullOptionsWidth
         />
         <Input
           autoFocus
@@ -480,138 +507,118 @@ const Expenses: FC = () => {
     <Modal
       title={t("filters")}
       isOpen={isFiltersModalOpen}
-      onClose={async () => {
+      onClose={() => setIsFiltersModalOpen(false)}
+      onCancel={onResetFilters}
+      cancelButtonText="cancelFilters"
+      onSubmit={async () => {
         await getData();
         setIsFiltersModalOpen(false);
       }}
-      onSubmit={onResetFilters}
-      submitButtonText={t("cancelFilters")}
+      submitButtonText="applyFilters"
     >
-      <div className="flex items-center justify-center">
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center gap-5 mobile:gap-2 mobile:justify-between">
+          <Button
+            text={t("incomings")}
+            className={`w-full ${tableType === "income" ? "bg-success-popup" : "bg-gray"}`}
+            onClick={() =>
+              setTable((prevState: any) => {
+                return { ...prevState, type: "1" };
+              })
+            }
+            readOnly={tableType === "income"}
+          />
+          <Button
+            text={t("exits")}
+            className={`w-full ${tableType === "exit" ? "bg-error-popup" : "bg-gray"}`}
+            onClick={() =>
+              setTable((prevState: any) => {
+                return { ...prevState, type: "2" };
+              })
+            }
+            readOnly={tableType === "exit"}
+          />
+          <Button
+            text={t("all")}
+            className={`w-full ${tableType === "" ? "bg-warning-popup" : "bg-gray"}`}
+            onClick={() =>
+              setTable((prevState: any) => {
+                return { ...prevState, type: "" };
+              })
+            }
+            readOnly={tableType === ""}
+          />
+        </div>
         <Grid
           container
+          className="w-full"
           columnSpacing={5}
-          rowSpacing={2}
-          style={{
-            width: "80%",
-          }}
+          rowSpacing={isMobile ? 2 : 0}
         >
           <Grid size={{ xs: 12, md: 6 }}>
             <Autocomplete
-              placeholder={t("searchForSubCategory")}
-              value={getSelectedSubCategory()}
+              placeholder={t("searchForSubcategory")}
+              value={getSelectedSubcategory()}
               onChange={(value: IAutocompleteValue) =>
                 setTable((prevState: any) => {
-                  return { ...prevState, subCategory: value.id };
+                  return { ...prevState, subcategory: value.id };
                 })
               }
-              data={getAutocompleteSubCategories()}
+              data={getAutocompleteSubcategories()}
               noFullOptionsWidth
+              zIndex={Z_INDEX.AUTOCOMPLETE + 10}
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <Grid size={{ xs: 12 }}>
-              <div>
-                <Input
-                  value={table.year}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                    event.target.value.length <= 4 &&
-                    setTable((prevState: any) => {
-                      return {
-                        ...prevState,
-                        year: Number(event.target.value),
-                      };
-                    })
-                  }
-                />
-              </div>
-            </Grid>
+            <Input
+              value={table.year}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                event.target.value.length <= 4 &&
+                setTable((prevState: any) => {
+                  return {
+                    ...prevState,
+                    year: Number(event.target.value),
+                  };
+                })
+              }
+              startIcon={<CalendarIcon className="text-darkgray text-lg" />}
+            />
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          className="w-full"
+          columnSpacing={5}
+          rowSpacing={isMobile ? 2 : 0}
+        >
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Autocomplete
+              placeholder={t("searchForMonth")}
+              value={getSelectedMonth()}
+              onChange={(value: IAutocompleteValue) =>
+                setTable((prevState: any) => {
+                  return { ...prevState, month: value.id?.toString() };
+                })
+              }
+              data={getAutocompleteMonths()}
+              noFullOptionsWidth
+              showAllOptions
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <Grid size={{ xs: 12 }}>
-              <Grid container columnSpacing={2} rowSpacing={2}>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <div className="mobile:flex mobile:justify-center mobile:items-center">
-                    <LiquidGlass
-                      backgroundColor={
-                        tableType === "income"
-                          ? "rgba(255, 255, 255, 0.5)"
-                          : "rgba(255, 255, 255, 0.1)"
-                      }
-                      onClick={() =>
-                        setTable((prevState: any) => {
-                          return { ...prevState, type: "1" };
-                        })
-                      }
-                      className="px-5 py-2 cursor-pointer hover:opacity-50 transition-all w-fit mobile:px-10 mobile:py-3"
-                    >
-                      <span className="text-white font-bold">
-                        {t("income").toUpperCase()}
-                      </span>
-                    </LiquidGlass>
-                  </div>
-                </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <div className="mobile:flex mobile:justify-center mobile:items-center">
-                    <LiquidGlass
-                      backgroundColor={
-                        tableType === "exit"
-                          ? "rgba(255, 255, 255, 0.5)"
-                          : "rgba(255, 255, 255, 0.1)"
-                      }
-                      onClick={() =>
-                        setTable((prevState: any) => {
-                          return { ...prevState, type: "2" };
-                        })
-                      }
-                      className="px-5 py-2 cursor-pointer hover:opacity-50 transition-all w-fit mobile:px-10 mobile:py-3"
-                    >
-                      <span className="text-white font-bold">
-                        {t("exit").toUpperCase()}
-                      </span>
-                    </LiquidGlass>
-                  </div>
-                </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <div className="mobile:flex mobile:justify-center mobile:items-center">
-                    <LiquidGlass
-                      backgroundColor={
-                        tableType === ""
-                          ? "rgba(255, 255, 255, 0.5)"
-                          : "rgba(255, 255, 255, 0.1)"
-                      }
-                      onClick={() =>
-                        setTable((prevState: any) => {
-                          return { ...prevState, type: "3" };
-                        })
-                      }
-                      className="px-5 py-2 cursor-pointer hover:opacity-50 transition-all w-fit mobile:px-10 mobile:py-3"
-                    >
-                      <span className="text-white font-bold">
-                        {t("noOne").toUpperCase()}
-                      </span>
-                    </LiquidGlass>
-                  </div>
-                </Grid>
-              </Grid>
-              <div className="flex items-center justify-between"></div>
-            </Grid>
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <div>
-              <Autocomplete
-                placeholder={t("searchForMonth")}
-                value={getSelectedMonth()}
-                onChange={(value: IAutocompleteValue) =>
-                  setTable((prevState: any) => {
-                    return { ...prevState, month: value.id?.toString() };
-                  })
-                }
-                data={getAutocompleteMonths()}
-                noFullOptionsWidth
-                showAllOptions
-              />
-            </div>
+            <Input
+              value={table.value}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                event.target.value.length <= 4 &&
+                setTable((prevState: any) => {
+                  return {
+                    ...prevState,
+                    value: Number(event.target.value),
+                  };
+                })
+              }
+              startIcon={<EuroIcon className="text-darkgray text-lg" />}
+            />
           </Grid>
         </Grid>
       </div>
@@ -632,7 +639,7 @@ const Expenses: FC = () => {
       from: table.from,
       to: table.to,
       page: table.page,
-      "sub-category": table.subCategory,
+      subcategory: table.subcategory,
       year: table.year,
       type: table.type,
       month: table.month,
@@ -643,7 +650,7 @@ const Expenses: FC = () => {
     table.from,
     table.to,
     table.page,
-    table.subCategory,
+    table.subcategory,
     table.year,
     table.type,
     table.month,
@@ -668,12 +675,10 @@ const Expenses: FC = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 justify-center items-center">
         {title}
         {filters}
-        <LiquidGlass className="flex flex-col gap-10">
-          {tableComponent}
-        </LiquidGlass>
+        {tableComponent}
       </div>
       {deleteModalComponent}
       {editModalComponent}

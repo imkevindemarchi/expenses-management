@@ -16,7 +16,7 @@ import { CATEGORY_API, SUB_CATEGORY_API } from "../api";
 import { CreateIcon, SaveIcon } from "../assets/icons";
 
 // Components
-import { Autocomplete, Button, Input, LiquidGlass } from "../components";
+import { Autocomplete, Button, Input, ShadowBox } from "../components";
 
 // Contexts
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
@@ -24,7 +24,7 @@ import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 
 // Types
-import { THTTPResponse, TCategory, TSubCategory } from "../types";
+import { THTTPResponse, TCategory, TSubcategory } from "../types";
 import { TValidation } from "../utils/validation.util";
 import { IAutocompleteValue } from "../components/Autocomplete.component";
 
@@ -55,27 +55,30 @@ const ERRORS_DEFAULT_STATE: TErrors = {
   },
 };
 
-const SubCategory: FC = () => {
+const Subcategory: FC = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const { categoryId } = useParams();
   const navigate: NavigateFunction = useNavigate();
-  const [subCategories, setSubCategories] = useState<TSubCategory[] | null>(
-    null
+  const [subcategories, setSubcategories] = useState<TSubcategory[] | null>(
+    null,
   );
   const [categories, setCategories] = useState<TCategory[]>([]);
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const isEditMode: boolean = categoryId ? true : false;
+  const titleLabel: string = isEditMode
+    ? t("editSubcategory")
+    : t("newSubcategory");
 
-  setPageTitle(isEditMode ? t("editSubCategory") : t("newSubCategory"));
+  setPageTitle(titleLabel);
 
   async function getData(): Promise<void> {
     setIsLoading(true);
@@ -85,8 +88,8 @@ const SubCategory: FC = () => {
       CATEGORY_API.getAll(userData?.id as string),
     ]).then(async (response: THTTPResponse[]) => {
       if (response[0] && response[0].hasSuccess)
-        setSubCategories(response[0].data);
-      else openPopup(t("unableLoadSubCategories"), "error");
+        setSubcategories(response[0].data);
+      else openPopup(t("unableLoadSubcategories"), "error");
 
       if (response[1] && response[1].hasSuccess)
         setCategories(response[1].data);
@@ -94,19 +97,19 @@ const SubCategory: FC = () => {
 
       if (isEditMode && response[1] && response[1].hasSuccess)
         await Promise.resolve(SUB_CATEGORY_API.get(categoryId as string)).then(
-          (subCategoryRes: THTTPResponse) => {
-            if (subCategoryRes && subCategoryRes.hasSuccess) {
+          (subcategoryRes: THTTPResponse) => {
+            if (subcategoryRes && subcategoryRes.hasSuccess) {
               const category: TCategory = response[1].data.find(
                 (category: TCategory) =>
-                  category.id === subCategoryRes.data?.category_id
+                  category.id === subcategoryRes.data?.category_id,
               ) as TCategory;
 
               setFormData({
-                ...subCategoryRes.data,
+                ...subcategoryRes.data,
                 category,
               });
-            } else openPopup(t("unableLoadSubCategory"), "error");
-          }
+            } else openPopup(t("unableLoadSubcategory"), "error");
+          },
         );
     });
 
@@ -124,10 +127,10 @@ const SubCategory: FC = () => {
 
   function validateForm(): boolean {
     const isLabelValid: TValidation = validateFormField(
-      formData.label as string
+      formData.label as string,
     );
     const isCategoryValid: TValidation = validateFormField(
-      formData.category?.label as string
+      formData.category?.label as string,
     );
 
     const isFormValid: boolean =
@@ -155,22 +158,22 @@ const SubCategory: FC = () => {
     event.preventDefault();
 
     const isFormValid: boolean = validateForm();
-    const subCategoryAlreadyExists: boolean = subCategories?.find(
-      (subCategory: TSubCategory) =>
-        subCategory.label?.toLowerCase().trim() ===
+    const subcategoryAlreadyExists: boolean = subcategories?.find(
+      (subcategory: TSubcategory) =>
+        subcategory.label?.toLowerCase().trim() ===
           formData.label?.toLowerCase().trim() &&
-        subCategory.category_id === formData.category?.id
+        subcategory.category_id === formData.category?.id,
     )
       ? true
       : false;
 
     if (!isFormValid) openPopup(t("invalidData"), "warning");
-    else if (subCategoryAlreadyExists && !isEditMode)
-      openPopup(t("subCategoryAlreadyExists"), "warning");
+    else if (subcategoryAlreadyExists && !isEditMode)
+      openPopup(t("subcategoryAlreadyExists"), "warning");
     else {
       setIsLoading(true);
 
-      const payload: Partial<TSubCategory> = {
+      const payload: Partial<TSubcategory> = {
         label: formData.label,
         category_id: (formData.category as TCategory)?.id as string,
         user_id: userData?.id,
@@ -178,20 +181,20 @@ const SubCategory: FC = () => {
 
       if (isEditMode)
         await Promise.resolve(
-          SUB_CATEGORY_API.update(payload, categoryId as string)
+          SUB_CATEGORY_API.update(payload, categoryId as string),
         ).then(async (response: THTTPResponse) => {
           if (response && response.hasSuccess)
-            openPopup(t("subCategorySuccessfullyUpdated"), "success");
-          else openPopup(t("unableUpdateSubCategory"), "error");
+            openPopup(t("subcategorySuccessfullyUpdated"), "success");
+          else openPopup(t("unableUpdateSubcategory"), "error");
         });
       else
         await Promise.resolve(SUB_CATEGORY_API.create(payload)).then(
           async (response: THTTPResponse) => {
             if (response && response.hasSuccess) {
-              openPopup(t("subCategorySuccessfullyCreated"), "success");
-              navigate(`/sub-categories/edit/${response.data}`);
-            } else openPopup(t("unableCreateSubCategory"), "error");
-          }
+              openPopup(t("subcategorySuccessfullyCreated"), "success");
+              navigate(`/subcategories/edit/${response.data}`);
+            } else openPopup(t("unableCreateSubcategory"), "error");
+          },
         );
 
       await getData();
@@ -200,7 +203,35 @@ const SubCategory: FC = () => {
     }
   }
 
-  const label = (
+  const category = (
+    <Autocomplete
+      value={formData.category as IAutocompleteValue}
+      onChange={(value: IAutocompleteValue) => onInputChange("category", value)}
+      placeholder={t("insertCategory")}
+      error={errors.category}
+      data={categories as IAutocompleteValue[]}
+    />
+  );
+
+  const title = (
+    <span className="text-black text-[2.5em] mobile:text-2xl">
+      {titleLabel}
+    </span>
+  );
+
+  const description = (
+    <div className="w-full flex justify-start">
+      <span className="text-lg text-black mobile:text-center">
+        {t(
+          isEditMode
+            ? "compileFormToUpdateSubcategory"
+            : "compileFormToCreateSubcategory",
+        )}
+      </span>
+    </div>
+  );
+
+  const input = (
     <Input
       autoFocus
       value={formData.label}
@@ -216,20 +247,12 @@ const SubCategory: FC = () => {
     />
   );
 
-  const category = (
-    <Autocomplete
-      value={formData.category as IAutocompleteValue}
-      onChange={(value: IAutocompleteValue) => onInputChange("category", value)}
-      placeholder={t("insertCategory")}
-      error={errors.category}
-      data={categories as IAutocompleteValue[]}
-    />
-  );
-
   const button = (
     <Button
       type="submit"
-      variant="liquid-glass"
+      text={t(isEditMode ? "save" : "create")}
+      onClick={onSubmit}
+      className="bg-primary"
       icon={
         isEditMode ? (
           <SaveIcon className="text-xl text-white" />
@@ -237,20 +260,19 @@ const SubCategory: FC = () => {
           <CreateIcon className="text-xl text-white" />
         )
       }
-      text={t(isEditMode ? "save" : "create")}
     />
   );
 
   const form = (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-5 justify-center items-center"
+      className="w-full flex flex-col gap-5 justify-center items-center"
     >
-      <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
-        {label}
+      <ShadowBox className="w-[40%] px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
+        {input}
         {category}
         {button}
-      </LiquidGlass>
+      </ShadowBox>
     </form>
   );
 
@@ -261,17 +283,12 @@ const SubCategory: FC = () => {
   }, [userData?.id]);
 
   return (
-    <div className="flex flex-col gap-10 pt-10">
-      <span className="text-lg text-white mobile:text-center">
-        {t(
-          isEditMode
-            ? "compileFormToUpdateSubCategory"
-            : "compileFormToCreateSubCategory"
-        )}
-      </span>
+    <div className="flex flex-col gap-5 justify-center items-center">
+      {title}
+      {description}
       {form}
     </div>
   );
 };
 
-export default SubCategory;
+export default Subcategory;

@@ -9,15 +9,13 @@ import React, {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-// Components
-import LiquidGlass from "./LiquidGlass.component";
-
 // Hooks
 import { useClickOutside } from "../hooks";
 
 // Types
 import { TValidation } from "../utils/validation.util";
 import { Z_INDEX } from "../assets/constants";
+import ShadowBox from "./ShadowBox.component";
 
 type TInputType = "text" | "password";
 
@@ -43,6 +41,9 @@ interface IProps {
   data: IAutocompleteValue[];
   showAllOptions?: boolean;
   noFullOptionsWidth?: boolean;
+  alignTextToCenter?: boolean;
+  noShadow?: boolean;
+  zIndex?: number;
 }
 
 const Autocomplete: FC<IProps> = ({
@@ -60,11 +61,15 @@ const Autocomplete: FC<IProps> = ({
   data,
   showAllOptions,
   noFullOptionsWidth = false,
+  alignTextToCenter = false,
+  noShadow = false,
+  zIndex,
 }) => {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLDivElement>(null);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [state, setState] = useState<string | undefined>(value?.label);
+  const [borderColor, setBorderColor] = useState<string>("rgba(0, 0, 0, 0.04)");
 
   const hasOptions: boolean = data && data.length > 0;
 
@@ -73,20 +78,18 @@ const Autocomplete: FC<IProps> = ({
       return element?.label
         ?.toLowerCase()
         .startsWith(state?.toLowerCase() as string);
-    }
+    },
   );
   const elabData: IAutocompleteValue[] =
     state && state.trim() !== "" && !showAllOptions ? filteredData : data;
 
   function onFocus(): void {
     setDropdown(true);
-    if (inputRef.current)
-      inputRef.current.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+    setBorderColor("#3Bcc3d");
   }
 
   function onBlur(): void {
-    if (inputRef.current)
-      inputRef.current.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+    setBorderColor("rgba(0, 0, 0, 0.04)");
   }
 
   useClickOutside(inputRef as RefObject<HTMLElement>, () => {
@@ -107,10 +110,13 @@ const Autocomplete: FC<IProps> = ({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <LiquidGlass
+      <ShadowBox
         ref={inputRef}
-        zIndex={Z_INDEX.AUTOCOMPLETE}
-        className={`flex flex-col gap-2 px-5 py-3 ${className}`}
+        borderColor={borderColor}
+        borderSize={2}
+        zIndex={zIndex ?? Z_INDEX.AUTOCOMPLETE}
+        className={`flex flex-col gap-2 px-5 py-3 border-2 border-white bg-white ${className}`}
+        noShadow={noShadow}
       >
         <div className="flex flex-row gap-2 items-center relative">
           {startIcon}
@@ -120,7 +126,7 @@ const Autocomplete: FC<IProps> = ({
             type={type}
             autoFocus={autoFocus}
             style={{ background: "transparent" }}
-            className="border-none outline-none text-base text-white w-full"
+            className={`border-none outline-none text-base text-black w-full ${alignTextToCenter ? "text-center" : ""}`}
             placeholder={placeholder}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -131,18 +137,18 @@ const Autocomplete: FC<IProps> = ({
           />
           {endIcon}
           {hasOptions && (
-            <LiquidGlass
+            <ShadowBox
               style={{ left: "50%", transform: "translate(-50%, 0)" }}
-              blur={100}
               borderRadius={50}
-              backgroundColor="rgba(0, 0, 0, 0.8)"
-              className={`absolute text-center top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center py-2 z-800 min-w-40 overflow-y-scroll ${
+              className={`absolute text-center top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center py-2 z-800 min-w-40 overflow-y-scroll bg-white ${
                 dropdown && "top-12 opacity-100 pointer-events-auto"
               } ${noFullOptionsWidth ? "w-96 text-center" : "w-full"}`}
             >
-              <div className="flex flex-col gap-2 max-h-60">
+              <div className="flex flex-col max-h-60 w-full px-5 py-2">
                 {elabData && elabData.length > 0 ? (
                   elabData.map((element: IAutocompleteValue, index: number) => {
+                    const isSelected: boolean = element.label === state;
+
                     return (
                       <div
                         key={index}
@@ -150,9 +156,11 @@ const Autocomplete: FC<IProps> = ({
                           onChange(element);
                           setDropdown(false);
                         }}
-                        className="cursor-pointer px-5 py-2 hover:opacity-50 transition-all duration-300"
+                        className={`cursor-pointer w-full px-5 py-2 hover:opacity-50 transition-all duration-300 rounded-full ${isSelected ? "bg-lightgray" : ""}`}
                       >
-                        <span className="text-white whitespace-nowrap">
+                        <span
+                          className={`whitespace-nowrap ${isSelected ? "text-primary" : "text-black"}`}
+                        >
                           {element.label}
                         </span>
                       </div>
@@ -164,18 +172,14 @@ const Autocomplete: FC<IProps> = ({
                   </span>
                 )}
               </div>
-            </LiquidGlass>
+            </ShadowBox>
           )}
         </div>
-      </LiquidGlass>
+      </ShadowBox>
       {!error?.isValid && (
-        <LiquidGlass
-          className="py-2 px-3"
-          backgroundColor="rgba(255, 41, 0, 0.3)"
-          borderColor="rgba(255, 41, 0, 0.3)"
-        >
+        <ShadowBox className="py-2 px-3">
           <span className="text-white">{error?.message}</span>
-        </LiquidGlass>
+        </ShadowBox>
       )}
     </div>
   );

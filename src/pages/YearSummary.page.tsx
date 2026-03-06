@@ -9,12 +9,15 @@ import { ITEM_API } from "../api";
 import { MONTHS } from "../assets";
 
 // Components
-import { BarsChart, Input, LiquidGlass, Table } from "../components";
+import { BarsChart, Input, ProgressBar, Table } from "../components";
 
 // Contexts
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+
+// Icons
+import { CalendarIcon } from "../assets/icons";
 
 // Types
 import { THTTPResponse, TItem, TItemType } from "../types";
@@ -24,6 +27,7 @@ import {
   IBarsChartTooltip,
   TBarsChartDataset,
 } from "../components/BarsChart.component";
+import { TProgressBarStatus } from "../components/ProgressBar.component";
 
 // Utils
 import { setPageTitle } from "../utils";
@@ -57,9 +61,16 @@ const YearSummary: FC = () => {
   const [barsChartData, setBarsChartDataset] = useState<TBarsChartDataset[]>(
     [],
   );
+  const progressBarStatus: TProgressBarStatus =
+    Number(calculateProgress().toFixed(0)) >= 80
+      ? "danger"
+      : Number(calculateProgress().toFixed(0)) >= 50
+        ? "warning"
+        : "ok";
+  const titleLabel: string = t("year-summary");
+  const isMobile: boolean = window.innerWidth <= 800;
 
-  const title: string = t("year-summary");
-  setPageTitle(title);
+  setPageTitle(titleLabel);
 
   async function getData(): Promise<void> {
     setIsLoading(true);
@@ -122,7 +133,7 @@ const YearSummary: FC = () => {
       );
 
       data.push({
-        month: t(month.label),
+        month: month.label,
         incomings: totalIncomingsMonth,
         exits: totalExpensesMonth,
       });
@@ -184,9 +195,23 @@ const YearSummary: FC = () => {
     return total;
   }
 
-  const header = (
-    <div className="flex items-center gap-5">
-      <span className="text-white text-lg whitespace-nowrap">{title}</span>
+  function calculateProgress(): number {
+    const progress: number =
+      getTotal("exit") && getTotal("income")
+        ? (getTotal("exit") / getTotal("income")) * 100
+        : 100;
+
+    return getTotal("exit") > getTotal("income") ? 100 : progress;
+  }
+
+  const title = (
+    <span className="text-black text-[2em] mobile:text-2xl mobile:text-center">
+      {titleLabel}
+    </span>
+  );
+
+  const year = (
+    <Grid size={{ xs: 12, md: 3 }}>
       <Input
         type="number"
         inputMode="numeric"
@@ -194,9 +219,75 @@ const YearSummary: FC = () => {
         onChange={(event: ChangeEvent<HTMLInputElement>) =>
           onFiltersChange("year", event.target.value)
         }
-        className="w-fit"
+        startIcon={<CalendarIcon className="text-darkgray text-lg" />}
+        noShadow
       />
+    </Grid>
+  );
+
+  const incomingsLabel = (
+    <div className="flex flex-col gap-2">
+      <span className="text-lg text-black capitalize">
+        {t("totalIncomings")}
+      </span>
+      <span className="text-3xl text-primary">€ {getTotal("income")}</span>
     </div>
+  );
+
+  const exitsLabel = (
+    <div className="flex flex-col gap-2">
+      <span className="text-lg text-black capitalize">{t("totalExits")}</span>
+      <span className="text-3xl text-primary-red">€ {getTotal("exit")}</span>
+    </div>
+  );
+
+  const progressBar = (
+    <div className="flex flex-row items-center gap-5 mobile:flex-col">
+      <ProgressBar progress={calculateProgress()} status={progressBarStatus} />
+      <span
+        className={`text-xl ${progressBarStatus === "warning" ? "text-warning-popup " : progressBarStatus === "danger" ? "text-primary-red" : "text-primary"}`}
+      >
+        {calculateProgress().toFixed(0)}%
+      </span>
+    </div>
+  );
+
+  const progressLabel = getTotal("exit") !== 0 && (
+    <div className="flex items-end h-full">
+      <div className="flex flex-col gap-2">
+        <span className="text-lg text-black lowercase">
+          {t("percentageOfRevenueSpent")}
+        </span>
+        <div className="flex items-end h-full">{progressBar}</div>
+      </div>
+    </div>
+  );
+
+  const labels = (
+    <div className="w-full flex items-center justify-between">
+      <div className="w-full flex items-center gap-20 mobile:flex-col mobile:gap-5">
+        <div className="w-full flex items-center gap-10">
+          {incomingsLabel}
+          <div className="h-[10vh] bg-lightgray w-[1px] rounded-full" />
+          {exitsLabel}
+        </div>
+        <div className="w-full flex mobile:justify-center">{progressLabel}</div>
+      </div>
+    </div>
+  );
+
+  const header = (
+    <Grid container rowSpacing={isMobile ? 2 : 0}>
+      <Grid size={{ md: 4 }} sx={{ width: "100%" }}>
+        <div className="w-full flex flex-col gap-10">
+          {title}
+          {year}
+        </div>
+      </Grid>
+      <Grid size={{ md: 8 }} sx={{ width: "100%" }}>
+        {labels}
+      </Grid>
+    </Grid>
   );
 
   const columns: IColumn[] = [
@@ -206,15 +297,13 @@ const YearSummary: FC = () => {
   ];
 
   const table = tableData && tableData.length > 0 && (
-    <LiquidGlass>
-      <Table
-        isLoading={isLoading}
-        data={tableData}
-        columns={columns}
-        noFooter
-        smallPadding
-      />
-    </LiquidGlass>
+    <Table
+      isLoading={isLoading}
+      data={tableData}
+      columns={columns}
+      noFooter
+      smallPadding
+    />
   );
 
   function graphTooltipTitle(context: IBarsChartTooltip[]): string {
@@ -229,42 +318,14 @@ const YearSummary: FC = () => {
   }
 
   const graph = (
-    <LiquidGlass
-      blur={100}
-      borderRadius={20}
-      className="p-10 mobile:p-5 h-full"
-    >
-      <BarsChart
-        data={barsChartData}
-        labels={barsChartLabels}
-        customTooltipTitle={graphTooltipTitle}
-        customTooltipLabel={graphTooltipLabel}
-      />
-    </LiquidGlass>
-  );
-
-  const incomingsTotal = (
-    <div className="flex items-center gap-5">
-      <span className="text-3xl text-white">{t("incomings")}:</span>
-      <LiquidGlass
-        backgroundColor="rgba(0, 0, 0, 0.5)"
-        className="flex justify-center items-center w-fit px-5 py-2"
-      >
-        <span className="text-incomings text-3xl">€ {getTotal("income")}</span>
-      </LiquidGlass>
-    </div>
-  );
-
-  const exitsTotal = (
-    <div className="flex items-center gap-5">
-      <span className="text-3xl text-white">{t("exits")}:</span>
-      <LiquidGlass
-        backgroundColor="rgba(0, 0, 0, 0.5)"
-        className="flex justify-center items-center w-fit px-5 py-2"
-      >
-        <span className="text-exits text-3xl">€ {getTotal("exit")}</span>
-      </LiquidGlass>
-    </div>
+    <BarsChart
+      data={barsChartData}
+      labels={barsChartLabels}
+      customTooltipTitle={graphTooltipTitle}
+      customTooltipLabel={graphTooltipLabel}
+      height={isMobile ? 50 : 15}
+      width={100}
+    />
   );
 
   useEffect(() => {
@@ -285,12 +346,12 @@ const YearSummary: FC = () => {
     setBarsChartLabels(barsChartLabels);
     const barsChartDataset: TBarsChartDataset[] = [
       {
-        backgroundColor: "#FFE875",
+        backgroundColor: "#91FF75",
         data: getEachMonthIncomings(),
         label: t("incomings"),
       },
       {
-        backgroundColor: "#FF7575",
+        backgroundColor: "#FF8B75",
         data: getEachMonthExits(),
         label: t("exits"),
       },
@@ -302,14 +363,10 @@ const YearSummary: FC = () => {
   }, [items, filters.year]);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-10">
       {header}
-      {incomingsTotal}
-      {exitsTotal}
-      <Grid container columnSpacing={5} rowSpacing={5}>
-        <Grid size={{ xs: 12, md: 8 }}>{graph}</Grid>
-        <Grid size={{ xs: 12, md: 4 }}>{table}</Grid>
-      </Grid>
+      {graph}
+      {table}
     </div>
   );
 };

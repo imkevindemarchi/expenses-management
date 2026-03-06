@@ -12,7 +12,7 @@ export type { TPassword, TPasswordPayload } from "./password.type";
 
 export type { TCategory } from "./category.type";
 
-export type { TSubCategory } from "./sub-category.type";
+export type { TSubcategory } from "./subcategory.type";
 
 export type { TItemType, TItem } from "./item.type";
 
