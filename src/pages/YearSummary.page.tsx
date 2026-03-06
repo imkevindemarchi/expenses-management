@@ -266,7 +266,7 @@ const YearSummary: FC = () => {
   const labels = (
     <div className="w-full flex items-center justify-between">
       <div className="w-full flex items-center gap-20 mobile:flex-col mobile:gap-5">
-        <div className="w-full flex items-center gap-10">
+        <div className="flex items-center gap-10 mobile:gap-0 mobile:justify-between mobile:w-full">
           {incomingsLabel}
           <div className="h-[10vh] bg-lightgray w-[1px] rounded-full" />
           {exitsLabel}
