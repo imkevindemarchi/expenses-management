@@ -50,7 +50,9 @@ const PasswordReset: FC = () => {
     PopupContext,
   ) as TPopupContext;
 
-  setPageTitle(t("passwordReset"));
+  const titleLabel: string = t("passwordReset");
+
+  setPageTitle(titleLabel);
 
   function validateForm(): boolean {
     const isPasswordValid: TValidation = validateFormField(formData.password);
@@ -117,7 +119,7 @@ const PasswordReset: FC = () => {
 
   const title = (
     <span className="text-black text-[2.5em] mobile:text-2xl">
-      {t("passwordReset")}
+      {titleLabel}
     </span>
   );
 

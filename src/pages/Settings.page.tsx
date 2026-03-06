@@ -65,7 +65,9 @@ const Settings = () => {
   ) as TPopupContext;
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  setPageTitle(t("settings"));
+  const titleLabel: string = t("settings");
+
+  setPageTitle(titleLabel);
 
   async function getData(): Promise<void> {
     setIsLoading(true);
@@ -152,7 +154,7 @@ const Settings = () => {
 
   const title = (
     <span className="text-black text-[2.5em] mobile:text-2xl">
-      {t("settings")}
+      {titleLabel}
     </span>
   );
 
