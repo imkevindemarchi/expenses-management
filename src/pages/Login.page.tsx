@@ -26,7 +26,7 @@ import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { THTTPResponse, TLoginPayload } from "../types";
 
 // Utils
-import { setToStorage, validateEmail } from "../utils";
+import { setPageTitle, setToStorage, validateEmail } from "../utils";
 
 interface IFormData {
   email: string;
@@ -54,6 +54,8 @@ const Login = () => {
     AuthContext,
   ) as TAuthContext;
   const [passwordType, setPasswordType] = useState<TPasswordType>("password");
+
+  setPageTitle(t("logInTitle"));
 
   async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();

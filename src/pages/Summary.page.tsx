@@ -38,6 +38,9 @@ import {
 } from "../components/DoughnutChart.component";
 import { TProgressBarStatus } from "../components/ProgressBar.component";
 
+// Utils
+import { setPageTitle } from "../utils";
+
 interface IFilters {
   month: IAutocompleteValue;
   year: number;
@@ -115,6 +118,9 @@ const Summary: FC = () => {
   const isLeftToSpendShown: boolean =
     goal && Number(goal) !== 0 && isSamePeriod ? true : false;
   const isMobile: boolean = window.innerWidth <= 800;
+  const titleLabel: string = t("summary");
+
+  setPageTitle(titleLabel);
 
   function getSubcategoryTotal(
     subcategory: TSubcategory,
@@ -277,7 +283,7 @@ const Summary: FC = () => {
 
   const title = (
     <span className="text-black text-[2em] mobile:text-2xl mobile:text-center">
-      {t("summary")}
+      {titleLabel}
     </span>
   );
 
