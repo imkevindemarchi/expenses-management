@@ -4,7 +4,7 @@ import React, { FC, useState } from "react";
 import { ArrowUpIcon } from "../assets/icons";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
+import ShadowBox from "./ShadowBox.component";
 
 const BackToTopButton: FC = () => {
   const [state, setState] = useState(false);
@@ -16,14 +16,14 @@ const BackToTopButton: FC = () => {
 
   window.addEventListener("scroll", checkScroll);
 
-  return (
-    <LiquidGlass
+  return state ? (
+    <ShadowBox
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="p-3 fixed bottom-7 right-7 mobile:bottom-4 mobile:right-4 cursor-pointer hover:opacity-50"
+      className="bg-white p-3 fixed bottom-7 right-7 mobile:bottom-4 mobile:right-4 cursor-pointer hover:opacity-50"
     >
-      <ArrowUpIcon className="text-white text-3xl" />
-    </LiquidGlass>
-  );
+      <ArrowUpIcon className="text-black text-3xl" />
+    </ShadowBox>
+  ) : null;
 };
 
 export default BackToTopButton;

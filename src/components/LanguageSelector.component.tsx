@@ -3,7 +3,7 @@ import ReactCountryFlag from "react-country-flag";
 import { useTranslation } from "react-i18next";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
+import ShadowBox from "./ShadowBox.component";
 
 // Hooks
 import { useClickOutside } from "../hooks";
@@ -37,28 +37,25 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
 
   return (
     <div ref={ref} className="relative">
-      <LiquidGlass
+      <ReactCountryFlag
+        countryCode={elabValue}
+        svg
+        style={{
+          width: "1.8em",
+          height: "1.8em",
+        }}
         onClick={() => setState(!state)}
-        className="w-10 h-10 flex justify-center items-center hover:opacity-50 cursor-pointer"
-      >
-        <ReactCountryFlag
-          countryCode={elabValue}
-          svg
-          style={{
-            width: "1.5em",
-            height: "1.5em",
-          }}
-        />
-      </LiquidGlass>
+        className="hover:opacity-50 cursor-pointer transition-all duration-300"
+      />
       <div
         style={{ left: "50%", transform: "translate(-50%, 0)" }}
         className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
           state && "top-12 opacity-100 pointer-events-auto"
         }`}
       >
-        <LiquidGlass
+        <ShadowBox
           borderRadius={30}
-          className="flex flex-col gap-5 justify-center items-center w-40 py-5"
+          className="flex flex-col gap-5 justify-center items-center w-40 py-5 bg-white"
         >
           {LANGUAGES.map((language: TLanguage, index: number) => {
             const countryCode: string =
@@ -66,9 +63,9 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
             const isSelectedLanguage: boolean = language.id === currentLanguage;
 
             return isSelectedLanguage ? (
-              <LiquidGlass
+              <div
                 key={index}
-                className="flex items-center gap-2 px-5 py-2"
+                className="flex items-center gap-2 px-5 py-2 bg-lightgray rounded-full"
               >
                 <ReactCountryFlag
                   countryCode={countryCode}
@@ -78,13 +75,13 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
                     height: "1.5em",
                   }}
                 />
-                <span className="text-white">{t(language.label)}</span>
-              </LiquidGlass>
+                <span className="text-black">{t(language.label)}</span>
+              </div>
             ) : (
               <div
                 key={index}
                 onClick={() => onChange(language.id)}
-                className="flex items-center gap-2 cursor-pointer hover:opacity-50 transition-all duration-300"
+                className="flex items-center gap-2 px-5 py-2 bg-white rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
               >
                 <ReactCountryFlag
                   countryCode={countryCode}
@@ -94,11 +91,11 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
                     height: "1.5em",
                   }}
                 />
-                <span className="text-white">{t(language.label)}</span>
+                <span className="text-black">{t(language.label)}</span>
               </div>
             );
           })}
-        </LiquidGlass>
+        </ShadowBox>
       </div>
     </div>
   );

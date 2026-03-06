@@ -38,6 +38,8 @@ interface IProps {
   data: TBarsChartDataset[];
   customTooltipTitle?: (context: IBarsChartTooltip[]) => string;
   customTooltipLabel?: (context: IBarsChartTooltip) => string;
+  height?: number;
+  width?: number;
 }
 
 ChartJS.register(
@@ -48,13 +50,15 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-ChartJS.defaults.color = "#ffffff";
+ChartJS.defaults.color = "#000000";
 
 const BarsChart: FC<IProps> = ({
   labels,
   data,
   customTooltipTitle,
   customTooltipLabel,
+  height,
+  width,
 }) => {
   const options: ChartOptions<any> = {
     elements: {
@@ -70,6 +74,23 @@ const BarsChart: FC<IProps> = ({
         },
       },
     },
+    scales: {
+      x: {
+        ticks: {},
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        ticks: {
+          beginAtZero: true,
+        },
+        grid: {
+          drawBorder: false,
+          display: false,
+        },
+      },
+    },
   };
 
   const dataset = {
@@ -77,7 +98,7 @@ const BarsChart: FC<IProps> = ({
     datasets: data,
   };
 
-  return <Bar options={options} data={dataset} />;
+  return <Bar options={options} data={dataset} height={height} width={width} />;
 };
 
 export default BarsChart;

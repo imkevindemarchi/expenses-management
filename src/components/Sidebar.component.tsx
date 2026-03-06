@@ -6,12 +6,19 @@ import { NavigateFunction, useLocation, useNavigate } from "react-router";
 import { AUTH_API } from "../api";
 
 // Assets
-import logoImg from "../assets/images/logo.png";
-import { LogoutIcon, UserIcon } from "../assets/icons";
+import {
+  EuroIcon,
+  LockIcon,
+  LogoutIcon,
+  SettingsIcon,
+  UserIcon,
+} from "../assets/icons";
+import { Z_INDEX } from "../assets/constants";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
 import LanguageSelector from "./LanguageSelector.component";
+import ShadowBox from "./ShadowBox.component";
+import IconButton from "./IconButton.component";
 
 // Contexts
 import { SidebarContext, TSidebarContext } from "../providers/sidebar.provider";
@@ -28,7 +35,6 @@ import { THTTPResponse } from "../types";
 
 // Utils
 import { removeFromStorage, setToStorage } from "../utils";
-import { Z_INDEX } from "../assets/constants";
 
 const Sidebar: FC = () => {
   const {
@@ -40,13 +46,13 @@ const Sidebar: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { pathname } = useLocation();
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const { setIsUserAuthenticated, userData }: TAuthContext = useContext(
-    AuthContext
+    AuthContext,
   ) as TAuthContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [isUserDropdownOpened, setIsUserDropdownOpened] =
     useState<boolean>(false);
@@ -88,39 +94,38 @@ const Sidebar: FC = () => {
   useClickOutside(userLiquidGlassRef, () => setIsUserDropdownOpened(false));
 
   const logo = (
-    <LiquidGlass borderRadius={20} onClick={goToHome}>
-      <img
-        src={logoImg}
-        alt={t("imgNotFound")}
-        className="w-24 h-24 hover:opacity-50 transition-all duration-300 cursor-pointer"
-      />
-    </LiquidGlass>
+    <div onClick={goToHome} className="flex items-center gap-5">
+      <EuroIcon className="text-[5em] text-primary cursor-pointer hover:opacity-50 transition-all duration-300" />
+      <span className="text-black text-[3em]">{t("finances")}</span>
+    </div>
   );
 
   const routesComponent = (
-    <div className="flex flex-col justify-center text-center items-center">
+    <div className="flex flex-col justify-center text-center items-center mobile:gap-5">
       {ROUTES.map((route: TRoute, index: number) => {
         const isRouteHidden: boolean = route.isHidden ? true : false;
         const routePathSection: string = route.path.split("/")[1];
         const isRouteActive: boolean = routePathSection === currentPathSection;
 
         return !isRouteHidden && isRouteActive ? (
-          <LiquidGlass key={index} className="px-5 py-2">
-            <span className="text-2xl text-white font-bold">
-              {t(route.name).toUpperCase()}
+          <div key={index} className="flex flex-col gap-10 relative">
+            <span
+              onClick={() => onRouteChange(route.path)}
+              className="text-black text-xl hover:opacity-50 transition-all duration-300 cursor-pointer"
+            >
+              {t(route.name)}
             </span>
-          </LiquidGlass>
+            <div className="bg-primary w-full h-[2px] absolute bottom-[-20px] mobile:bottom-[-10px] rounded-full" />
+          </div>
         ) : (
           !isRouteHidden && (
-            <div
+            <span
               key={index}
               onClick={() => onRouteChange(route.path)}
-              className="px-5 py-2 cursor-pointer"
+              className="text-darkgray text-xl hover:opacity-50 transition-all duration-300 cursor-pointer"
             >
-              <span className="text-2xl text-white font-bold">
-                {t(route.name).toUpperCase()}
-              </span>
-            </div>
+              {t(route.name)}
+            </span>
           )
         );
       })}
@@ -132,74 +137,80 @@ const Sidebar: FC = () => {
   );
 
   const userIcon = (
-    <LiquidGlass
+    <div
       ref={userLiquidGlassRef}
-      className="w-10 h-10 flex justify-center items-center relative"
+      onClick={() => setIsUserDropdownOpened(!isUserDropdownOpened)}
+      className={`border-2 border-lightgray w-10 h-10 flex justify-center items-center cursor-pointer relative bg-lightgray rounded-full ${isUserDropdownOpened ? "" : "hover:opacity-50 transition-all duration-300"}`}
     >
-      <UserIcon
-        onClick={() => setIsUserDropdownOpened(!isUserDropdownOpened)}
-        className="w-6 h-6 text-white"
-      />
-      <div
-        style={{ left: "50%", transform: "translate(-50%, 0)" }}
-        className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
-          isUserDropdownOpened && "top-12 opacity-100 pointer-events-auto"
-        }`}
-      >
-        <LiquidGlass
-          borderRadius={30}
-          className="flex flex-col gap-2 justify-center items-center p-5"
+      <div className="relative">
+        <UserIcon className="text-black" />
+        <div
+          style={{ left: "50%", transform: "translate(-50%, 0)" }}
+          className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
+            isUserDropdownOpened && "top-12 opacity-100 pointer-events-auto"
+          }`}
         >
-          <span className="text-white underline cursor-default">
-            {userData?.email}
-          </span>
-          <span
-            onClick={() => onRouteChange("/settings")}
-            className="text-white hover:opacity-50 transition-all duration-300"
+          <ShadowBox
+            borderRadius={30}
+            className="flex flex-col gap-5 justify-center items-center p-5 bg-white"
           >
-            {t("settings")}
-          </span>
-          {/* <span
-            onClick={() => onRouteChange("/profile")}
-            className="text-white hover:opacity-50 transition-all duration-300"
-          >
-            {t("profile")}
-          </span> */}
-          <span
-            onClick={() => onRouteChange("/password-reset")}
-            className="text-white hover:opacity-50 transition-all duration-300"
-          >
-            {t("resetPassword")}
-          </span>
-        </LiquidGlass>
+            <span className="text-primary underline cursor-default">
+              {userData?.email}
+            </span>
+            <div
+              onClick={() => onRouteChange("/settings")}
+              className="flex items-center gap-2 hover:opacity-50 transition-all duration-300"
+            >
+              <SettingsIcon className="text-darkgray text-2xl" />
+              <span className="text-black">{t("settings")}</span>
+            </div>
+            <div
+              onClick={() => onRouteChange("/password-reset")}
+              className="flex items-center gap-2 hover:opacity-50 transition-all duration-300"
+            >
+              <LockIcon className="text-darkgray text-xl" />
+              <span className="text-black">{t("resetPassword")}</span>
+            </div>
+            {/* <span
+              onClick={() => navigate("/profile")}
+              className="text-white hover:opacity-50 transition-all duration-300"
+            >
+              {t("profile")}
+            </span> */}
+          </ShadowBox>
+        </div>
       </div>
-    </LiquidGlass>
+    </div>
   );
 
   const logoutIcon = (
-    <LiquidGlass className="w-10 h-10 flex justify-center items-center">
-      <LogoutIcon onClick={onLogout} className="w-6 h-6 text-white" />
-    </LiquidGlass>
+    <IconButton
+      onClick={onLogout}
+      icon={<LogoutIcon className="text-black text-xl" />}
+      className="border-lightgray w-10 h-10 relative bg-white border-2"
+    />
+  );
+
+  const icons = (
+    <div className="flex items-center gap-5">
+      {languageSelector}
+      {userIcon}
+      {logoutIcon}
+    </div>
   );
 
   return (
-    <LiquidGlass
-      className={`fixed left-0 w-full h-full flex justify-center items-center flex-col gap-10 desktop:hidden ${
+    <ShadowBox
+      className={`bg-white fixed left-0 w-full h-full flex justify-center items-center flex-col gap-10 desktop:hidden ${
         isOpen ? "top-0 opacity-100" : "top-[-100%] opacity-0"
       }`}
       borderRadius={0}
-      borderBottomRadius={50}
-      blur={10}
       zIndex={Z_INDEX.SIDEBAR}
     >
       {logo}
       {routesComponent}
-      <div className="flex items-center gap-5">
-        {languageSelector}
-        {userIcon}
-        {logoutIcon}
-      </div>
-    </LiquidGlass>
+      {icons}
+    </ShadowBox>
   );
 };
 

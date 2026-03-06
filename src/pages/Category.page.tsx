@@ -2,7 +2,6 @@ import React, {
   ChangeEvent,
   FC,
   FormEvent,
-  ReactNode,
   useContext,
   useEffect,
   useState,
@@ -17,7 +16,7 @@ import { CATEGORY_API } from "../api";
 import { CreateIcon, SaveIcon } from "../assets/icons";
 
 // Components
-import { Button, Input, LiquidGlass } from "../components";
+import { Button, Input, ShadowBox } from "../components";
 
 // Contexts
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
@@ -54,10 +53,10 @@ const Category: FC = () => {
   const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const { categoryId } = useParams();
   const navigate: NavigateFunction = useNavigate();
@@ -65,8 +64,9 @@ const Category: FC = () => {
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
 
   const isEditMode: boolean = categoryId ? true : false;
+  const titleLabel: string = isEditMode ? t("editCategory") : t("newCategory");
 
-  setPageTitle(isEditMode ? t("editCategory") : t("newCategory"));
+  setPageTitle(titleLabel);
 
   async function getData(): Promise<void> {
     setIsLoading(true);
@@ -75,7 +75,7 @@ const Category: FC = () => {
       (response: THTTPResponse) => {
         if (response && response.hasSuccess) setCategories(response.data);
         else openPopup(t("unableLoadCategories"), "error");
-      }
+      },
     );
 
     if (isEditMode)
@@ -84,7 +84,7 @@ const Category: FC = () => {
           if (response && response.hasSuccess)
             setFormData({ ...response.data });
           else openPopup(t("unableLoadCategory"), "error");
-        }
+        },
       );
 
     setIsLoading(false);
@@ -101,7 +101,7 @@ const Category: FC = () => {
 
   function validateForm(): boolean {
     const isLabelValid: TValidation = validateFormField(
-      formData.label as string
+      formData.label as string,
     );
 
     const isFormValid: boolean = isLabelValid.isValid;
@@ -127,7 +127,7 @@ const Category: FC = () => {
     const categoryAlreadyExists: boolean = categories?.find(
       (category: TCategory) =>
         category.label?.toLowerCase().trim() ===
-        formData.label?.toLowerCase().trim()
+        formData.label?.toLowerCase().trim(),
     )
       ? true
       : false;
@@ -145,7 +145,7 @@ const Category: FC = () => {
 
       if (isEditMode)
         await Promise.resolve(
-          CATEGORY_API.update(payload, categoryId as string)
+          CATEGORY_API.update(payload, categoryId as string),
         ).then(async (response: THTTPResponse) => {
           if (response && response.hasSuccess)
             openPopup(t("categorySuccessfullyUpdated"), "success");
@@ -158,7 +158,7 @@ const Category: FC = () => {
               openPopup(t("categorySuccessfullyCreated"), "success");
               navigate(`/categories/edit/${response.data}`);
             } else openPopup(t("unableCreateCategory"), "error");
-          }
+          },
         );
 
       await getData();
@@ -167,7 +167,25 @@ const Category: FC = () => {
     }
   }
 
-  const label: ReactNode = (
+  const title = (
+    <span className="text-black text-[2.5em] mobile:text-2xl">
+      {titleLabel}
+    </span>
+  );
+
+  const description = (
+    <div className="w-full flex justify-start">
+      <span className="text-lg text-black mobile:text-center">
+        {t(
+          isEditMode
+            ? "compileFormToUpdateCategory"
+            : "compileFormToCreateCategory",
+        )}
+      </span>
+    </div>
+  );
+
+  const input = (
     <Input
       autoFocus
       value={formData.label}
@@ -183,10 +201,12 @@ const Category: FC = () => {
     />
   );
 
-  const button: ReactNode = (
+  const button = (
     <Button
       type="submit"
-      variant="liquid-glass"
+      text={t(isEditMode ? "save" : "create")}
+      onClick={onSubmit}
+      className="bg-primary"
       icon={
         isEditMode ? (
           <SaveIcon className="text-xl text-white" />
@@ -194,19 +214,18 @@ const Category: FC = () => {
           <CreateIcon className="text-xl text-white" />
         )
       }
-      text={t(isEditMode ? "save" : "create")}
     />
   );
 
   const form = (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-5 justify-center items-center"
+      className="w-full flex flex-col gap-5 justify-center items-center"
     >
-      <LiquidGlass className="w-fit px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
-        {label}
+      <ShadowBox className="w-[40%] px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
+        {input}
         {button}
-      </LiquidGlass>
+      </ShadowBox>
     </form>
   );
 
@@ -217,14 +236,9 @@ const Category: FC = () => {
   }, [userData?.id]);
 
   return (
-    <div className="flex flex-col gap-10 pt-10">
-      <span className="text-lg text-white mobile:text-center">
-        {t(
-          isEditMode
-            ? "compileFormToUpdateCategory"
-            : "compileFormToCreateCategory"
-        )}
-      </span>
+    <div className="flex flex-col gap-5 justify-center items-center">
+      {title}
+      {description}
       {form}
     </div>
   );

@@ -6,16 +6,15 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid } from "@mui/material";
 
 // Api
 import { SETTING_API } from "../api";
 
 // Assets
-import { SaveIcon } from "../assets/icons";
+import { EuroIcon, SaveIcon } from "../assets/icons";
 
 // Components
-import { Button, Input, LiquidGlass } from "../components";
+import { Button, Input, ShadowBox } from "../components";
 
 // Contexts
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
@@ -56,13 +55,13 @@ const ERRORS_DEFAULT_STATE: TErrors = {
 const Settings = () => {
   const { t } = useTranslation();
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const [formData, setFormData] = useState<IFormData>(DEFAULT_STATE);
   const [errors, setErrors] = useState<TErrors>(ERRORS_DEFAULT_STATE);
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -80,7 +79,7 @@ const Settings = () => {
           });
           setIsEdit(true);
         }
-      }
+      },
     );
 
     setIsLoading(false);
@@ -88,7 +87,7 @@ const Settings = () => {
 
   function validateForm(): boolean {
     const isGoalValid: TValidation = validateFormField(
-      formData.goal.toString()
+      formData.goal.toString(),
     );
 
     const isFormValid: boolean = isGoalValid.isValid;
@@ -126,8 +125,8 @@ const Settings = () => {
               if (res.hasSuccess)
                 openPopup(t("settingsSuccessfullySaved"), "success");
               else openPopup(t("unableSaveSettings"), "error");
-            }
-          )
+            },
+          ),
         );
       else
         await Promise.resolve(
@@ -135,7 +134,7 @@ const Settings = () => {
             if (res.hasSuccess)
               openPopup(t("settingsSuccessfullySaved"), "success");
             else openPopup(t("unableSaveSettings"), "error");
-          })
+          }),
         );
     } else openPopup(t("invalidData"), "error");
 
@@ -152,46 +151,63 @@ const Settings = () => {
   }
 
   const title = (
-    <span className="text-white text-2xl mobile:text-center">
+    <span className="text-black text-[2.5em] mobile:text-2xl">
       {t("settings")}
     </span>
+  );
+
+  const description = (
+    <div className="w-full flex justify-start">
+      <span className="text-lg text-black mobile:text-center">
+        {t("insertMonthGoal")}
+      </span>
+    </div>
+  );
+
+  const input = (
+    <div className="w-full flex justify-center items-center">
+      <div>
+        <Input
+          type="number"
+          autoFocus
+          value={formData.goal}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            onInputChange("goal", event.target.value)
+          }
+          error={errors.password}
+          startIcon={<EuroIcon className="text-darkgray text-lg" />}
+          className="w-fit"
+        />
+      </div>
+    </div>
+  );
+
+  const formDescription = (
+    <span className="text-lg text-darkgray text-center">
+      {t("insertMonthGoalDescription")}
+    </span>
+  );
+
+  const button = (
+    <Button
+      type="submit"
+      text={t("save")}
+      onClick={onSubmit}
+      className="bg-primary"
+      icon={<SaveIcon className="text-xl text-white" />}
+    />
   );
 
   const form = (
     <form
       onSubmit={onSubmit}
-      className="w-full h-full flex flex-col gap-5 justify-center items-center"
+      className="w-full flex flex-col gap-5 justify-center items-center"
     >
-      <LiquidGlass className="w-full px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
-        <Grid
-          container
-          sx={{ width: "100%", display: "flex", alignItems: "center" }}
-          rowSpacing={2}
-        >
-          <Grid size={{ xs: 12, md: 3 }}>
-            <span className="text-white">{t("insertMonthGoal")}</span>
-          </Grid>
-          <Grid size={{ xs: 12, md: 9 }}>
-            <Input
-              type="number"
-              autoFocus
-              value={formData.goal}
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                onInputChange("goal", event.target.value)
-              }
-              error={errors.password}
-              className="w-fit"
-            />
-          </Grid>
-        </Grid>
-        <Button
-          type="submit"
-          variant="liquid-glass"
-          text={t("save")}
-          icon={<SaveIcon className="text-xl text-white" />}
-          className="w-fit"
-        />
-      </LiquidGlass>
+      <ShadowBox className="w-[40%] px-20 py-20 mobile:px-10 mobile:py-10 mobile:w-full flex flex-col justify-center items-center gap-10">
+        {formDescription}
+        {input}
+        {button}
+      </ShadowBox>
     </form>
   );
 
@@ -202,8 +218,9 @@ const Settings = () => {
   }, [userData?.id]);
 
   return (
-    <div className="flex flex-col gap-10 pt-10">
+    <div className="flex flex-col gap-5 justify-center items-center">
       {title}
+      {description}
       {form}
     </div>
   );

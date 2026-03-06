@@ -9,7 +9,7 @@ import React, {
 } from "react";
 
 // Components
-import LiquidGlass from "./LiquidGlass.component";
+import ShadowBox from "./ShadowBox.component";
 
 // Spinner
 import { ClipLoader as Spinner } from "react-spinners";
@@ -38,6 +38,7 @@ interface IProps {
   onSearch?: () => Promise<void>;
   inputMode?: TInputMode;
   onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
+  noShadow?: boolean;
 }
 
 const Input: FC<IProps> = ({
@@ -55,19 +56,19 @@ const Input: FC<IProps> = ({
   onSearch,
   inputMode,
   onKeyUp,
+  noShadow = false,
 }) => {
   const inputRef = useRef<HTMLDivElement>(null);
   const [isValueChanged, setIsValueChanged] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [borderColor, setBorderColor] = useState<string>("rgba(0, 0, 0, 0.04)");
 
   function onFocus() {
-    if (inputRef.current)
-      inputRef.current.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+    setBorderColor("#3Bcc3d");
   }
 
   function onBlur() {
-    if (inputRef.current)
-      inputRef.current.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+    setBorderColor("rgba(0, 0, 0, 0.04)");
   }
 
   useEffect(() => {
@@ -91,9 +92,12 @@ const Input: FC<IProps> = ({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <LiquidGlass
+      <ShadowBox
         ref={inputRef}
-        className={`flex flex-col gap-2 px-5 py-3 ${className}`}
+        borderColor={borderColor}
+        borderSize={2}
+        className={`flex flex-col gap-2 px-5 py-3 border-2 border-white ${className}`}
+        noShadow={noShadow}
       >
         <div className="flex flex-row gap-2 items-center">
           {startIcon}
@@ -103,7 +107,7 @@ const Input: FC<IProps> = ({
             type={type}
             autoFocus={autoFocus}
             style={{ background: "transparent" }}
-            className="border-none outline-none text-base text-white w-full"
+            className="border-none outline-none text-base text-black w-full"
             placeholder={placeholder}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -121,15 +125,11 @@ const Input: FC<IProps> = ({
           {endIcon}
           {isLoading && <Spinner size={20} color="#ffffff" className="ml-2" />}
         </div>
-      </LiquidGlass>
+      </ShadowBox>
       {!error?.isValid && (
-        <LiquidGlass
-          className="py-2 px-3"
-          backgroundColor="rgba(255, 41, 0, 0.3)"
-          borderColor="rgba(255, 41, 0, 0.3)"
-        >
+        <ShadowBox className="py-2 px-3">
           <span className="text-white">{error?.message}</span>
-        </LiquidGlass>
+        </ShadowBox>
       )}
     </div>
   );

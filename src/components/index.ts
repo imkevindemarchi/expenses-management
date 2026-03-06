@@ -17,3 +17,5 @@ export { default as GoBackButton } from "./GoBackButton.component";
 export { default as ProgressBar } from "./ProgressBar.component";
 export { default as DoughnutChart } from "./DoughnutChart.component";
 export { default as BarsChart } from "./BarsChart.component";
+export { default as ShadowBox } from "./ShadowBox.component";
+export { default as IconButton } from "./IconButton.component";

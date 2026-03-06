@@ -1,10 +1,14 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-
-// Assets
-import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon } from "../assets/icons";
-import LiquidGlass from "./LiquidGlass.component";
 import { format, parse } from "date-fns";
+
+// Icons
+import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon } from "../assets/icons";
+
+// Components
+import LiquidGlass from "./LiquidGlass.component";
+import ShadowBox from "./ShadowBox.component";
+import IconButton from "./IconButton.component";
 
 export interface IColumn {
   key: string;
@@ -56,54 +60,62 @@ const Table: FC<IProps> = ({
   const footer = !noFooter && (
     <div className="py-5 px-2 flex justify-between items-center sticky bottom-0 left-0 right-0">
       <div className="flex gap-1">
-        <span className="text-white opacity-80">{t("total")}:</span>
-        <span className="text-white font-bold">{total}</span>
+        <span className="text-black opacity-80">{t("total")}:</span>
+        <span className="text-black">{total}</span>
       </div>
-      <div className="flex flex-row desktop:w-[7%] w-[12%] justify-between mobile:w-[35%]">
-        <LiquidGlass
-          className={`transition-all duration-300 ${
-            !canGoPrevious ? "opacity-60 cursor-not-allowed" : ""
+      <div className="flex flex-row gap-5">
+        <ShadowBox
+          noBorder
+          noShadow
+          className={`transition-all duration-300 bg-lightgray ${
+            !canGoPrevious ? "opacity-60" : "hover:opacity-50"
           }`}
         >
           <button
             disabled={!canGoPrevious}
             onClick={async () => onGoPreviousPage && (await onGoPreviousPage())}
             className={`flex justify-center items-center w-10 h-10 p-2 rounded-lg ${
-              !canGoPrevious ? "opacity-50 cursor-default" : ""
+              !canGoPrevious ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            <ArrowLeftIcon className="text-3xl text-white" />
+            <ArrowLeftIcon className="text-3xl text-darkgray" />
           </button>
-        </LiquidGlass>
-        <LiquidGlass
-          className={`transition-all duration-300 ${
-            !canGoNext ? "opacity-60 cursor-not-allowed" : ""
+        </ShadowBox>
+        <ShadowBox
+          noBorder
+          noShadow
+          className={`transition-all duration-300 bg-lightgray ${
+            !canGoNext ? "opacity-60" : "hover:opacity-50"
           }`}
         >
           <button
             disabled={!canGoNext}
             onClick={async () => onGoNextPage && (await onGoNextPage())}
             className={`flex justify-center items-center w-10 h-10 p-2 rounded-lg ${
-              !canGoNext ? "opacity-50 cursor-default" : ""
+              !canGoNext ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            <ArrowRightIcon className="text-3xl text-white" />
+            <ArrowRightIcon className="text-3xl text-darkgray" />
           </button>
-        </LiquidGlass>
+        </ShadowBox>
       </div>
     </div>
   );
 
   return data && data?.length > 0 ? (
-    <div className="mobile:overflow-x-scroll relative px-10 py-10">
+    <ShadowBox
+      borderRadius={20}
+      className="mobile:overflow-x-scroll relative px-10 py-10 mobile:px-0 mobile:py-5"
+      noBorder
+    >
       <table className="w-full">
         <thead className="w-full">
           <tr>
             {onDelete && <th />}
             {columns.map((column: IColumn, index: number) => {
               return (
-                <th key={index} className="p-2 text-left">
-                  <span className="text-white whitespace-nowrap">
+                <th key={index} className="px-5 text-left">
+                  <span className="text-black font-normal whitespace-nowrap">
                     {column.value}
                   </span>
                 </th>
@@ -121,27 +133,26 @@ const Table: FC<IProps> = ({
                 onClick={() => onRowClick && onRowClick(item)}
                 style={{
                   borderBottom:
-                    isLastElement && noFooter
-                      ? ""
-                      : "1px solid rgba(255, 255, 255, 0.25)",
+                    isLastElement && noFooter ? "" : "1px solid #ececec",
                 }}
                 className={`${
                   onRowClick
-                    ? "cursor-pointer hover:opacity-50 transition-all duration-300"
+                    ? "cursor-pointer hover:bg-lightgray transition-all duration-300"
                     : ""
                 }`}
               >
                 {onDelete && (
-                  <td className="mobile:p-2">
-                    <LiquidGlass
+                  <td className="px-5">
+                    <IconButton
                       onClick={(event: any) => {
                         event.stopPropagation();
                         onDelete(item);
                       }}
-                      className="w-10 h-10 flex justify-center items-center"
-                    >
-                      <DeleteIcon className="text-white text-2xl" />
-                    </LiquidGlass>
+                      icon={<DeleteIcon className="text-white text-2xl" />}
+                      className="w-10 h-10 flex justify-center items-center bg-primary-red"
+                      noBorder
+                      noShadow
+                    />
                   </td>
                 )}
                 {columns.map((column: IColumn, index2: number) => {
@@ -161,7 +172,7 @@ const Table: FC<IProps> = ({
                       <td
                         key={index2}
                         className={`whitespace-nowrap ${
-                          !smallPadding ? "p-5" : "p-3"
+                          !smallPadding ? "p-5" : "p-1"
                         }`}
                       >
                         <span className="transition-all duration-300 text-primary">
@@ -187,8 +198,8 @@ const Table: FC<IProps> = ({
                       : null;
 
                     return (
-                      <td>
-                        <span className="text-white">{elabDate}</span>
+                      <td key={index2} className="p-5">
+                        <span className="text-black">{elabDate}</span>
                       </td>
                     );
                   }
@@ -209,65 +220,53 @@ const Table: FC<IProps> = ({
 
                   if (isIncomingColumn)
                     return isValueZero ? (
-                      <td />
+                      <td key={index2} />
                     ) : (
                       <td
-                        className={`whitespace-nowrap ${
-                          !smallPadding ? "p-5" : "p-3"
+                        key={index2}
+                        className={`whitespace-nowrap px-5 ${
+                          !smallPadding ? "p-5" : "p-1"
                         }`}
                       >
-                        <LiquidGlass
-                          backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center min-w-20 px-3 py-2"
-                        >
-                          <span className="text-incomings">
-                            {`€ ${item[column.key]}`}
-                          </span>
-                        </LiquidGlass>
+                        <span className="text-primary text-lg">
+                          {`€ ${item[column.key]}`}
+                        </span>
                       </td>
                     );
 
                   if (isExitColumn)
                     return isValueZero ? (
-                      <td />
+                      <td key={index2} />
                     ) : (
                       <td
-                        className={`whitespace-nowrap ${
-                          !smallPadding ? "p-5" : "p-3"
+                        key={index2}
+                        className={`whitespace-nowrap px-5 ${
+                          !smallPadding ? "p-5" : "p-1"
                         }`}
                       >
-                        <LiquidGlass
-                          backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center min-w-20 px-3 py-2"
-                        >
-                          <span className="text-exits">
-                            {`€ ${item[column.key]}`}
-                          </span>
-                        </LiquidGlass>
+                        <span className="text-primary-red text-lg">
+                          {`€ ${item[column.key]}`}
+                        </span>
                       </td>
                     );
 
                   if (isTypeColumn) {
                     return (
                       <td
+                        key={index2}
                         className={`whitespace-nowrap ${
-                          !smallPadding ? "p-5" : "p-3"
+                          !smallPadding ? "p-5" : "p-1"
                         }`}
                       >
-                        <LiquidGlass
-                          backgroundColor="rgba(0, 0, 0, 0.5)"
-                          className="flex justify-center items-center w-fit px-5 py-2"
+                        <span
+                          className={`${
+                            item[column.key] === "Entrata"
+                              ? "text-primary"
+                              : "text-primary-red"
+                          } `}
                         >
-                          <span
-                            className={`${
-                              item[column.key] === "Entrata"
-                                ? "text-incomings"
-                                : "text-exits"
-                            } `}
-                          >
-                            {item[column.key]}
-                          </span>
-                        </LiquidGlass>
+                          {item[column.key]}
+                        </span>
                       </td>
                     );
                   }
@@ -275,11 +274,12 @@ const Table: FC<IProps> = ({
                   if (isMonthColumn)
                     return (
                       <td
-                        className={`whitespace-nowrap ${
-                          !smallPadding ? "p-5" : "p-3"
+                        key={index2}
+                        className={`whitespace-nowrap px-5 ${
+                          !smallPadding ? "py-5" : "py-1"
                         }`}
                       >
-                        <span className="text-white">
+                        <span className="text-black">
                           {t(item[column.key])}
                         </span>
                       </td>
@@ -287,11 +287,12 @@ const Table: FC<IProps> = ({
 
                   return (
                     <td
+                      key={index2}
                       className={`whitespace-nowrap ${
-                        !smallPadding ? "p-5" : "p-3"
+                        !smallPadding ? "p-5" : "p-1"
                       }`}
                     >
-                      <span className="text-white">
+                      <span className="text-black">
                         {isValueColumn
                           ? `€ ${item[column.key]}`
                           : item[column.key]}
@@ -305,10 +306,10 @@ const Table: FC<IProps> = ({
         </tbody>
       </table>
       {footer}
-    </div>
+    </ShadowBox>
   ) : !isLoading && data ? (
     <div className="flex justify-center p-5">
-      <span className="text-white">{t("noData")}</span>
+      <span className="text-black">{t("noData")}</span>
     </div>
   ) : null;
 };

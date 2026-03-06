@@ -6,7 +6,6 @@ import { NavigateFunction, useNavigate } from "react-router";
 import { AUTH_API } from "../api";
 
 // Assets
-import wallpaperImg from "../assets/images/login-wallpaper.jpg";
 import iconImg from "../assets/images/icon.png";
 import {
   ClosedEyeIcon,
@@ -16,7 +15,7 @@ import {
 } from "../assets/icons";
 
 // Components
-import { Button, Input, LiquidGlass } from "../components";
+import { Button, Input, ShadowBox } from "../components";
 
 // Contexts
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
@@ -45,14 +44,14 @@ const Login = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<IFormData>(DEFAULT_FORM_DATA);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const { setState: setIsLoading }: TLoaderContext = useContext(
-    LoaderContext
+    LoaderContext,
   ) as TLoaderContext;
   const navigate: NavigateFunction = useNavigate();
   const { setIsUserAuthenticated }: TAuthContext = useContext(
-    AuthContext
+    AuthContext,
   ) as TAuthContext;
   const [passwordType, setPasswordType] = useState<TPasswordType>("password");
 
@@ -84,7 +83,7 @@ const Login = () => {
                 setToStorage("token", response.data?.access_token);
                 setIsUserAuthenticated(true);
               } else openPopup(t("unableLogin"), "error");
-            })
+            }),
           );
         } else openPopup(t("invalidEnteredEmail"), "warning");
       } catch (error) {
@@ -105,9 +104,9 @@ const Login = () => {
   }
 
   const title = (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-row items-center gap-5">
       <img src={iconImg} className="w-32 mobile:w-28" alt={t("imgNotFound")} />
-      <span className="font-bold text-white text-[3em] mobile:text-3xl">
+      <span className="font-bold text-black text-[3em] mobile:text-3xl">
         {t("welcome")}
       </span>
     </div>
@@ -115,66 +114,68 @@ const Login = () => {
 
   const description = (
     <div className="flex justify-center items-center">
-      <span className="text-white opacity-70 text-base">
+      <span className="text-darkgray opacity-70 text-base">
         {t("logInYourExpensesManagement")}
       </span>
     </div>
   );
 
   const form = (
-    <form onSubmit={onSubmit} className="flex flex-col gap-10">
-      <div className="flex flex-col gap-3">
-        <Input
-          name="email"
-          autoFocus
-          placeholder={t("email")}
-          startIcon={<EmailIcon className="text-white text-2xl" />}
-          value={formData.email}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            onInputChange("email", event.target.value)
-          }
-          className="w-[35vh] mobile:w-full"
-          autoComplete="email"
-        />
-        <Input
-          type={passwordType}
-          name="password"
-          placeholder={t("password")}
-          startIcon={<LockIcon className="text-white text-2xl" />}
-          endIcon={
-            <LiquidGlass
-              className="p-1 cursor-pointer hover:opacity-50"
-              onClick={onPasswordTypeChange}
-            >
-              {passwordType === "password" ? (
-                <OpenedEyeIcon className="text-white text-base" />
-              ) : (
-                <ClosedEyeIcon className="text-white text-base" />
-              )}
-            </LiquidGlass>
-          }
-          value={formData.password}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            onInputChange("password", event.target.value)
-          }
-          className="w-[35vh] mobile:w-full"
-          autoComplete="current-password"
-        />
-      </div>
-      <Button variant="primary" type="submit" text={t("logIn")} />
+    <form onSubmit={onSubmit} className="flex flex-col gap-10 mobile:w-[90%]">
+      <ShadowBox
+        borderRadius={30}
+        className="px-10 py-5 flex flex-col gap-5 mobile:px-5"
+      >
+        {description}
+        <div className="flex flex-col gap-3">
+          <Input
+            name="email"
+            autoFocus
+            placeholder={t("email")}
+            startIcon={<EmailIcon className="text-gray text-2xl" />}
+            value={formData.email}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              onInputChange("email", event.target.value)
+            }
+            className="w-[35vh] mobile:w-full bg-white"
+            autoComplete="email"
+          />
+          <Input
+            type={passwordType}
+            name="password"
+            placeholder={t("password")}
+            startIcon={<LockIcon className="text-gray text-2xl" />}
+            endIcon={
+              <ShadowBox
+                className="p-1 cursor-pointer hover:opacity-50 bg-lightgray"
+                onClick={onPasswordTypeChange}
+                noBorder
+                noShadow
+              >
+                {passwordType === "password" ? (
+                  <OpenedEyeIcon className="text-darkgray text-base" />
+                ) : (
+                  <ClosedEyeIcon className="text-darkgray text-base" />
+                )}
+              </ShadowBox>
+            }
+            value={formData.password}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              onInputChange("password", event.target.value)
+            }
+            className="w-[35vh] mobile:w-full bg-white"
+            autoComplete="current-password"
+          />
+        </div>
+        <Button type="submit" text={t("logIn")} className="bg-primary w-full" />
+      </ShadowBox>
     </form>
   );
 
   return (
-    <div
-      style={{ backgroundImage: `url("${wallpaperImg}")` }}
-      className="w-full h-[100vh] mobile:h-[110vh] mobile:justify-start mobile:pt-36 bg-cover flex items-center justify-center flex-col gap-5"
-    >
+    <div className="w-full h-[100vh] mobile:h-[110vh] mobile:justify-start mobile:pt-36 flex items-center justify-center flex-col gap-5">
       {title}
-      {description}
-      <LiquidGlass className="px-10 py-5 flex flex-col gap-5 mobile:px-5 mobile:w-[90%]">
-        {form}
-      </LiquidGlass>
+      {form}
     </div>
   );
 };

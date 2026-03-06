@@ -7,15 +7,15 @@ import { CATEGORY_API, ITEM_API, SETTING_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
 import { MONTHS } from "../assets";
-import { HappyIcon, NeutralIcon, SadIcon } from "../assets/icons";
+import { CalendarIcon, ExpenseIcon } from "../assets/icons";
 
 // Components
 import {
   Autocomplete,
   DoughnutChart,
   Input,
-  LiquidGlass,
   ProgressBar,
+  ShadowBox,
 } from "../components";
 
 // Contexts
@@ -29,29 +29,33 @@ import {
   THTTPResponse,
   TItem,
   TItemType,
-  TSubCategory,
+  TSubcategory,
 } from "../types";
 import { IAutocompleteValue } from "../components/Autocomplete.component";
 import {
   IDoughnutChartTooltip,
   TDoughnutChartData,
 } from "../components/DoughnutChart.component";
+import { TProgressBarStatus } from "../components/ProgressBar.component";
 
 interface IFilters {
   month: IAutocompleteValue;
   year: number;
 }
 
-type TSubCategoryItem = TSubCategory & { items: TItem[]; total: number };
+type TSubcategoryItem = TSubcategory & { items: TItem[]; total: number };
 
 type TCategoryItem = TCategory & {
-  subCategories: TSubCategoryItem[];
+  subcategories: TSubcategoryItem[];
   total: number;
 };
 
 type TLeftToSpendType = "positive" | "neutral" | "negative";
 
-type TLeftToSpendColor = "text-exits" | "text-green" | "text-neutral";
+type TLeftToSpendColor =
+  | "text-success-popup"
+  | "text-warning-popup"
+  | "text-error-popup";
 
 const Summary: FC = () => {
   const { t } = useTranslation();
@@ -102,18 +106,25 @@ const Summary: FC = () => {
     elabDoughnutChartData.data &&
     elabDoughnutChartData.data.length > 0 &&
     elabDoughnutChartData.data[0] !== 0;
+  const progressBarStatus: TProgressBarStatus =
+    Number(calculateProgress().toFixed(0)) >= 80
+      ? "danger"
+      : Number(calculateProgress().toFixed(0)) >= 50
+        ? "warning"
+        : "ok";
+  const isLeftToSpendShown: boolean =
+    goal && Number(goal) !== 0 && isSamePeriod ? true : false;
+  const isMobile: boolean = window.innerWidth <= 800;
 
-  const title = t("summary");
-
-  function getSubCategoryTotal(
-    subCategory: TSubCategory,
+  function getSubcategoryTotal(
+    subcategory: TSubcategory,
     items: TItem[],
   ): number {
     let total: number = 0;
 
     items?.forEach((item: TItem) => {
       if (
-        item.sub_category_id === subCategory.id &&
+        item.sub_category_id === subcategory.id &&
         item.type === "exit" &&
         Number(item.year) === Number(filters.year) &&
         item.month_id === filters.month.id
@@ -154,15 +165,15 @@ const Summary: FC = () => {
       SETTING_API.get(userData?.id as string),
     ]).then((response: THTTPResponse[]) => {
       const categoriesRes = response[0];
-      const subCategoriesRes = response[1];
+      const subcategoriesRes = response[1];
       const itemsRes = response[2];
       const settingsRes = response[3];
 
       if (
         categoriesRes &&
         categoriesRes.hasSuccess &&
-        subCategoriesRes &&
-        subCategoriesRes.hasSuccess &&
+        subcategoriesRes &&
+        subcategoriesRes.hasSuccess &&
         itemsRes &&
         itemsRes.hasSuccess &&
         settingsRes &&
@@ -174,28 +185,28 @@ const Summary: FC = () => {
               category,
               itemsRes.data,
             );
-            const subCategories: TSubCategoryItem[] = [];
-            subCategoriesRes?.data?.forEach((subCategory: TSubCategory) => {
+            const subcategories: TSubcategoryItem[] = [];
+            subcategoriesRes?.data?.forEach((subcategory: TSubcategory) => {
               const items: TItem[] = [];
               itemsRes?.data?.forEach((item: TItem) => {
                 item.category_id === category.id &&
-                  item.sub_category_id === subCategory.id &&
+                  item.sub_category_id === subcategory.id &&
                   items.push(item);
               });
-              const subCategoryTotal: number = getSubCategoryTotal(
-                subCategory,
+              const subcategoryTotal: number = getSubcategoryTotal(
+                subcategory,
                 items,
               );
 
-              subCategory.category_id === category.id &&
-                subCategories.push({
-                  ...subCategory,
+              subcategory.category_id === category.id &&
+                subcategories.push({
+                  ...subcategory,
                   items,
-                  total: subCategoryTotal,
+                  total: subcategoryTotal,
                 });
             });
 
-            return { ...category, subCategories, total: categoryTotal };
+            return { ...category, subcategories, total: categoryTotal };
           },
         );
 
@@ -256,7 +267,7 @@ const Summary: FC = () => {
   function filteredData(): TCategoryItem[] {
     return data?.sort(
       (a: TCategoryItem, b: TCategoryItem) =>
-        b.subCategories.length - a.subCategories.length,
+        b.subcategories.length - a.subcategories.length,
     ) as TCategoryItem[];
   }
 
@@ -264,22 +275,27 @@ const Summary: FC = () => {
     return ` €${context?.formattedValue}`;
   }
 
-  const header = (
+  const title = (
+    <span className="text-black text-[2em] mobile:text-2xl mobile:text-center">
+      {t("summary")}
+    </span>
+  );
+
+  const inputs = (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, md: 2 }}>
-        <div className="flex items-center gap-5">
-          <span className="text-white text-lg">{title}</span>
-          <Input
-            type="number"
-            inputMode="numeric"
-            value={filters.year}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              onFiltersChange("year", event.target.value)
-            }
-          />
-        </div>
+        <Input
+          type="number"
+          inputMode="numeric"
+          value={filters.year}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            onFiltersChange("year", event.target.value)
+          }
+          startIcon={<CalendarIcon className="text-darkgray text-lg" />}
+          noShadow
+        />
       </Grid>
-      <Grid size={{ xs: 12, md: 10 }}>
+      <Grid size={{ xs: 12, md: 3 }}>
         <Autocomplete
           value={filters.month}
           onChange={(value: IAutocompleteValue) =>
@@ -287,32 +303,74 @@ const Summary: FC = () => {
           }
           data={_MONTHS}
           showAllOptions
+          alignTextToCenter
+          noShadow
         />
       </Grid>
     </Grid>
   );
 
-  const incomingsTotal = (
-    <div className="flex items-center gap-5">
-      <span className="text-3xl text-white">{t("incomings")}:</span>
-      <LiquidGlass
-        backgroundColor="rgba(0, 0, 0, 0.5)"
-        className="flex justify-center items-center w-fit px-5 py-2"
-      >
-        <span className="text-incomings text-3xl">€ {getTotal("income")}</span>
-      </LiquidGlass>
+  const incomingsLabel = (
+    <div className="flex flex-col gap-2">
+      <span className="text-lg text-black capitalize">
+        {t("totalIncomings")}
+      </span>
+      <span className="text-3xl text-primary">€ {getTotal("income")}</span>
     </div>
   );
 
-  const exitsTotal = (
-    <div className="flex items-center gap-5">
-      <span className="text-3xl text-white">{t("exits")}:</span>
-      <LiquidGlass
-        backgroundColor="rgba(0, 0, 0, 0.5)"
-        className="flex justify-center items-center w-fit px-5 py-2"
+  const exitsLabel = (
+    <div className="flex flex-col gap-2">
+      <span className="text-lg text-black capitalize">{t("totalExits")}</span>
+      <span className="text-3xl text-primary-red">€ {getTotal("exit")}</span>
+    </div>
+  );
+
+  const progressBar = (
+    <div className="flex flex-row items-center gap-5">
+      <ProgressBar progress={calculateProgress()} status={progressBarStatus} />
+      <span
+        className={`text-xl ${progressBarStatus === "warning" ? "text-warning-popup " : progressBarStatus === "danger" ? "text-primary-red" : "text-primary"}`}
       >
-        <span className="text-exits text-3xl">€ {getTotal("exit")}</span>
-      </LiquidGlass>
+        {calculateProgress().toFixed(0)}%
+      </span>
+    </div>
+  );
+
+  const progressLabel = getTotal("exit") !== 0 && (
+    <div className="flex items-end h-full">
+      <div className="flex flex-col gap-2">
+        <span className="text-lg text-black lowercase">
+          {t("percentageOfRevenueSpent")}
+        </span>
+        <div className="flex items-end h-full">{progressBar}</div>
+      </div>
+    </div>
+  );
+
+  const labels = (
+    <div className="flex flex-col gap-10 h-full">
+      {inputs}
+      <div className="flex items-center gap-20 mobile:flex-col mobile:gap-5">
+        <div className="flex items-center gap-10">
+          {incomingsLabel}
+          <div className="h-[10vh] bg-lightgray w-[1px] rounded-full" />
+          {exitsLabel}
+        </div>
+        {progressLabel}
+      </div>
+    </div>
+  );
+
+  const doghnutChart = isData && (
+    <div className="flex w-full mobile:justify-center">
+      <div className="w-60 h-60 mobile:w-40 mobile:h-40">
+        <DoughnutChart
+          data={elabDoughnutChartData}
+          labels={doughnutChartLabels}
+          customTooltipLabel={graphTooltipLabel}
+        />
+      </div>
     </div>
   );
 
@@ -324,10 +382,12 @@ const Summary: FC = () => {
       return leftToSpend;
     }
 
+    const leftToSpend: number = getLeftToSpend();
+
     function getLeftToSpendType(): TLeftToSpendType {
-      return getLeftToSpend() > 100
+      return leftToSpend > 100
         ? "positive"
-        : getLeftToSpend() > 0
+        : leftToSpend > 0
           ? "neutral"
           : "negative";
     }
@@ -338,71 +398,80 @@ const Summary: FC = () => {
 
     function getLeftToSpendColor(): TLeftToSpendColor {
       return isPositive
-        ? "text-green"
+        ? "text-success-popup"
         : isNeutral
-          ? "text-neutral"
-          : "text-exits";
+          ? "text-warning-popup"
+          : "text-error-popup";
     }
 
-    function getLeftToSpendLabel(): string {
-      const leftToSpend: number = getLeftToSpend();
+    const icon = (
+      <div>
+        {isPositive && (
+          <span
+            className={`text-[3em] mobile:text-xl ${getLeftToSpendColor()}`}
+          >
+            🤑
+          </span>
+        )}
+        {isNeutral && (
+          <span
+            className={`text-[3em] mobile:text-xl ${getLeftToSpendColor()}`}
+          >
+            🫤
+          </span>
+        )}
+        {isNegative && (
+          <span
+            className={`text-[3em] mobile:text-xl ${getLeftToSpendColor()}`}
+          >
+            🥵
+          </span>
+        )}
+      </div>
+    );
 
-      return leftToSpend > 0
-        ? `${t("leftToSpend")}: €${leftToSpend}`
-        : t("youHaveAlreadyCrossedThreshold");
-    }
+    const leftToSpendLabel: string =
+      leftToSpend > 0 ? "youCanStillSpend" : "youHaveAlreadyCrossedThreshold";
+
+    const leftToSpendValue = (
+      <span className={`text-xl ml-2 font-bold ${getLeftToSpendColor()}`}>
+        €{leftToSpend}
+      </span>
+    );
 
     return (
       <div className="mobile:flex mobile:justify-center mobile:items-center mobile:w-full">
-        <LiquidGlass
-          backgroundColor="rgba(0, 0, 0, 0.5)"
-          className="p-2 pr-5 flex items-center gap-5"
+        <ShadowBox
+          noBorder
+          noShadow
+          borderRadius={20}
+          className="p-2 px-5 flex items-center gap-2 bg-lightgray"
         >
-          {isPositive && (
-            <HappyIcon className={`text-[3em] ${getLeftToSpendColor()}`} />
-          )}
-          {isNeutral && (
-            <NeutralIcon className={`text-[3em] ${getLeftToSpendColor()}`} />
-          )}
-          {isNegative && (
-            <SadIcon className={`text-[3em] ${getLeftToSpendColor()}`} />
-          )}
-          <span className={`text-xl mobile:text-lg ${getLeftToSpendColor()}`}>
-            {getLeftToSpendLabel()}
-          </span>
-        </LiquidGlass>
+          {icon}
+          <div className="flex flex-col gap-2">
+            <span className="text-lg text-black">
+              {t(leftToSpendLabel)}
+              {leftToSpend !== 0 && leftToSpendValue}!
+            </span>
+            {!isMobile && (
+              <span className="text-lg text-darkgray">
+                {t("continueMonitorExpenses")}
+              </span>
+            )}
+          </div>
+        </ShadowBox>
       </div>
     );
   };
 
-  const leftToSpend = (
-    <div className="flex flex-row items-center gap-2">
-      <LeftToSpend />
-    </div>
-  );
-
-  const progressBar = getTotal("exit") !== 0 && (
-    <div className="flex flex-row items-center gap-5 mobile:flex-col">
-      <span className="text-white">{t("percentageOfRevenueSpent")}</span>
-      <ProgressBar progress={calculateProgress()} />
-      <span className="text-white text-3xl">
-        {calculateProgress().toFixed(0)}%
-      </span>
-    </div>
-  );
-
-  const doghnutChart = isData && (
-    <div className="flex w-full mobile:justify-center">
-      <LiquidGlass
-        hasBlur={false}
-        className="w-full p-10 w-9h-96 h-96 flex justify-center mobile:h-full mobile:w-full"
-      >
-        <DoughnutChart
-          data={elabDoughnutChartData}
-          labels={doughnutChartLabels}
-          customTooltipLabel={graphTooltipLabel}
-        />
-      </LiquidGlass>
+  const header = (
+    <div className="flex flex-col gap-5">
+      {title}
+      <Grid container rowSpacing={isMobile ? 2 : 0}>
+        <Grid size={{ xs: 12, md: 8 }}>{labels}</Grid>
+        <Grid size={{ xs: 12, md: 4 }}>{doghnutChart}</Grid>
+      </Grid>
+      {isLeftToSpendShown && <LeftToSpend />}
     </div>
   );
 
@@ -412,57 +481,77 @@ const Summary: FC = () => {
         const isCategoryVisible: boolean =
           getCategoryTotal(category, items as TItem[]) > 0;
 
+        const categoryTitle = (
+          <span className="text-black text-xl">{category.label}</span>
+        );
+
+        const categoryTotal = (
+          <span className="text-darkgray text-xl">{`€ ${getCategoryTotal(category, items as TItem[])}`}</span>
+        );
+
+        const categoryHeader = (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ExpenseIcon className="text-primary text-xl" />
+              {categoryTitle}
+            </div>
+            {categoryTotal}
+          </div>
+        );
+
+        const subcategories = (
+          <div className="flex flex-col gap-2">
+            {category?.subcategories?.map(
+              (subcategory: TSubcategory, index2: number) => {
+                const itemsTotal: number = getSubcategoryTotal(
+                  subcategory,
+                  items as TItem[],
+                );
+                const itemsTotalString: string = `€ ${itemsTotal}`.replaceAll(
+                  "-",
+                  "",
+                );
+                const isItemVisible: boolean = itemsTotal !== 0;
+
+                const subcategoryLabel = (
+                  <span className="text-darkgray">{subcategory.label}</span>
+                );
+
+                const subcategoryValue = (
+                  <span className="text-wrap text-blue">
+                    {itemsTotalString}
+                  </span>
+                );
+
+                return (
+                  isItemVisible && (
+                    <ShadowBox
+                      key={index2}
+                      className="flex justify-between px-5 py-2 bg-lightgray"
+                      noBorder
+                      noShadow
+                    >
+                      {subcategoryLabel}
+                      {subcategoryValue}
+                    </ShadowBox>
+                  )
+                );
+              },
+            )}
+          </div>
+        );
+
         return (
           isCategoryVisible && (
             <Grid key={index} size={{ xs: 12, md: 4 }}>
-              <div className="flex flex-col gap-5">
-                <div className="flex items-center justify-center gap-2">
-                  <LiquidGlass
-                    borderRadius={10}
-                    backgroundColor="rgba(0, 0, 0, 0.5)"
-                    className="w-full flex justify-center items-center px-5 py-2"
-                  >
-                    <span className="text-white font-bold uppercase">
-                      {`${category.label} (`}
-                      <span className="text-exits">{`€${getCategoryTotal(category, items as TItem[])}`}</span>
-                      )
-                    </span>
-                  </LiquidGlass>
-                </div>
-                <LiquidGlass
-                  borderRadius={20}
-                  className="p-10 flex flex-col gap-2"
-                >
-                  {category?.subCategories?.map(
-                    (subCategory: TSubCategory, index2: number) => {
-                      const itemsTotal: number = getSubCategoryTotal(
-                        subCategory,
-                        items as TItem[],
-                      );
-                      const itemsTotalString: string =
-                        `€${itemsTotal}`.replaceAll("-", "");
-                      const isItemVisible: boolean = itemsTotal !== 0;
-
-                      return (
-                        isItemVisible && (
-                          <LiquidGlass
-                            key={index2}
-                            backgroundColor="rgba(0, 0, 0, 0.5)"
-                            className="flex justify-between px-5 py-2"
-                          >
-                            <span className="text-white">
-                              {subCategory.label}
-                            </span>
-                            <span className="text-wrap font-bold text-white">
-                              {itemsTotalString}
-                            </span>
-                          </LiquidGlass>
-                        )
-                      );
-                    },
-                  )}
-                </LiquidGlass>
-              </div>
+              <ShadowBox
+                className="py-5 px-10 flex flex-col gap-5"
+                borderRadius={20}
+              >
+                {categoryHeader}
+                <div className="w-full h-[1px] bg-lightgray" />
+                {subcategories}
+              </ShadowBox>
             </Grid>
           )
         );
@@ -496,13 +585,8 @@ const Summary: FC = () => {
   }, [filters.month, filters.year]);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-10">
       {header}
-      {incomingsTotal}
-      {exitsTotal}
-      {goal && Number(goal) !== 0 && isSamePeriod ? leftToSpend : null}
-      {progressBar}
-      {doghnutChart}
       {exits}
     </div>
   );

@@ -1,9 +1,6 @@
 import React, { FC, ReactNode, useContext } from "react";
 import { useLocation } from "react-router";
 
-// Assets
-import wallpaperImg from "../assets/images/wallpaper.jpg";
-
 // Components
 import Loader from "./Loader.component";
 import Popup from "./Popup.component";
@@ -48,16 +45,11 @@ const Layout: FC<IProps> = ({ children }) => {
   const breadcrumb = <Breadcrumb />;
 
   const layout = (
-    <div
-      style={{
-        backgroundImage: `url("${wallpaperImg}")`,
-      }}
-      className="min-h-[100vh] bg-cover"
-    >
+    <div className="min-h-[100vh] bg-cover bg-white">
       {navbar}
       {hamburger}
       {sidebar}
-      <div className="px-60 py-10 w-full min-h-[100vh] mobile:px-5 mobile:pt-28 flex flex-col gap-5 pt-52">
+      <div className="px-60 py-10 w-full min-h-[100vh] mobile:px-5 mobile:pt-24 flex flex-col gap-5 pt-52">
         {breadcrumb}
         {children}
       </div>

@@ -11,10 +11,10 @@ import {
 import { CATEGORY_API } from "../api";
 
 // Assets
-import { AddIcon, SearchIcon } from "../assets/icons";
+import { AddIcon, CloseIcon, SearchIcon } from "../assets/icons";
 
 // Components
-import { Input, LiquidGlass, Modal, Table } from "../components";
+import { IconButton, Input, Modal, Table } from "../components";
 
 // Contexts
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
@@ -61,7 +61,7 @@ const Categories: FC = () => {
   const [table, setTable] = useState<ITableData>(TABLE_DEFAULT_STATE);
   const [tableData, setTableData] = useState<TCategory[] | null>(null);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [deleteModal, setDeleteModal] = useState<IModal>(DEFAULT_DELETE_MODAL);
   const navigate: NavigateFunction = useNavigate();
@@ -80,8 +80,8 @@ const Categories: FC = () => {
         table.from,
         table.to,
         table.label,
-        userData?.id as string
-      )
+        userData?.id as string,
+      ),
     ).then((response: THTTPResponse) => {
       if (response && response.hasSuccess) {
         setTableData(response.data);
@@ -132,7 +132,7 @@ const Categories: FC = () => {
     setIsLoading(true);
 
     await Promise.resolve(
-      CATEGORY_API.delete(deleteModal.item?.id as string)
+      CATEGORY_API.delete(deleteModal.item?.id as string),
     ).then(async (categoryRes: THTTPResponse) => {
       if (categoryRes && categoryRes.hasSuccess) {
         openPopup(t("categorySuccessfullyDeleted"), "success");
@@ -147,17 +147,29 @@ const Categories: FC = () => {
     navigate(`${pathname}/new`);
   }
 
+  function resetFilterHandler(): void {
+    setTable((prevState) => {
+      return {
+        ...prevState,
+        label: "",
+        from: 0,
+        to: 4,
+        page: 1,
+      };
+    });
+  }
+
   const title = (
-    <span className="text-white text-2xl mobile:text-center">
+    <span className="text-black text-[2.5em] mobile:text-2xl">
       {t("categories")}
     </span>
   );
 
   const header = (
-    <div className="w-full flex justify-between items-center gap-5">
+    <div className="flex items-center gap-5 w-full px-80 mobile:px-0 mobile:flex-col">
       <Input
-        autoFocus
-        placeholder={t("searchForName")}
+        placeholder={t("searchForCategory")}
+        type="text"
         value={table.label}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           let text: string = event.target.value;
@@ -175,29 +187,39 @@ const Categories: FC = () => {
           });
         }}
         onSearch={getData}
-        startIcon={<SearchIcon className="text-white text-2xl" />}
+        className="w-full"
+        startIcon={<SearchIcon className="text-darkgray text-3xl" />}
+        endIcon={
+          <div
+            onClick={resetFilterHandler}
+            className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+          >
+            <CloseIcon className="text-darkgray text-2xl" />
+          </div>
+        }
       />
-      <LiquidGlass
+      <IconButton
         onClick={onGoToNewPage}
-        className="p-3 cursor-pointer hover:opacity-50"
-      >
-        <AddIcon className="text-white text-2xl" />
-      </LiquidGlass>
+        icon={<AddIcon className="text-white text-3xl" />}
+        className="bg-primary"
+      />
     </div>
   );
 
   const tableComponent = (
-    <Table
-      data={tableData}
-      columns={talbeColumns}
-      total={table.total}
-      onGoPreviousPage={onTableGoPreviousPage}
-      onGoNextPage={onTableGoNextPage}
-      info={table}
-      isLoading={isLoading}
-      onDelete={onTableDelete}
-      onRowClick={onTableRowClick}
-    />
+    <div className="min-w-[30%] mobile:w-full">
+      <Table
+        data={tableData}
+        columns={talbeColumns}
+        total={table.total}
+        onGoPreviousPage={onTableGoPreviousPage}
+        onGoNextPage={onTableGoNextPage}
+        info={table}
+        isLoading={isLoading}
+        onDelete={onTableDelete}
+        onRowClick={onTableRowClick}
+      />
+    </div>
   );
 
   const modalComponent = (
@@ -209,7 +231,7 @@ const Categories: FC = () => {
       cancelButtonText="no"
       submitButtonText="yes"
     >
-      <span className="text-white opacity-80">
+      <span className="text-black opacity-80">
         {t("confirmToDelete", { name: deleteModal.item?.label })}
       </span>
     </Modal>
@@ -234,12 +256,10 @@ const Categories: FC = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 justify-center items-center">
         {title}
         {header}
-        <LiquidGlass className="flex flex-col gap-10">
-          {tableComponent}
-        </LiquidGlass>
+        {tableComponent}
       </div>
       {modalComponent}
     </>

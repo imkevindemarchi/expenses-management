@@ -1,1 +1,1 @@
-export { FaSave as Save } from "react-icons/fa";
+export { MdOutlineDataSaverOff  as Save } from "react-icons/md";

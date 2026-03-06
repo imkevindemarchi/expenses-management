@@ -6,7 +6,7 @@ import { TCategory, THTTPResponse } from "../types";
 
 const TABLE = "sub_categories";
 
-export const SUB_CATEGORY_API = {
+export const SUBCATEGORY_API = {
   getAll: async (userId: string): Promise<THTTPResponse> => {
     try {
       const { data, error } = await supabase

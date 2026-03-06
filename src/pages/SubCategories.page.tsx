@@ -11,10 +11,10 @@ import {
 import { CATEGORY_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
-import { AddIcon, SearchIcon } from "../assets/icons";
+import { AddIcon, CloseIcon, SearchIcon } from "../assets/icons";
 
 // Components
-import { Input, LiquidGlass, Modal, Table } from "../components";
+import { IconButton, Input, Modal, Table } from "../components";
 
 // Contexts
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
@@ -22,7 +22,7 @@ import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 
 // Types
-import { TCategory, THTTPResponse, TSubCategory } from "../types";
+import { TCategory, THTTPResponse, TSubcategory } from "../types";
 import { IColumn } from "../components/Table.component";
 
 // Utils
@@ -38,7 +38,7 @@ interface ITableData {
 
 interface IModal {
   show: boolean;
-  item: TSubCategory | null;
+  item: TSubcategory | null;
 }
 
 const DEFAULT_DELETE_MODAL: IModal = {
@@ -46,7 +46,7 @@ const DEFAULT_DELETE_MODAL: IModal = {
   item: null,
 };
 
-const SubCategories: FC = () => {
+const Subcategories: FC = () => {
   const { t } = useTranslation();
   const { state: isLoading, setState: setIsLoading }: TLoaderContext =
     useContext(LoaderContext) as TLoaderContext;
@@ -59,9 +59,9 @@ const SubCategories: FC = () => {
     label: searchParams.get("label") || "",
   };
   const [table, setTable] = useState<ITableData>(TABLE_DEFAULT_STATE);
-  const [tableData, setTableData] = useState<TSubCategory[] | null>(null);
+  const [tableData, setTableData] = useState<TSubcategory[] | null>(null);
   const { onOpen: openPopup }: TPopupContext = useContext(
-    PopupContext
+    PopupContext,
   ) as TPopupContext;
   const [deleteModal, setDeleteModal] = useState<IModal>(DEFAULT_DELETE_MODAL);
   const navigate: NavigateFunction = useNavigate();
@@ -73,7 +73,7 @@ const SubCategories: FC = () => {
     { key: "category", value: t("category") },
   ];
 
-  setPageTitle(t("subCategories"));
+  setPageTitle(t("subcategories"));
 
   async function getData(): Promise<void> {
     setIsLoading(true);
@@ -83,7 +83,7 @@ const SubCategories: FC = () => {
         table.from,
         table.to,
         table.label,
-        userData?.id as string
+        userData?.id as string,
       ),
       CATEGORY_API.getAll(userData?.id as string),
     ]).then((response: THTTPResponse[]) => {
@@ -93,19 +93,19 @@ const SubCategories: FC = () => {
         response[1] &&
         response[1].hasSuccess
       ) {
-        const data: TSubCategory[] = response[0].data.map(
-          (subCategory: TSubCategory) => {
+        const data: TSubcategory[] = response[0].data.map(
+          (subcategory: TSubcategory) => {
             const category: TCategory | null = response[1].data.find(
-              (category: TCategory) => category.id === subCategory.category_id
+              (category: TCategory) => category.id === subcategory.category_id,
             );
-            return { ...subCategory, category: category?.label ?? "" };
-          }
+            return { ...subcategory, category: category?.label ?? "" };
+          },
         );
         setTableData(data);
         setTable((prevState) => {
           return { ...prevState, total: response[0]?.totalRecords as number };
         });
-      } else openPopup(t("unableLoadSubCategories"), "error");
+      } else openPopup(t("unableLoadSubcategories"), "error");
     });
 
     setIsLoading(false);
@@ -133,14 +133,14 @@ const SubCategories: FC = () => {
     });
   }
 
-  async function onTableDelete(rowData: TSubCategory): Promise<void> {
+  async function onTableDelete(rowData: TSubcategory): Promise<void> {
     setDeleteModal({
       show: true,
       item: rowData,
     });
   }
 
-  function onTableRowClick(rowData: TSubCategory): void {
+  function onTableRowClick(rowData: TSubcategory): void {
     navigate(`${pathname}/edit/${rowData.id}`);
   }
 
@@ -149,12 +149,12 @@ const SubCategories: FC = () => {
     setIsLoading(true);
 
     await Promise.resolve(
-      SUB_CATEGORY_API.delete(deleteModal.item?.id as string)
+      SUB_CATEGORY_API.delete(deleteModal.item?.id as string),
     ).then(async (categoryRes: THTTPResponse) => {
       if (categoryRes && categoryRes.hasSuccess) {
-        openPopup(t("subCategorySuccessfullyDeleted"), "success");
+        openPopup(t("subcategorySuccessfullyDeleted"), "success");
         getData();
-      } else openPopup(t("unableDeleteSubCategory"), "error");
+      } else openPopup(t("unableDeleteSubcategory"), "error");
     });
 
     setIsLoading(false);
@@ -164,17 +164,29 @@ const SubCategories: FC = () => {
     navigate(`${pathname}/new`);
   }
 
+  function resetFilterHandler(): void {
+    setTable((prevState) => {
+      return {
+        ...prevState,
+        label: "",
+        from: 0,
+        to: 4,
+        page: 1,
+      };
+    });
+  }
+
   const title = (
-    <span className="text-white text-2xl mobile:text-center">
-      {t("subCategories")}
+    <span className="text-black text-[2.5em] mobile:text-2xl">
+      {t("subcategories")}
     </span>
   );
 
   const header = (
-    <div className="w-full flex justify-between items-center gap-5">
+    <div className="flex items-center gap-5 w-full px-80 mobile:px-0 mobile:flex-col">
       <Input
-        autoFocus
-        placeholder={t("searchForName")}
+        placeholder={t("searchForSubcategory")}
+        type="text"
         value={table.label}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           let text: string = event.target.value;
@@ -192,41 +204,51 @@ const SubCategories: FC = () => {
           });
         }}
         onSearch={getData}
-        startIcon={<SearchIcon className="text-white text-2xl" />}
+        className="w-full"
+        startIcon={<SearchIcon className="text-darkgray text-3xl" />}
+        endIcon={
+          <div
+            onClick={resetFilterHandler}
+            className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+          >
+            <CloseIcon className="text-darkgray text-2xl" />
+          </div>
+        }
       />
-      <LiquidGlass
+      <IconButton
         onClick={onGoToNewPage}
-        className="p-3 cursor-pointer hover:opacity-50"
-      >
-        <AddIcon className="text-white text-2xl" />
-      </LiquidGlass>
+        icon={<AddIcon className="text-white text-3xl" />}
+        className="bg-primary"
+      />
     </div>
   );
 
   const tableComponent = (
-    <Table
-      data={tableData}
-      columns={talbeColumns}
-      total={table.total}
-      onGoPreviousPage={onTableGoPreviousPage}
-      onGoNextPage={onTableGoNextPage}
-      info={table}
-      isLoading={isLoading}
-      onDelete={onTableDelete}
-      onRowClick={onTableRowClick}
-    />
+    <div className="min-w-[30%]">
+      <Table
+        data={tableData}
+        columns={talbeColumns}
+        total={table.total}
+        onGoPreviousPage={onTableGoPreviousPage}
+        onGoNextPage={onTableGoNextPage}
+        info={table}
+        isLoading={isLoading}
+        onDelete={onTableDelete}
+        onRowClick={onTableRowClick}
+      />
+    </div>
   );
 
   const modalComponent = (
     <Modal
       isOpen={deleteModal.show}
-      title={t("deleteCategory")}
+      title={t("deleteSubcategory")}
       onCancel={() => setDeleteModal(DEFAULT_DELETE_MODAL)}
       onSubmit={onDelete}
       cancelButtonText="no"
       submitButtonText="yes"
     >
-      <span className="text-white opacity-80">
+      <span className="text-black opacity-80">
         {t("confirmToDelete", { name: deleteModal.item?.label })}
       </span>
     </Modal>
@@ -251,16 +273,14 @@ const SubCategories: FC = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 justify-center items-center">
         {title}
         {header}
-        <LiquidGlass className="flex flex-col gap-10">
-          {tableComponent}
-        </LiquidGlass>
+        {tableComponent}
       </div>
       {modalComponent}
     </>
   );
 };
 
-export default SubCategories;
+export default Subcategories;
