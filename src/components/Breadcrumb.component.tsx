@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { NavigateFunction, useLocation, useNavigate } from "react-router";
 
 // Assets
 import { ArrowRightIcon } from "../assets/icons";
 
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
+
 const Breadcrumb = () => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
   const navigate: NavigateFunction = useNavigate();
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const splittedPathname = pathname.split("/").slice(1);
   const hasEdit: boolean = splittedPathname.find(
@@ -34,18 +40,23 @@ const Breadcrumb = () => {
         const isLastElement: boolean = index === splittedPathname.length - 1;
 
         return isLastElement ? (
-          <span key={index} className="text-black">
+          <span
+            key={index}
+            className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+          >
             {t(path)}
           </span>
         ) : (
           <div key={index} className="flex flex-row items-center gap-3">
             <span
               onClick={onGoToPreviousPage}
-              className="transition-all duration-300 hover:underline cursor-pointer text-darkgray opacity-80"
+              className={`transition-all duration-300 hover:underline cursor-pointer opacity-80 ${isLightMode ? "text-darkgray" : "text-gray"}`}
             >
               {t(path)}
             </span>
-            <ArrowRightIcon className="text-black" />
+            <ArrowRightIcon
+              className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+            />
           </div>
         );
       })}

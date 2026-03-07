@@ -22,6 +22,7 @@ import { Button, Input, ShadowBox } from "../components";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Types
 import { THTTPResponse, TCategory } from "../types";
@@ -62,6 +63,9 @@ const Category: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const [categories, setCategories] = useState<TCategory[] | null>(null);
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const isEditMode: boolean = categoryId ? true : false;
   const titleLabel: string = isEditMode ? t("editCategory") : t("newCategory");
@@ -168,14 +172,18 @@ const Category: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2.5em] mobile:text-2xl">
+    <span
+      className={`text-[2em] mobile:text-2xl mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {titleLabel}
     </span>
   );
 
   const description = (
     <div className="w-full flex justify-start">
-      <span className="text-lg text-black mobile:text-center">
+      <span
+        className={`text-lg mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
         {t(
           isEditMode
             ? "compileFormToUpdateCategory"

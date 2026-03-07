@@ -15,7 +15,7 @@ import {
   FiltersIcon,
   IncomeIcon,
 } from "../assets/icons";
-import { Z_INDEX } from "../assets/constants";
+import { isMobile, Z_INDEX } from "../assets/constants";
 
 // Components
 import { Button, Input, Modal, ShadowBox, Table } from "../components";
@@ -24,6 +24,7 @@ import { Button, Input, Modal, ShadowBox, Table } from "../components";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Types
 import {
@@ -115,8 +116,10 @@ const Expenses: FC = () => {
     null,
   );
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
-  setPageTitle(t("expenses"));
   const talbeColumns: IColumn[] = [
     { key: "type", value: t("type") },
     { key: "date", value: t("creationDate") },
@@ -130,7 +133,9 @@ const Expenses: FC = () => {
   const isExitType: boolean = formData?.type === "exit";
   const tableType: TItemType | string =
     table?.type === "1" ? "income" : table?.type === "2" ? "exit" : "";
-  const isMobile: boolean = window.innerWidth <= 800;
+
+  setPageTitle(t("expenses"));
+
   async function getData(): Promise<void> {
     setIsLoading(true);
 
@@ -377,7 +382,9 @@ const Expenses: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2.5em] mobile:text-2xl">
+    <span
+      className={`text-[2em] mobile:text-2xl mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {t("expenses")}
     </span>
   );
@@ -386,11 +393,17 @@ const Expenses: FC = () => {
     <div className="w-full flex justify-start">
       <ShadowBox
         onClick={() => setIsFiltersModalOpen(true)}
-        className="flex items-center gap-5 px-5 w-fit p-2 hover:opacity-50 transition-all duration-300 cursor-pointer bg-lightgray"
+        className={`flex items-center gap-5 px-5 w-fit p-2 hover:opacity-50 cursor-pointer ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
         noShadow
       >
-        <FiltersIcon className="text-black text-xl" />
-        <span className="text-darkgray">{t("openFilters")}</span>
+        <FiltersIcon
+          className={`text-xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        />
+        <span
+          className={`transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
+        >
+          {t("openFilters")}
+        </span>
       </ShadowBox>
     </div>
   );
@@ -420,7 +433,11 @@ const Expenses: FC = () => {
       cancelButtonText="no"
       submitButtonText="yes"
     >
-      <span className="text-black opacity-80">{t("confirmToDeleteVoice")}</span>
+      <span
+        className={`opacity-80 transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("confirmToDeleteVoice")}
+      </span>
     </Modal>
   );
 
@@ -441,6 +458,7 @@ const Expenses: FC = () => {
                 ? "cursor-default opacity-70 bg-success-popup"
                 : "hover:opacity-50 cursor-pointer"
             }`}
+            noShadow
           >
             <IncomeIcon
               className={`text-[3em] ${isIncomeType ? "text-primary" : "text-gray"}`}
@@ -458,6 +476,7 @@ const Expenses: FC = () => {
                 ? "cursor-default opacity-70 bg-error-popup"
                 : "hover:opacity-50 cursor-pointer"
             }`}
+            noShadow
           >
             <ExitIcon
               className={`text-[3em] ${isExitType ? "text-primary-red" : "text-gray"}`}
@@ -479,6 +498,7 @@ const Expenses: FC = () => {
           data={_MONTHS}
           showAllOptions
           noFullOptionsWidth
+          noShadow
         />
         <Input
           autoFocus
@@ -490,6 +510,7 @@ const Expenses: FC = () => {
           }
           inputMode="numeric"
           onKeyUp={onItemKeyUp}
+          noShadow
         />
         <Input
           type="number"
@@ -498,6 +519,7 @@ const Expenses: FC = () => {
             onFormDataChange("year", event.target.value)
           }
           inputMode="numeric"
+          noShadow
         />
       </div>
     </Modal>
@@ -520,7 +542,7 @@ const Expenses: FC = () => {
         <div className="flex items-center gap-5 mobile:gap-2 mobile:justify-between">
           <Button
             text={t("incomings")}
-            className={`w-full ${tableType === "income" ? "bg-success-popup" : "bg-gray"}`}
+            className={`w-full ${tableType === "income" ? "bg-success-popup" : isLightMode ? "bg-gray" : "bg-darkgray2"}`}
             onClick={() =>
               setTable((prevState: any) => {
                 return { ...prevState, type: "1" };
@@ -530,7 +552,7 @@ const Expenses: FC = () => {
           />
           <Button
             text={t("exits")}
-            className={`w-full ${tableType === "exit" ? "bg-error-popup" : "bg-gray"}`}
+            className={`w-full ${tableType === "exit" ? "bg-error-popup" : isLightMode ? "bg-gray" : "bg-darkgray2"}`}
             onClick={() =>
               setTable((prevState: any) => {
                 return { ...prevState, type: "2" };
@@ -540,7 +562,7 @@ const Expenses: FC = () => {
           />
           <Button
             text={t("all")}
-            className={`w-full ${tableType === "" ? "bg-warning-popup" : "bg-gray"}`}
+            className={`w-full ${tableType === "" ? "bg-warning-popup" : isLightMode ? "bg-gray" : "bg-darkgray2"}`}
             onClick={() =>
               setTable((prevState: any) => {
                 return { ...prevState, type: "" };
@@ -567,6 +589,7 @@ const Expenses: FC = () => {
               data={getAutocompleteSubcategories()}
               noFullOptionsWidth
               zIndex={Z_INDEX.AUTOCOMPLETE + 10}
+              noShadow
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
@@ -582,6 +605,7 @@ const Expenses: FC = () => {
                 })
               }
               startIcon={<CalendarIcon className="text-darkgray text-lg" />}
+              noShadow
             />
           </Grid>
         </Grid>
@@ -603,6 +627,7 @@ const Expenses: FC = () => {
               data={getAutocompleteMonths()}
               noFullOptionsWidth
               showAllOptions
+              noShadow
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
@@ -618,6 +643,7 @@ const Expenses: FC = () => {
                 })
               }
               startIcon={<EuroIcon className="text-darkgray text-lg" />}
+              noShadow
             />
           </Grid>
         </Grid>

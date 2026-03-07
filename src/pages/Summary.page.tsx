@@ -8,6 +8,7 @@ import { CATEGORY_API, ITEM_API, SETTING_API, SUB_CATEGORY_API } from "../api";
 // Assets
 import { MONTHS } from "../assets";
 import { CalendarIcon, ExpenseIcon } from "../assets/icons";
+import { isMobile } from "../assets/constants";
 
 // Components
 import {
@@ -22,6 +23,7 @@ import {
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Types
 import {
@@ -89,6 +91,9 @@ const Summary: FC = () => {
   const [doughnutChartData, setDoughnutChartData] = useState<number[]>([]);
   const [doughnutChartLabels, setDoughnutChartLabels] = useState<string[]>([]);
   const [isSamePeriod, setIsSamePeriod] = useState<boolean>(true);
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const elabDoughnutChartData: TDoughnutChartData = {
     label: t("count"),
@@ -117,7 +122,6 @@ const Summary: FC = () => {
         : "ok";
   const isLeftToSpendShown: boolean =
     goal && Number(goal) !== 0 && isSamePeriod ? true : false;
-  const isMobile: boolean = window.innerWidth <= 800;
   const titleLabel: string = t("summary");
 
   setPageTitle(titleLabel);
@@ -282,7 +286,9 @@ const Summary: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2em] mobile:text-2xl mobile:text-center">
+    <span
+      className={`text-[2em] mobile:text-2xl mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {titleLabel}
     </span>
   );
@@ -310,6 +316,7 @@ const Summary: FC = () => {
           data={_MONTHS}
           showAllOptions
           alignTextToCenter
+          className="text-center"
           noShadow
         />
       </Grid>
@@ -318,7 +325,9 @@ const Summary: FC = () => {
 
   const incomingsLabel = (
     <div className="flex flex-col gap-2">
-      <span className="text-lg text-black capitalize">
+      <span
+        className={`text-lg capitalize transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
         {t("totalIncomings")}
       </span>
       <span className="text-3xl text-primary">€ {getTotal("income")}</span>
@@ -327,7 +336,11 @@ const Summary: FC = () => {
 
   const exitsLabel = (
     <div className="flex flex-col gap-2">
-      <span className="text-lg text-black capitalize">{t("totalExits")}</span>
+      <span
+        className={`text-lg capitalize transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("totalExits")}
+      </span>
       <span className="text-3xl text-primary-red">€ {getTotal("exit")}</span>
     </div>
   );
@@ -346,7 +359,9 @@ const Summary: FC = () => {
   const progressLabel = getTotal("exit") !== 0 && (
     <div className="flex items-end h-full">
       <div className="flex flex-col gap-2">
-        <span className="text-lg text-black lowercase">
+        <span
+          className={`text-lg lowercase transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        >
           {t("percentageOfRevenueSpent")}
         </span>
         <div className="flex items-end h-full">{progressBar}</div>
@@ -360,7 +375,9 @@ const Summary: FC = () => {
       <div className="flex items-center gap-20 mobile:flex-col mobile:gap-5">
         <div className="flex items-center gap-10 mobile:gap-0 mobile:justify-between mobile:w-full">
           {incomingsLabel}
-          <div className="h-[10vh] bg-lightgray w-[1px] rounded-full" />
+          <div
+            className={`h-[10vh] w-[1px] rounded-full transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
+          />
           {exitsLabel}
         </div>
         {progressLabel}
@@ -451,16 +468,20 @@ const Summary: FC = () => {
           noBorder
           noShadow
           borderRadius={20}
-          className="p-2 px-5 flex items-center gap-2 bg-lightgray"
+          className={`p-2 px-5 flex items-center gap-2 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
         >
           {icon}
           <div className="flex flex-col gap-2">
-            <span className="text-lg text-black">
+            <span
+              className={`text-lg text-black transition-all duration-300 ${isLightMode ? "text-lg text-black" : "text-white"}`}
+            >
               {t(leftToSpendLabel)}
               {leftToSpend !== 0 && leftToSpendValue}!
             </span>
             {!isMobile && (
-              <span className="text-lg text-darkgray">
+              <span
+                className={`text-lg transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
+              >
                 {t("continueMonitorExpenses")}
               </span>
             )}
@@ -488,11 +509,17 @@ const Summary: FC = () => {
           getCategoryTotal(category, items as TItem[]) > 0;
 
         const categoryTitle = (
-          <span className="text-black text-xl">{category.label}</span>
+          <span
+            className={`text-xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+          >
+            {category.label}
+          </span>
         );
 
         const categoryTotal = (
-          <span className="text-darkgray text-xl">{`€ ${getCategoryTotal(category, items as TItem[])}`}</span>
+          <span
+            className={`text-xl transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
+          >{`€ ${getCategoryTotal(category, items as TItem[])}`}</span>
         );
 
         const categoryHeader = (
@@ -520,11 +547,17 @@ const Summary: FC = () => {
                 const isItemVisible: boolean = itemsTotal !== 0;
 
                 const subcategoryLabel = (
-                  <span className="text-darkgray">{subcategory.label}</span>
+                  <span
+                    className={`transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-lightgray"}`}
+                  >
+                    {subcategory.label}
+                  </span>
                 );
 
                 const subcategoryValue = (
-                  <span className="text-wrap text-blue">
+                  <span
+                    className={`text-wrap text-blue transition-all duration-300 ${isLightMode ? "text-blue" : "text-dark-blue"}`}
+                  >
                     {itemsTotalString}
                   </span>
                 );
@@ -533,7 +566,7 @@ const Summary: FC = () => {
                   isItemVisible && (
                     <ShadowBox
                       key={index2}
-                      className="flex justify-between px-5 py-2 bg-lightgray"
+                      className={`flex justify-between px-5 py-2 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
                       noBorder
                       noShadow
                     >
@@ -555,7 +588,9 @@ const Summary: FC = () => {
                 borderRadius={20}
               >
                 {categoryHeader}
-                <div className="w-full h-[1px] bg-lightgray" />
+                <div
+                  className={`w-full h-[1px] transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
+                />
                 {subcategories}
               </ShadowBox>
             </Grid>

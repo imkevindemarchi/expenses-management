@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,6 +10,9 @@ import {
   Legend,
   ChartOptions,
 } from "chart.js";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 export type TBarsChartData = {
   label: string;
@@ -50,7 +53,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-ChartJS.defaults.color = "#000000";
 
 const BarsChart: FC<IProps> = ({
   labels,
@@ -60,6 +62,11 @@ const BarsChart: FC<IProps> = ({
   height,
   width,
 }) => {
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
+  ChartJS.defaults.color = isLightMode ? "#000000" : "#ffffff";
+
   const options: ChartOptions<any> = {
     elements: {
       bar: {
@@ -98,7 +105,15 @@ const BarsChart: FC<IProps> = ({
     datasets: data,
   };
 
-  return <Bar options={options} data={dataset} height={height} width={width} />;
+  return (
+    <Bar
+      options={options}
+      data={dataset}
+      height={height}
+      width={width}
+      className={`transition-all duration-300 ${isLightMode ? "" : "opacity-80"}`}
+    />
+  );
 };
 
 export default BarsChart;

@@ -7,8 +7,20 @@ import { useNavigate } from "react-router";
 import { CATEGORY_API, ITEM_API, SUB_CATEGORY_API } from "../api";
 
 // Assets
-import { CloseIcon, ExitIcon, IncomeIcon, SearchIcon } from "../assets/icons";
+import {
+  CalendarIcon,
+  ClockIcon,
+  CloseIcon,
+  EuroIcon,
+  ExitIcon,
+  IncomeIcon,
+  SearchIcon,
+} from "../assets/icons";
 import { MONTHS } from "../assets";
+import {
+  DEFAULT_DARK_BORDER_COLOR,
+  DEFAULT_LIGHT_BORDER_COLOR,
+} from "../assets/constants";
 
 // Components
 import {
@@ -23,6 +35,7 @@ import {
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Types
 import {
@@ -86,6 +99,9 @@ const Home: FC = () => {
   const [isFirstTimeOnWebsite, setIsFirstTimeOnWebsite] =
     useState<boolean>(false);
   const navigate = useNavigate();
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const titleLabel: string = t(
     step === 1 ? "selectACategory" : step === 2 ? "selectASubcategory" : "",
@@ -198,7 +214,9 @@ const Home: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2.5em] mobile:text-2xl">
+    <span
+      className={`text-[2.5em] mobile:text-2xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {titleLabel}
     </span>
   );
@@ -216,9 +234,11 @@ const Home: FC = () => {
       endIcon={
         <div
           onClick={resetFilterHandler}
-          className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+          className={`flex items-center justify-center p-2 rounded-full cursor-pointer hover:opacity-50 transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
         >
-          <CloseIcon className="text-darkgray text-2xl" />
+          <CloseIcon
+            className={`transition-all duration-300 text-2xl ${isLightMode ? "text-darkgray" : "text-lightgray"}`}
+          />
         </div>
       }
     />
@@ -238,9 +258,11 @@ const Home: FC = () => {
         endIcon={
           <div
             onClick={resetFilterHandler}
-            className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+            className={`flex items-center justify-center p-2 rounded-full cursor-pointer hover:opacity-50 transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
           >
-            <CloseIcon className="text-darkgray text-2xl" />
+            <CloseIcon
+              className={`transition-all duration-300 text-2xl ${isLightMode ? "text-darkgray" : "text-lightgray"}`}
+            />
           </div>
         }
       />
@@ -254,20 +276,29 @@ const Home: FC = () => {
             <Grid key={index} size={{ xs: 12, md: 3 }}>
               <ShadowBox
                 onClick={() => onCategoryClick(category)}
-                className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300 bg-primary"
+                className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50"
                 noShadow
+                borderColor="#3Bcc3d"
               >
-                <span className="text-white text-lg">{category.label}</span>
+                <span
+                  className={`text-lg transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                >
+                  {category.label}
+                </span>
               </ShadowBox>
             </Grid>
           );
         })
       ) : (
         <div className="flex flex-col gap-2">
-          <span className="text-white">{t("noCategoriesMessage")}</span>
+          <span
+            className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+          >
+            {t("noCategoriesMessage")}
+          </span>
           <span
             onClick={() => navigate("/categories/new")}
-            className="text-white underline cursor-pointer w-fit"
+            className={`underline cursor-pointer w-fit transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
           >
             {t("createCategory")}
           </span>
@@ -286,10 +317,13 @@ const Home: FC = () => {
                 <Grid key={index} size={{ xs: 12, md: 3 }}>
                   <ShadowBox
                     onClick={() => onSubcategoryClick(subcategory)}
-                    className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50 transition-all duration-300 bg-primary"
+                    className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50"
                     noShadow
+                    borderColor="#3Bcc3d"
                   >
-                    <span className="text-white text-lg">
+                    <span
+                      className={`text-lg transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                    >
                       {subcategory.label}
                     </span>
                   </ShadowBox>
@@ -300,10 +334,14 @@ const Home: FC = () => {
         )
       ) : (
         <div className="flex flex-col gap-2">
-          <span className="text-white">{t("noSubcategoriesMessage")}</span>
+          <span
+            className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+          >
+            {t("noSubcategoriesMessage")}
+          </span>
           <span
             onClick={() => navigate("/subcategories/new")}
-            className="text-white underline cursor-pointer w-fit"
+            className={`underline cursor-pointer w-fit transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
           >
             {t("createSubcategory")}
           </span>
@@ -324,17 +362,25 @@ const Home: FC = () => {
       className="mobile:mt-10"
     >
       <div className="flex flex-col gap-5">
-        <span className="text-darkgray text-base">
+        <span
+          className={`text-base transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
+        >
           {t("addItemDescription")}
         </span>
         <div className="flex items-center gap-5 justify-between mobile:flex-col">
           <ShadowBox
+            borderColor={
+              isLightMode
+                ? DEFAULT_LIGHT_BORDER_COLOR
+                : DEFAULT_DARK_BORDER_COLOR
+            }
             onClick={() => onFormDataChange("type", "income")}
             className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
               isIncomeType
                 ? "cursor-default opacity-70 bg-success-popup"
                 : "hover:opacity-50 cursor-pointer"
             }`}
+            noShadow
           >
             <IncomeIcon
               className={`text-[3em] ${isIncomeType ? "text-primary" : "text-gray"}`}
@@ -346,12 +392,18 @@ const Home: FC = () => {
             </span>
           </ShadowBox>
           <ShadowBox
+            borderColor={
+              isLightMode
+                ? DEFAULT_LIGHT_BORDER_COLOR
+                : DEFAULT_DARK_BORDER_COLOR
+            }
             onClick={() => onFormDataChange("type", "exit")}
             className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
               isExitType
                 ? "cursor-default opacity-70 bg-error-popup"
-                : "hover:opacity-50 cursor-pointer"
+                : "hover:opacity-50  cursor-pointer"
             }`}
+            noShadow
           >
             <ExitIcon
               className={`text-[3em] ${isExitType ? "text-primary-red" : "text-gray"}`}
@@ -363,6 +415,16 @@ const Home: FC = () => {
             </span>
           </ShadowBox>
         </div>
+        <Input
+          type="number"
+          value={formData.year}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange("year", event.target.value)
+          }
+          inputMode="numeric"
+          startIcon={<CalendarIcon className="text-darkgray text-xl" />}
+          noShadow
+        />
         <Autocomplete
           autoComplete="current-password"
           placeholder={t("month")}
@@ -373,6 +435,8 @@ const Home: FC = () => {
           data={_MONTHS}
           showAllOptions
           noFullOptionsWidth
+          startIcon={<ClockIcon className="text-darkgray text-2xl" />}
+          noShadow
         />
         <Input
           autoFocus
@@ -384,14 +448,8 @@ const Home: FC = () => {
           }
           inputMode="numeric"
           onKeyUp={onItemKeyUp}
-        />
-        <Input
-          type="number"
-          value={formData.year}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange("year", event.target.value)
-          }
-          inputMode="numeric"
+          startIcon={<EuroIcon className="text-darkgray text-2xl" />}
+          noShadow
         />
       </div>
     </Modal>

@@ -1,12 +1,19 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useContext, useRef, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useTranslation } from "react-i18next";
 
 // Components
 import ShadowBox from "./ShadowBox.component";
 
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
+
 // Hooks
 import { useClickOutside } from "../hooks";
+import {
+  DEFAULT_DARK_BORDER_COLOR2,
+  DEFAULT_LIGHT_BORDER_COLOR,
+} from "../assets/constants";
 
 interface IProps {
   value: string;
@@ -30,6 +37,9 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
     t,
     i18n: { language: currentLanguage },
   } = useTranslation();
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const elabValue: string = value === "en" ? "gb" : value;
 
@@ -54,8 +64,13 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
         }`}
       >
         <ShadowBox
+          borderColor={
+            isLightMode
+              ? DEFAULT_LIGHT_BORDER_COLOR
+              : DEFAULT_DARK_BORDER_COLOR2
+          }
           borderRadius={30}
-          className="flex flex-col gap-5 justify-center items-center w-40 py-5 bg-white"
+          className={`flex flex-col gap-5 justify-center items-center w-40 py-5 ${isLightMode ? "bg-white" : "bg-black"}`}
         >
           {LANGUAGES.map((language: TLanguage, index: number) => {
             const countryCode: string =
@@ -65,7 +80,7 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
             return isSelectedLanguage ? (
               <div
                 key={index}
-                className="flex items-center gap-2 px-5 py-2 bg-lightgray rounded-full"
+                className={`flex items-center gap-2 px-5 py-2 rounded-full transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
               >
                 <ReactCountryFlag
                   countryCode={countryCode}
@@ -75,13 +90,17 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
                     height: "1.5em",
                   }}
                 />
-                <span className="text-black">{t(language.label)}</span>
+                <span
+                  className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                >
+                  {t(language.label)}
+                </span>
               </div>
             ) : (
               <div
                 key={index}
                 onClick={() => onChange(language.id)}
-                className="flex items-center gap-2 px-5 py-2 bg-white rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+                className={`flex items-center gap-2 px-5 py-2 rounded-full cursor-pointer hover:opacity-50 transition-all duration-300 ${isLightMode ? "bg-white" : "bg-black"}`}
               >
                 <ReactCountryFlag
                   countryCode={countryCode}
@@ -91,7 +110,11 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
                     height: "1.5em",
                   }}
                 />
-                <span className="text-black">{t(language.label)}</span>
+                <span
+                  className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                >
+                  {t(language.label)}
+                </span>
               </div>
             );
           })}

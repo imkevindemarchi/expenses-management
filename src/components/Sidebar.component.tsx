@@ -25,6 +25,7 @@ import { SidebarContext, TSidebarContext } from "../providers/sidebar.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Hooks
 import { useClickOutside } from "../hooks";
@@ -57,6 +58,9 @@ const Sidebar: FC = () => {
   const [isUserDropdownOpened, setIsUserDropdownOpened] =
     useState<boolean>(false);
   const userLiquidGlassRef: any | null = useRef(null);
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const currentPaths: string[] = pathname.split("/");
   const currentPathSection: string = currentPaths[1];
@@ -96,7 +100,11 @@ const Sidebar: FC = () => {
   const logo = (
     <div onClick={goToHome} className="flex items-center gap-5">
       <EuroIcon className="text-[5em] text-primary cursor-pointer hover:opacity-50 transition-all duration-300" />
-      <span className="text-black text-[3em]">{t("finances")}</span>
+      <span
+        className={`text-[3em] transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("finances")}
+      </span>
     </div>
   );
 
@@ -111,7 +119,7 @@ const Sidebar: FC = () => {
           <div key={index} className="flex flex-col gap-10 relative">
             <span
               onClick={() => onRouteChange(route.path)}
-              className="text-black text-xl hover:opacity-50 transition-all duration-300 cursor-pointer"
+              className={`text-xl hover:opacity-50 transition-all duration-300 cursor-pointer ${isLightMode ? "text-black" : "text-white"}`}
             >
               {t(route.name)}
             </span>
@@ -122,7 +130,7 @@ const Sidebar: FC = () => {
             <span
               key={index}
               onClick={() => onRouteChange(route.path)}
-              className="text-darkgray text-xl hover:opacity-50 transition-all duration-300 cursor-pointer"
+              className={`text-xl hover:opacity-50 transition-all duration-300 cursor-pointer ${isLightMode ? "text-darkgray" : "text-gray"}`}
             >
               {t(route.name)}
             </span>
@@ -140,10 +148,12 @@ const Sidebar: FC = () => {
     <div
       ref={userLiquidGlassRef}
       onClick={() => setIsUserDropdownOpened(!isUserDropdownOpened)}
-      className={`border-2 border-lightgray w-10 h-10 flex justify-center items-center cursor-pointer relative bg-lightgray rounded-full ${isUserDropdownOpened ? "" : "hover:opacity-50 transition-all duration-300"}`}
+      className={`border-2 w-10 h-10 flex justify-center items-center cursor-pointer relative rounded-full ${isUserDropdownOpened ? "" : "hover:opacity-50 transition-all duration-300"} ${isLightMode ? "bg-lightgray border-lightgray" : "bg-darkgray2 border-darkgray2"}`}
     >
       <div className="relative">
-        <UserIcon className="text-black" />
+        <UserIcon
+          className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        />
         <div
           style={{ left: "50%", transform: "translate(-50%, 0)" }}
           className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
@@ -152,7 +162,7 @@ const Sidebar: FC = () => {
         >
           <ShadowBox
             borderRadius={30}
-            className="flex flex-col gap-5 justify-center items-center p-5 bg-white"
+            className={`flex flex-col gap-5 justify-center items-center p-5 transition-all duration-300 ${isLightMode ? "bg-white" : "bg-black"}`}
           >
             <span className="text-primary underline cursor-default">
               {userData?.email}
@@ -161,15 +171,23 @@ const Sidebar: FC = () => {
               onClick={() => onRouteChange("/settings")}
               className="flex items-center gap-2 hover:opacity-50 transition-all duration-300"
             >
-              <SettingsIcon className="text-darkgray text-2xl" />
-              <span className="text-black">{t("settings")}</span>
+              <SettingsIcon className="text-2xl text-darkgray" />
+              <span
+                className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+              >
+                {t("settings")}
+              </span>
             </div>
             <div
               onClick={() => onRouteChange("/password-reset")}
               className="flex items-center gap-2 hover:opacity-50 transition-all duration-300"
             >
-              <LockIcon className="text-darkgray text-xl" />
-              <span className="text-black">{t("resetPassword")}</span>
+              <LockIcon className="text-xl text-darkgray" />
+              <span
+                className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+              >
+                {t("resetPassword")}
+              </span>
             </div>
             {/* <span
               onClick={() => navigate("/profile")}
@@ -186,8 +204,12 @@ const Sidebar: FC = () => {
   const logoutIcon = (
     <IconButton
       onClick={onLogout}
-      icon={<LogoutIcon className="text-black text-xl" />}
-      className="border-lightgray w-10 h-10 relative bg-white border-2"
+      icon={
+        <LogoutIcon
+          className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        />
+      }
+      className={`w-10 h-10 relative border-2 transition-all duration-300 ${isLightMode ? "bg-lightgray border-lightgray" : "bg-darkgray2 border-darkgray2"}`}
     />
   );
 
@@ -201,11 +223,12 @@ const Sidebar: FC = () => {
 
   return (
     <ShadowBox
-      className={`bg-white fixed left-0 w-full h-full flex justify-center items-center flex-col gap-10 desktop:hidden ${
+      className={`fixed left-0 w-full h-full flex justify-center items-center flex-col gap-10 desktop:hidden ${
         isOpen ? "top-0 opacity-100" : "top-[-100%] opacity-0"
-      }`}
+      } ${isLightMode ? "bg-white" : "bg-black"}`}
       borderRadius={0}
       zIndex={Z_INDEX.SIDEBAR}
+      noBorder
     >
       {logo}
       {routesComponent}

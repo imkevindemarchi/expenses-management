@@ -1,14 +1,17 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { format, parse } from "date-fns";
-
-// Icons
-import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon } from "../assets/icons";
 
 // Components
 import LiquidGlass from "./LiquidGlass.component";
 import ShadowBox from "./ShadowBox.component";
 import IconButton from "./IconButton.component";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
+
+// Icons
+import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon } from "../assets/icons";
 
 export interface IColumn {
   key: string;
@@ -52,6 +55,9 @@ const Table: FC<IProps> = ({
   smallPadding,
 }) => {
   const { t } = useTranslation();
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const canGoPrevious: boolean = Number(info?.page ?? 0) > 1;
   const totalPages: number = approximateByExcess(Number(info?.total ?? 0) / 5);
@@ -60,14 +66,22 @@ const Table: FC<IProps> = ({
   const footer = !noFooter && (
     <div className="py-5 px-2 flex justify-between items-center sticky bottom-0 left-0 right-0">
       <div className="flex gap-1">
-        <span className="text-black opacity-80">{t("total")}:</span>
-        <span className="text-black">{total}</span>
+        <span
+          className={`opacity-80" transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        >
+          {t("total")}:
+        </span>
+        <span
+          className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        >
+          {total}
+        </span>
       </div>
       <div className="flex flex-row gap-5">
         <ShadowBox
           noBorder
           noShadow
-          className={`transition-all duration-300 bg-lightgray ${
+          className={`transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"} ${
             !canGoPrevious ? "opacity-60" : "hover:opacity-50"
           }`}
         >
@@ -84,7 +98,7 @@ const Table: FC<IProps> = ({
         <ShadowBox
           noBorder
           noShadow
-          className={`transition-all duration-300 bg-lightgray ${
+          className={`transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"} ${
             !canGoNext ? "opacity-60" : "hover:opacity-50"
           }`}
         >
@@ -95,7 +109,9 @@ const Table: FC<IProps> = ({
               !canGoNext ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            <ArrowRightIcon className="text-3xl text-darkgray" />
+            <ArrowRightIcon
+              className={`text-3xl transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-lightgray"}`}
+            />
           </button>
         </ShadowBox>
       </div>
@@ -115,7 +131,9 @@ const Table: FC<IProps> = ({
             {columns.map((column: IColumn, index: number) => {
               return (
                 <th key={index} className="px-5 text-left">
-                  <span className="text-black font-normal whitespace-nowrap">
+                  <span
+                    className={`font-normal whitespace-nowrap transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                  >
                     {column.value}
                   </span>
                 </th>
@@ -133,11 +151,13 @@ const Table: FC<IProps> = ({
                 onClick={() => onRowClick && onRowClick(item)}
                 style={{
                   borderBottom:
-                    isLastElement && noFooter ? "" : "1px solid #ececec",
+                    isLastElement && noFooter
+                      ? ""
+                      : `1px solid ${isLightMode ? "#ececec" : "#4d4d4d"}`,
                 }}
                 className={`${
                   onRowClick
-                    ? "cursor-pointer hover:bg-lightgray transition-all duration-300"
+                    ? `cursor-pointer transition-all duration-300 ${isLightMode ? "hover:bg-lightgray" : "hover:bg-darkgray2"}`
                     : ""
                 }`}
               >
@@ -148,7 +168,11 @@ const Table: FC<IProps> = ({
                         event.stopPropagation();
                         onDelete(item);
                       }}
-                      icon={<DeleteIcon className="text-white text-2xl" />}
+                      icon={
+                        <DeleteIcon
+                          className={`text-2xl transition-all duration-300 ${isLightMode ? "text-white" : "text-black"}`}
+                        />
+                      }
                       className="w-10 h-10 flex justify-center items-center bg-primary-red"
                       noBorder
                       noShadow
@@ -199,7 +223,11 @@ const Table: FC<IProps> = ({
 
                     return (
                       <td key={index2} className="p-5">
-                        <span className="text-black">{elabDate}</span>
+                        <span
+                          className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                        >
+                          {elabDate}
+                        </span>
                       </td>
                     );
                   }
@@ -279,7 +307,9 @@ const Table: FC<IProps> = ({
                           !smallPadding ? "py-5" : "py-1"
                         }`}
                       >
-                        <span className="text-black">
+                        <span
+                          className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                        >
                           {t(item[column.key])}
                         </span>
                       </td>
@@ -292,7 +322,9 @@ const Table: FC<IProps> = ({
                         !smallPadding ? "p-5" : "p-1"
                       }`}
                     >
-                      <span className="text-black">
+                      <span
+                        className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+                      >
                         {isValueColumn
                           ? `€ ${item[column.key]}`
                           : item[column.key]}
@@ -309,7 +341,11 @@ const Table: FC<IProps> = ({
     </ShadowBox>
   ) : !isLoading && data ? (
     <div className="flex justify-center p-5">
-      <span className="text-black">{t("noData")}</span>
+      <span
+        className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("noData")}
+      </span>
     </div>
   ) : null;
 };

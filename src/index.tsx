@@ -15,10 +15,11 @@ import {
   LoaderProvider,
   PopupProvider,
   SidebarProvider,
+  ThemeProvider,
 } from "./providers";
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
 const app = (
@@ -27,7 +28,9 @@ const app = (
       <AuthProvider>
         <PopupProvider>
           <SidebarProvider>
-            <App />
+            <ThemeProvider>
+              <App />
+            </ThemeProvider>
           </SidebarProvider>
         </PopupProvider>
       </AuthProvider>

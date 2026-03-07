@@ -1,7 +1,10 @@
-import React, { FC, MouseEvent } from "react";
+import React, { FC, MouseEvent, useContext } from "react";
 
 // Components
 import ShadowBox from "./ShadowBox.component";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 type TButtonType = "button" | "submit" | "reset";
 
@@ -28,10 +31,14 @@ const Button: FC<IProps> = ({
   variant = "primary",
   readOnly = false,
 }) => {
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
+
   switch (variant) {
     case "primary": {
       return (
-        <ShadowBox zIndex={zIndex} className={`w-fit ${className}`}>
+        <ShadowBox zIndex={zIndex} noBorder className={`w-fit ${className}`}>
           <button
             onClick={(event: any) => !readOnly && onClick && onClick(event)}
             type={type}
@@ -47,7 +54,7 @@ const Button: FC<IProps> = ({
       return (
         <span
           onClick={onClick}
-          className="text-base text-darkgray underline-offset-4 underline cursor-pointer hover:opacity-50 transition-all duration-300"
+          className={`text-base underline-offset-4 underline cursor-pointer hover:opacity-50 transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
         >
           {text}
         </span>
