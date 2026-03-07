@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Pie } from "react-chartjs-2";
 import {
   ArcElement,
@@ -12,6 +12,9 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 ChartJS.register(
   CategoryScale,
@@ -47,6 +50,10 @@ interface IProps {
 }
 
 const DoughnutChart: FC<IProps> = ({ labels, data, customTooltipLabel }) => {
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
+
   const dataset = {
     labels,
     datasets: [data],
@@ -56,7 +63,7 @@ const DoughnutChart: FC<IProps> = ({ labels, data, customTooltipLabel }) => {
     plugins: {
       legend: {
         labels: {
-          color: "#000000",
+          color: isLightMode ? "#000000" : "#ffffff",
         },
       },
       tooltip: {
@@ -68,7 +75,13 @@ const DoughnutChart: FC<IProps> = ({ labels, data, customTooltipLabel }) => {
     scales: {},
   };
 
-  return <Pie data={dataset} options={options} />;
+  return (
+    <Pie
+      data={dataset}
+      options={options}
+      className={`transition-all duration-300 ${isLightMode ? "" : "opacity-80"}`}
+    />
+  );
 };
 
 export default DoughnutChart;

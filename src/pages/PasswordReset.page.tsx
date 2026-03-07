@@ -10,6 +10,7 @@ import { Button, Input, ShadowBox } from "../components";
 // Contexts
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Icons
 import { LockIcon, SaveIcon } from "../assets/icons";
@@ -49,6 +50,9 @@ const PasswordReset: FC = () => {
   const { onOpen: openPopup }: TPopupContext = useContext(
     PopupContext,
   ) as TPopupContext;
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const titleLabel: string = t("passwordReset");
 
@@ -118,14 +122,18 @@ const PasswordReset: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2.5em] mobile:text-2xl">
+    <span
+      className={`text-[2em] mobile:text-2xl mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {titleLabel}
     </span>
   );
 
   const description = (
     <div className="w-full flex justify-start">
-      <span className="text-lg text-black mobile:text-center">
+      <span
+        className={`text-lg mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
         {t("compileFormToResetPassword")}
       </span>
     </div>

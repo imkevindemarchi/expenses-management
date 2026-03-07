@@ -3,19 +3,32 @@ import React, {
   FC,
   ReactElement,
   RefObject,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
 
+// Assets
+import {
+  DEFAULT_DARK_BORDER_COLOR,
+  DEFAULT_DARK_BORDER_COLOR2,
+  DEFAULT_LIGHT_BORDER_COLOR,
+  Z_INDEX,
+} from "../assets/constants";
+
+// Components
+import ShadowBox from "./ShadowBox.component";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
+
 // Hooks
 import { useClickOutside } from "../hooks";
 
 // Types
 import { TValidation } from "../utils/validation.util";
-import { Z_INDEX } from "../assets/constants";
-import ShadowBox from "./ShadowBox.component";
 
 type TInputType = "text" | "password";
 
@@ -69,7 +82,12 @@ const Autocomplete: FC<IProps> = ({
   const inputRef = useRef<HTMLDivElement>(null);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [state, setState] = useState<string | undefined>(value?.label);
-  const [borderColor, setBorderColor] = useState<string>("rgba(0, 0, 0, 0.04)");
+  const { state: theme, isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
+  const [borderColor, setBorderColor] = useState<string>(
+    isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR,
+  );
 
   const hasOptions: boolean = data && data.length > 0;
 
@@ -88,8 +106,10 @@ const Autocomplete: FC<IProps> = ({
     setBorderColor("#3Bcc3d");
   }
 
-  function onBlur(): void {
-    setBorderColor("rgba(0, 0, 0, 0.04)");
+  function onBlur() {
+    setBorderColor(
+      isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR,
+    );
   }
 
   useClickOutside(inputRef as RefObject<HTMLElement>, () => {
@@ -108,14 +128,19 @@ const Autocomplete: FC<IProps> = ({
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    setBorderColor(
+      isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR2,
+    );
+  }, [isLightMode]);
+
   return (
     <div className="flex flex-col gap-2 w-full">
       <ShadowBox
         ref={inputRef}
-        borderColor={borderColor}
-        borderSize={2}
+        borderColor={!error?.isValid ? "#cc3b3b" : borderColor}
         zIndex={zIndex ?? Z_INDEX.AUTOCOMPLETE}
-        className={`flex flex-col gap-2 px-5 py-3 border-2 border-white bg-white ${className}`}
+        className={`flex flex-col gap-2 px-5 py-3 border-2 ${isLightMode ? "bg-white" : "bg-black"} ${className}`}
         noShadow={noShadow}
       >
         <div className="flex flex-row gap-2 items-center relative">
@@ -126,7 +151,7 @@ const Autocomplete: FC<IProps> = ({
             type={type}
             autoFocus={autoFocus}
             style={{ background: "transparent" }}
-            className={`border-none outline-none text-base text-black w-full ${alignTextToCenter ? "text-center" : ""}`}
+            className={`border-none outline-none text-base w-full ${isLightMode ? "text-black" : "text-white"} ${alignTextToCenter ? "text-center" : ""}`}
             placeholder={placeholder}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -138,11 +163,16 @@ const Autocomplete: FC<IProps> = ({
           {endIcon}
           {hasOptions && (
             <ShadowBox
+              borderColor={
+                isLightMode
+                  ? DEFAULT_LIGHT_BORDER_COLOR
+                  : DEFAULT_DARK_BORDER_COLOR2
+              }
               style={{ left: "50%", transform: "translate(-50%, 0)" }}
               borderRadius={50}
-              className={`absolute text-center top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center py-2 z-800 min-w-40 overflow-y-scroll bg-white ${
+              className={`absolute text-center top-0 transition-all duration-300 opacity-0 pointer-events-none flex flex-col gap-5 justify-center items-center py-2 z-800 min-w-40 overflow-y-scroll ${
                 dropdown && "top-12 opacity-100 pointer-events-auto"
-              } ${noFullOptionsWidth ? "w-96 text-center" : "w-full"}`}
+              } ${noFullOptionsWidth ? "w-96 text-center" : "w-full"} ${isLightMode ? "bg-white" : "bg-black"}`}
             >
               <div className="flex flex-col max-h-60 w-full px-5 py-2">
                 {elabData && elabData.length > 0 ? (
@@ -156,10 +186,10 @@ const Autocomplete: FC<IProps> = ({
                           onChange(element);
                           setDropdown(false);
                         }}
-                        className={`cursor-pointer w-full px-5 py-2 hover:opacity-50 transition-all duration-300 rounded-full ${isSelected ? "bg-lightgray" : ""}`}
+                        className={`cursor-pointer w-full px-5 py-2 hover:opacity-50 transition-all duration-300 rounded-full ${isSelected && isLightMode ? "bg-lightgray" : isSelected ? "bg-darkgray2" : ""}`}
                       >
                         <span
-                          className={`whitespace-nowrap ${isSelected ? "text-primary" : "text-black"}`}
+                          className={`whitespace-nowrap ${isSelected ? "text-primary" : isLightMode ? "text-black" : "text-white"}`}
                         >
                           {element.label}
                         </span>
@@ -177,9 +207,7 @@ const Autocomplete: FC<IProps> = ({
         </div>
       </ShadowBox>
       {!error?.isValid && (
-        <ShadowBox className="py-2 px-3">
-          <span className="text-white">{error?.message}</span>
-        </ShadowBox>
+        <span className="text-primary-red">{error?.message}</span>
       )}
     </div>
   );

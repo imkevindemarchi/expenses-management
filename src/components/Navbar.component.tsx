@@ -11,6 +11,7 @@ import {
   EuroIcon,
   LockIcon,
   LogoutIcon,
+  MoonIcon,
   SettingsIcon,
   UserIcon,
 } from "../assets/icons";
@@ -24,6 +25,7 @@ import IconButton from "./IconButton.component";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Hooks
 import { useClickOutside } from "../hooks";
@@ -54,7 +56,10 @@ const Navbar: FC = () => {
   const [isOnTopOfPage, setIsOnTopOfPage] = useState<boolean>(true);
   const [isUserDropdownOpened, setIsUserDropdownOpened] =
     useState<boolean>(false);
-  const userLiquidGlassRef: any | null = useRef(null);
+  const userIconRef: any | null = useRef(null);
+  const { isLightMode, stateHandler: themeHandler }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const currentPaths: string[] = pathname.split("/");
   const currentPathSection: string = currentPaths[1];
@@ -86,7 +91,7 @@ const Navbar: FC = () => {
     setIsLoading(false);
   }
 
-  useClickOutside(userLiquidGlassRef, () => setIsUserDropdownOpened(false));
+  useClickOutside(userIconRef, () => setIsUserDropdownOpened(false));
 
   const logo = (
     <div className="flex items-center gap-5">
@@ -94,7 +99,11 @@ const Navbar: FC = () => {
         onClick={goToHome}
         className="text-[3em] text-primary cursor-pointer hover:opacity-50 transition-all duration-300"
       />
-      <span className="text-black text-3xl">{t("finances")}</span>
+      <span
+        className={`text-3xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("finances")}
+      </span>
     </div>
   );
 
@@ -109,7 +118,7 @@ const Navbar: FC = () => {
           <div key={index} className="flex flex-col gap-10 relative">
             <span
               onClick={() => onRouteChange(route.path)}
-              className="text-black hover:opacity-50 transition-all duration-300 cursor-pointer"
+              className={`hover:opacity-50 transition-all duration-300 cursor-pointer ${isLightMode ? "text-black" : "text-white"}`}
             >
               {t(route.name)}
             </span>
@@ -120,7 +129,7 @@ const Navbar: FC = () => {
             <span
               key={index}
               onClick={() => onRouteChange(route.path)}
-              className="text-darkgray hover:opacity-50 transition-all duration-300 cursor-pointer"
+              className={`hover:opacity-50 transition-all duration-300 cursor-pointer ${isLightMode ? "text-darkgray" : "text-gray"}`}
             >
               {t(route.name)}
             </span>
@@ -134,14 +143,29 @@ const Navbar: FC = () => {
     <LanguageSelector value={language} onChange={onLanguageChange} />
   );
 
+  const themeIcon = (
+    <IconButton
+      noBorder
+      onClick={themeHandler}
+      icon={
+        <MoonIcon
+          className={`text-xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        />
+      }
+      className={`w-10 h-10 relative border-2 transition-all duration-300 ${isLightMode ? "bg-lightgray border-lightgray" : "bg-darkgray2 border-darkgray2"}`}
+    />
+  );
+
   const userIcon = (
     <div
-      ref={userLiquidGlassRef}
+      ref={userIconRef}
       onClick={() => setIsUserDropdownOpened(!isUserDropdownOpened)}
-      className={`border-2 border-lightgray w-10 h-10 flex justify-center items-center cursor-pointer relative bg-lightgray rounded-full ${isUserDropdownOpened ? "" : "hover:opacity-50 transition-all duration-300"}`}
+      className={`border-2 w-10 h-10 flex justify-center items-center cursor-pointer relative rounded-full ${isUserDropdownOpened ? "" : "hover:opacity-50 transition-all duration-300"} ${isLightMode ? "bg-lightgray border-lightgray" : "bg-darkgray2 border-darkgray2"}`}
     >
       <div className="relative">
-        <UserIcon className="text-black" />
+        <UserIcon
+          className={`text-xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        />
         <div
           style={{ left: "50%", transform: "translate(-50%, 0)" }}
           className={`absolute top-0 transition-all duration-300 opacity-0 pointer-events-none ${
@@ -150,7 +174,7 @@ const Navbar: FC = () => {
         >
           <ShadowBox
             borderRadius={30}
-            className="flex flex-col gap-5 justify-center items-center p-5 bg-white"
+            className={`flex flex-col gap-5 justify-center items-center p-5 transition-all duration-300 ${isLightMode ? "bg-white" : "bg-black"}`}
           >
             <span className="text-primary underline cursor-default">
               {userData?.email}
@@ -159,15 +183,23 @@ const Navbar: FC = () => {
               onClick={() => navigate("/settings")}
               className="flex items-center gap-2 hover:opacity-50 transition-all duration-300"
             >
-              <SettingsIcon className="text-darkgray text-2xl" />
-              <span className="text-black">{t("settings")}</span>
+              <SettingsIcon className="text-2xl text-darkgray" />
+              <span
+                className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+              >
+                {t("settings")}
+              </span>
             </div>
             <div
               onClick={() => navigate("/password-reset")}
               className="flex items-center gap-2 hover:opacity-50 transition-all duration-300"
             >
-              <LockIcon className="text-darkgray text-xl" />
-              <span className="text-black">{t("resetPassword")}</span>
+              <LockIcon className="text-xl text-darkgray" />
+              <span
+                className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+              >
+                {t("resetPassword")}
+              </span>
             </div>
             {/* <span
             onClick={() => navigate("/profile")}
@@ -183,15 +215,21 @@ const Navbar: FC = () => {
 
   const logoutIcon = (
     <IconButton
+      noBorder
       onClick={onLogout}
-      icon={<LogoutIcon className="text-black text-xl" />}
-      className="border-lightgray w-10 h-10 relative bg-white border-2"
+      icon={
+        <LogoutIcon
+          className={`text-xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        />
+      }
+      className={`w-10 h-10 relative border-2 transition-all duration-300 ${isLightMode ? "bg-lightgray border-lightgray" : "bg-darkgray2 border-darkgray2"}`}
     />
   );
 
   const icons = (
     <div className="h-full flex items-center gap-5">
       {languageSelector}
+      {themeIcon}
       {userIcon}
       {logoutIcon}
     </div>
@@ -203,9 +241,9 @@ const Navbar: FC = () => {
 
   return (
     <div
-      className={`w-full fixed flex items-center justify-between mobile:hidden px-20 border-b-[1px] border-lightgray bg-white transition-all duration-300 ${
+      className={`w-full fixed flex items-center justify-between mobile:hidden px-20 border-b-[1px] transition-all duration-300 ${
         isOnTopOfPage ? "h-36" : "h-16"
-      }`}
+      } ${isLightMode ? "border-lightgray bg-white" : "border-darkgray2 bg-black"}`}
     >
       <Grid container sx={{ width: "100%" }}>
         <Grid size={{ xs: 2 }}>{logo}</Grid>

@@ -20,6 +20,7 @@ import { IconButton, Input, Modal, Table } from "../components";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Types
 import { THTTPResponse, TCategory } from "../types";
@@ -67,6 +68,9 @@ const Categories: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { pathname } = useLocation();
   const { userData }: TAuthContext = useContext(AuthContext) as TAuthContext;
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   const talbeColumns: IColumn[] = [{ key: "label", value: t("name") }];
 
@@ -160,7 +164,9 @@ const Categories: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2.5em] mobile:text-2xl">
+    <span
+      className={`text-[2em] mobile:text-2xl mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {t("categories")}
     </span>
   );
@@ -192,9 +198,11 @@ const Categories: FC = () => {
         endIcon={
           <div
             onClick={resetFilterHandler}
-            className="flex items-center justify-center p-2 bg-lightgray rounded-full cursor-pointer hover:opacity-50 transition-all duration-300"
+            className={`flex items-center justify-center p-2 rounded-full cursor-pointer hover:opacity-50 transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
           >
-            <CloseIcon className="text-darkgray text-2xl" />
+            <CloseIcon
+              className={`transition-all duration-300 text-2xl ${isLightMode ? "text-darkgray" : "text-lightgray"}`}
+            />
           </div>
         }
       />
@@ -231,7 +239,9 @@ const Categories: FC = () => {
       cancelButtonText="no"
       submitButtonText="yes"
     >
-      <span className="text-black opacity-80">
+      <span
+        className={`opacity-80 transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
         {t("confirmToDelete", { name: deleteModal.item?.label })}
       </span>
     </Modal>

@@ -7,6 +7,7 @@ import { ITEM_API } from "../api";
 
 // Assets
 import { MONTHS } from "../assets";
+import { isMobile } from "../assets/constants";
 
 // Components
 import { BarsChart, Input, ProgressBar, Table } from "../components";
@@ -15,6 +16,7 @@ import { BarsChart, Input, ProgressBar, Table } from "../components";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Icons
 import { CalendarIcon } from "../assets/icons";
@@ -68,7 +70,9 @@ const YearSummary: FC = () => {
         ? "warning"
         : "ok";
   const titleLabel: string = t("year-summary");
-  const isMobile: boolean = window.innerWidth <= 800;
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   setPageTitle(titleLabel);
 
@@ -205,13 +209,15 @@ const YearSummary: FC = () => {
   }
 
   const title = (
-    <span className="text-black text-[2em] mobile:text-2xl mobile:text-center">
+    <span
+      className={`text-[2em] mobile:text-2xl mobile:text-center transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+    >
       {titleLabel}
     </span>
   );
 
   const year = (
-    <Grid size={{ xs: 12, md: 3 }}>
+    <Grid size={{ xs: 12, md: 4 }}>
       <Input
         type="number"
         inputMode="numeric"
@@ -227,7 +233,9 @@ const YearSummary: FC = () => {
 
   const incomingsLabel = (
     <div className="flex flex-col gap-2">
-      <span className="text-lg text-black capitalize">
+      <span
+        className={`text-lg capitalize transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
         {t("totalIncomings")}
       </span>
       <span className="text-3xl text-primary">€ {getTotal("income")}</span>
@@ -236,7 +244,11 @@ const YearSummary: FC = () => {
 
   const exitsLabel = (
     <div className="flex flex-col gap-2">
-      <span className="text-lg text-black capitalize">{t("totalExits")}</span>
+      <span
+        className={`text-lg capitalize transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("totalExits")}
+      </span>
       <span className="text-3xl text-primary-red">€ {getTotal("exit")}</span>
     </div>
   );
@@ -255,7 +267,9 @@ const YearSummary: FC = () => {
   const progressLabel = getTotal("exit") !== 0 && (
     <div className="flex items-end h-full">
       <div className="flex flex-col gap-2">
-        <span className="text-lg text-black lowercase">
+        <span
+          className={`text-lg lowercase transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+        >
           {t("percentageOfRevenueSpent")}
         </span>
         <div className="flex items-end h-full">{progressBar}</div>
@@ -266,9 +280,11 @@ const YearSummary: FC = () => {
   const labels = (
     <div className="w-full flex items-center justify-between">
       <div className="w-full flex items-center gap-20 mobile:flex-col mobile:gap-5">
-        <div className="flex items-center gap-10 mobile:gap-0 mobile:justify-between mobile:w-full">
+        <div className="w-full flex items-center gap-10 mobile:gap-0 mobile:justify-between mobile:w-full">
           {incomingsLabel}
-          <div className="h-[10vh] bg-lightgray w-[1px] rounded-full" />
+          <div
+            className={`h-[10vh] w-[1px] rounded-full transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
+          />
           {exitsLabel}
         </div>
         <div className="w-full flex mobile:justify-center">{progressLabel}</div>

@@ -3,13 +3,23 @@ import React, {
   FC,
   KeyboardEventHandler,
   ReactNode,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 
+// Assets
+import {
+  DEFAULT_DARK_BORDER_COLOR2,
+  DEFAULT_LIGHT_BORDER_COLOR,
+} from "../assets/constants";
+
 // Components
 import ShadowBox from "./ShadowBox.component";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Spinner
 import { ClipLoader as Spinner } from "react-spinners";
@@ -61,14 +71,21 @@ const Input: FC<IProps> = ({
   const inputRef = useRef<HTMLDivElement>(null);
   const [isValueChanged, setIsValueChanged] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [borderColor, setBorderColor] = useState<string>("rgba(0, 0, 0, 0.04)");
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
+  const [borderColor, setBorderColor] = useState<string>(
+    isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR2,
+  );
 
   function onFocus() {
     setBorderColor("#3Bcc3d");
   }
 
   function onBlur() {
-    setBorderColor("rgba(0, 0, 0, 0.04)");
+    setBorderColor(
+      isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR2,
+    );
   }
 
   useEffect(() => {
@@ -90,13 +107,19 @@ const Input: FC<IProps> = ({
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    setBorderColor(
+      isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR2,
+    );
+  }, [isLightMode]);
+
   return (
     <div className="flex flex-col gap-2 w-full">
       <ShadowBox
         ref={inputRef}
-        borderColor={borderColor}
+        borderColor={!error?.isValid ? "#cc3b3b" : borderColor}
         borderSize={2}
-        className={`flex flex-col gap-2 px-5 py-3 border-2 border-white ${className}`}
+        className={`flex flex-col gap-2 px-5 py-3 border-2 ${isLightMode ? "bg-white" : "bg-black"} ${className}`}
         noShadow={noShadow}
       >
         <div className="flex flex-row gap-2 items-center">
@@ -107,7 +130,7 @@ const Input: FC<IProps> = ({
             type={type}
             autoFocus={autoFocus}
             style={{ background: "transparent" }}
-            className="border-none outline-none text-base text-black w-full"
+            className={`border-none outline-none text-base w-full ${isLightMode ? "text-black" : "text-white"}`}
             placeholder={placeholder}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -127,9 +150,7 @@ const Input: FC<IProps> = ({
         </div>
       </ShadowBox>
       {!error?.isValid && (
-        <ShadowBox className="py-2 px-3">
-          <span className="text-white">{error?.message}</span>
-        </ShadowBox>
+        <span className="text-primary-red">{error?.message}</span>
       )}
     </div>
   );

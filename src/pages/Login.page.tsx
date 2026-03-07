@@ -21,6 +21,7 @@ import { Button, Input, ShadowBox } from "../components";
 import { PopupContext, TPopupContext } from "../providers/popup.provider";
 import { LoaderContext, TLoaderContext } from "../providers/loader.provider";
 import { AuthContext, TAuthContext } from "../providers/auth.provider";
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Types
 import { THTTPResponse, TLoginPayload } from "../types";
@@ -54,6 +55,9 @@ const Login = () => {
     AuthContext,
   ) as TAuthContext;
   const [passwordType, setPasswordType] = useState<TPasswordType>("password");
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   setPageTitle(t("logInTitle"));
 
@@ -108,7 +112,9 @@ const Login = () => {
   const title = (
     <div className="flex flex-row items-center gap-5">
       <img src={iconImg} className="w-32 mobile:w-28" alt={t("imgNotFound")} />
-      <span className="font-bold text-black text-[3em] mobile:text-3xl">
+      <span
+        className={`font-bold text-black text-[3em] mobile:text-3xl transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
         {t("welcome")}
       </span>
     </div>
@@ -116,7 +122,9 @@ const Login = () => {
 
   const description = (
     <div className="flex justify-center items-center">
-      <span className="text-darkgray opacity-70 text-base">
+      <span
+        className={`opacity-70 text-base transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
+      >
         {t("logInYourExpensesManagement")}
       </span>
     </div>
@@ -139,7 +147,7 @@ const Login = () => {
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               onInputChange("email", event.target.value)
             }
-            className="w-[35vh] mobile:w-full bg-white"
+            className="w-[35vh] mobile:w-full"
             autoComplete="email"
           />
           <Input
@@ -165,7 +173,7 @@ const Login = () => {
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               onInputChange("password", event.target.value)
             }
-            className="w-[35vh] mobile:w-full bg-white"
+            className="w-[35vh] mobile:w-full"
             autoComplete="current-password"
           />
         </div>
@@ -175,7 +183,9 @@ const Login = () => {
   );
 
   return (
-    <div className="w-full h-[100vh] mobile:h-[110vh] mobile:justify-start mobile:pt-36 flex items-center justify-center flex-col gap-5">
+    <div
+      className={`w-full h-[100vh] mobile:h-[110vh] mobile:justify-start mobile:pt-36 flex items-center justify-center flex-col gap-5 transition-all duration-300 ${isLightMode ? "bg-white" : "bg-black"}`}
+    >
       {title}
       {form}
     </div>

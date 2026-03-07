@@ -28,3 +28,5 @@ export { Euro as EuroIcon } from "./euro.icon";
 export { Settings as SettingsIcon } from "./settings.icon";
 export { Calendar as CalendarIcon } from "./calendar.icon";
 export { Expense as ExpenseIcon } from "./expense.icon";
+export { Moon as MoonIcon } from "./moon.icon";
+export { Clock as ClockIcon } from "./clock.icon";

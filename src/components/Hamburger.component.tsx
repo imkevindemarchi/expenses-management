@@ -1,4 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 interface IProps {
   onClick: () => void;
@@ -7,6 +10,9 @@ interface IProps {
 
 const Hamburger: FC<IProps> = ({ onClick, isActive }) => {
   const lines: number[] = [1, 2, 3];
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
 
   return (
     <button
@@ -22,7 +28,9 @@ const Hamburger: FC<IProps> = ({ onClick, isActive }) => {
             ${
               isActive
                 ? "bg-primary opacity-100 first:rotate-45 even:opacity-0 even:translate-x-20 last:rotate-[-45deg]"
-                : "bg-black"
+                : isLightMode
+                  ? "bg-black"
+                  : "bg-white"
             } ${isActive ? "opacity-100" : "opacity-50"}`}
         />
       ))}

@@ -1,4 +1,17 @@
-import React, { FC, ReactNode, RefObject } from "react";
+import React, { FC, ReactNode, RefObject, useContext } from "react";
+
+// Assets
+import {
+  DEFAULT_DARK_BORDER_COLOR,
+  DEFAULT_DARK_BOX_SHADOW_COLOR,
+  DEFAULT_DARK_BOX_SHADOW_COLOR2,
+  DEFAULT_LIGHT_BORDER_COLOR,
+  DEFAULT_LIGHT_BOX_SHADOW_COLOR,
+  isMobile,
+} from "../assets/constants";
+
+// Contexts
+import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 interface IProps {
   children?: ReactNode;
@@ -31,11 +44,15 @@ const ShadowBox: FC<IProps> = ({
   style,
   zIndex,
   noShadow = false,
-  borderColor = "rgba(0, 0, 0, 0.04)",
-  borderSize = 1,
+  borderColor,
+  borderSize = 2,
   borderRadius = 50,
   ...props
 }) => {
+  const { isLightMode }: TThemeContext = useContext(
+    ThemeContext,
+  ) as TThemeContext;
+
   return (
     <div
       ref={ref}
@@ -45,9 +62,13 @@ const ShadowBox: FC<IProps> = ({
       onDragOver={onDragOver}
       onDrop={onDrop}
       style={{
-        border: noBorder ? "" : `${borderSize}px solid ${borderColor}`,
+        border: noBorder
+          ? ""
+          : `${borderSize}px solid ${borderColor ? borderColor : isLightMode ? DEFAULT_LIGHT_BORDER_COLOR : DEFAULT_DARK_BORDER_COLOR}`,
         zIndex,
-        boxShadow: noShadow ? "" : "0 10px 30px rgba(0, 0, 0, 0.06)",
+        boxShadow: noShadow
+          ? ""
+          : `0 10px 30px ${isLightMode ? DEFAULT_LIGHT_BOX_SHADOW_COLOR : isMobile ? DEFAULT_DARK_BOX_SHADOW_COLOR2 : DEFAULT_DARK_BOX_SHADOW_COLOR}`,
         borderRadius,
         ...style,
       }}
