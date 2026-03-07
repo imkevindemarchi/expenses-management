@@ -450,44 +450,6 @@ const Expenses: FC = () => {
       className="mobile:mt-10"
     >
       <div className="flex flex-col gap-5">
-        <div className="flex items-center gap-5 justify-between mobile:flex-col">
-          <ShadowBox
-            onClick={() => onFormDataChange("type", "income")}
-            className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
-              isIncomeType
-                ? "cursor-default opacity-70 bg-success-popup"
-                : "hover:opacity-50 cursor-pointer"
-            }`}
-            noShadow
-          >
-            <IncomeIcon
-              className={`text-[3em] ${isIncomeType ? "text-primary" : "text-gray"}`}
-            />
-            <span
-              className={`transition-all duration-300 ${isIncomeType ? "text-white" : "text-gray"}`}
-            >
-              {t("income")}
-            </span>
-          </ShadowBox>
-          <ShadowBox
-            onClick={() => onFormDataChange("type", "exit")}
-            className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
-              isExitType
-                ? "cursor-default opacity-70 bg-error-popup"
-                : "hover:opacity-50 cursor-pointer"
-            }`}
-            noShadow
-          >
-            <ExitIcon
-              className={`text-[3em] ${isExitType ? "text-primary-red" : "text-gray"}`}
-            />
-            <span
-              className={`transition-all duration-300 ${isExitType ? "text-white" : "text-gray"}`}
-            >
-              {t("exit")}
-            </span>
-          </ShadowBox>
-        </div>
         <Autocomplete
           autoComplete="current-password"
           placeholder={t("month")}
@@ -521,6 +483,44 @@ const Expenses: FC = () => {
           inputMode="numeric"
           noShadow
         />
+        <div className="flex items-center gap-5 justify-between">
+          <ShadowBox
+            onClick={() => onFormDataChange("type", "income")}
+            className={`p-2 px-10 mobile:px-5 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
+              isIncomeType
+                ? "cursor-default opacity-70 bg-success-popup"
+                : "hover:opacity-50 cursor-pointer"
+            }`}
+            noShadow
+          >
+            <IncomeIcon
+              className={`text-[3em] mobile:text-[2em] ${isIncomeType ? "text-primary" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isIncomeType ? "text-white" : "text-gray"}`}
+            >
+              {t("income")}
+            </span>
+          </ShadowBox>
+          <ShadowBox
+            onClick={() => onFormDataChange("type", "exit")}
+            className={`p-2 px-10 mobile:px-5 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
+              isExitType
+                ? "cursor-default opacity-70 bg-error-popup"
+                : "hover:opacity-50  cursor-pointer"
+            }`}
+            noShadow
+          >
+            <ExitIcon
+              className={`text-[3em] mobile:text-[2em] ${isExitType ? "text-primary-red" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isExitType ? "text-white" : "text-gray"}`}
+            >
+              {t("exit")}
+            </span>
+          </ShadowBox>
+        </div>
       </div>
     </Modal>
   );

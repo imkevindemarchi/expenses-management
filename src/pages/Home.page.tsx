@@ -367,54 +367,6 @@ const Home: FC = () => {
         >
           {t("addItemDescription")}
         </span>
-        <div className="flex items-center gap-5 justify-between mobile:flex-col">
-          <ShadowBox
-            borderColor={
-              isLightMode
-                ? DEFAULT_LIGHT_BORDER_COLOR
-                : DEFAULT_DARK_BORDER_COLOR
-            }
-            onClick={() => onFormDataChange("type", "income")}
-            className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
-              isIncomeType
-                ? "cursor-default opacity-70 bg-success-popup"
-                : "hover:opacity-50 cursor-pointer"
-            }`}
-            noShadow
-          >
-            <IncomeIcon
-              className={`text-[3em] ${isIncomeType ? "text-primary" : "text-gray"}`}
-            />
-            <span
-              className={`transition-all duration-300 ${isIncomeType ? "text-white" : "text-gray"}`}
-            >
-              {t("income")}
-            </span>
-          </ShadowBox>
-          <ShadowBox
-            borderColor={
-              isLightMode
-                ? DEFAULT_LIGHT_BORDER_COLOR
-                : DEFAULT_DARK_BORDER_COLOR
-            }
-            onClick={() => onFormDataChange("type", "exit")}
-            className={`p-2 px-10 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
-              isExitType
-                ? "cursor-default opacity-70 bg-error-popup"
-                : "hover:opacity-50  cursor-pointer"
-            }`}
-            noShadow
-          >
-            <ExitIcon
-              className={`text-[3em] ${isExitType ? "text-primary-red" : "text-gray"}`}
-            />
-            <span
-              className={`transition-all duration-300 ${isExitType ? "text-white" : "text-gray"}`}
-            >
-              {t("exit")}
-            </span>
-          </ShadowBox>
-        </div>
         <Input
           type="number"
           value={formData.year}
@@ -451,6 +403,54 @@ const Home: FC = () => {
           startIcon={<EuroIcon className="text-darkgray text-2xl" />}
           noShadow
         />
+        <div className="flex items-center gap-5 justify-between">
+          <ShadowBox
+            borderColor={
+              isLightMode
+                ? DEFAULT_LIGHT_BORDER_COLOR
+                : DEFAULT_DARK_BORDER_COLOR
+            }
+            onClick={() => onFormDataChange("type", "income")}
+            className={`p-2 px-10 mobile:px-5 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
+              isIncomeType
+                ? "cursor-default opacity-70 bg-success-popup"
+                : "hover:opacity-50 cursor-pointer"
+            }`}
+            noShadow
+          >
+            <IncomeIcon
+              className={`text-[3em] mobile:text-[2em] ${isIncomeType ? "text-primary" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isIncomeType ? "text-white" : "text-gray"}`}
+            >
+              {t("income")}
+            </span>
+          </ShadowBox>
+          <ShadowBox
+            borderColor={
+              isLightMode
+                ? DEFAULT_LIGHT_BORDER_COLOR
+                : DEFAULT_DARK_BORDER_COLOR
+            }
+            onClick={() => onFormDataChange("type", "exit")}
+            className={`p-2 px-10 mobile:px-5 w-full justify-center flex items-center gap-5 transition-all duration-300 ${
+              isExitType
+                ? "cursor-default opacity-70 bg-error-popup"
+                : "hover:opacity-50  cursor-pointer"
+            }`}
+            noShadow
+          >
+            <ExitIcon
+              className={`text-[3em] mobile:text-[2em] ${isExitType ? "text-primary-red" : "text-gray"}`}
+            />
+            <span
+              className={`transition-all duration-300 ${isExitType ? "text-white" : "text-gray"}`}
+            >
+              {t("exit")}
+            </span>
+          </ShadowBox>
+        </div>
       </div>
     </Modal>
   );
@@ -469,7 +469,11 @@ const Home: FC = () => {
       submitButtonText="understood"
       hideSubmitIcon
     >
-      <span className="text-black">{t("welcomeMessage")}</span>
+      <span
+        className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
+      >
+        {t("welcomeMessage")}
+      </span>
     </Modal>
   );
 
