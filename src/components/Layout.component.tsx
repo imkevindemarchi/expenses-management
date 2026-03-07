@@ -56,7 +56,7 @@ const Layout: FC<IProps> = ({ children }) => {
   const breadcrumb = <Breadcrumb />;
 
   const mobileThemeIcon = (
-    <div className="w-full flex justify-center items-center pt-5">
+    <div className="w-full flex justify-end items-center pt-5 mobile:px-5">
       <IconButton
         onClick={themeHandler}
         icon={
