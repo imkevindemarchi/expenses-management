@@ -82,7 +82,7 @@ const Autocomplete: FC<IProps> = ({
   const inputRef = useRef<HTMLDivElement>(null);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [state, setState] = useState<string | undefined>(value?.label);
-  const { state: theme, isLightMode }: TThemeContext = useContext(
+  const { isLightMode }: TThemeContext = useContext(
     ThemeContext,
   ) as TThemeContext;
   const [borderColor, setBorderColor] = useState<string>(

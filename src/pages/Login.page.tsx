@@ -142,30 +142,43 @@ const Login = () => {
             name="email"
             autoFocus
             placeholder={t("email")}
-            startIcon={<EmailIcon className="text-gray text-2xl" />}
+            startIcon={
+              <EmailIcon
+                className={`text-2xl transition-all duration-300 ${isLightMode ? "text-gray" : "text-darkgray"}`}
+              />
+            }
             value={formData.email}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               onInputChange("email", event.target.value)
             }
             className="w-[35vh] mobile:w-full"
             autoComplete="email"
+            noShadow
           />
           <Input
             type={passwordType}
             name="password"
             placeholder={t("password")}
-            startIcon={<LockIcon className="text-gray text-2xl" />}
+            startIcon={
+              <LockIcon
+                className={`text-2xl transition-all duration-300 ${isLightMode ? "text-gray" : "text-darkgray"}`}
+              />
+            }
             endIcon={
               <ShadowBox
-                className="p-1 cursor-pointer hover:opacity-50 bg-lightgray"
+                className={`p-1 cursor-pointer hover:opacity-50 transition-all duration-300 ${isLightMode ? "bg-lightgray" : "bg-darkgray2"}`}
                 onClick={onPasswordTypeChange}
                 noBorder
                 noShadow
               >
                 {passwordType === "password" ? (
-                  <OpenedEyeIcon className="text-darkgray text-base" />
+                  <OpenedEyeIcon
+                    className={`text-base transition-all duration-300 ${isLightMode ? "text-darkgray " : "text-gray"}`}
+                  />
                 ) : (
-                  <ClosedEyeIcon className="text-darkgray text-base" />
+                  <ClosedEyeIcon
+                    className={`text-base transition-all duration-300 ${isLightMode ? "text-darkgray " : "text-gray"}`}
+                  />
                 )}
               </ShadowBox>
             }
@@ -175,6 +188,7 @@ const Login = () => {
             }
             className="w-[35vh] mobile:w-full"
             autoComplete="current-password"
+            noShadow
           />
         </div>
         <Button type="submit" text={t("logIn")} className="bg-primary w-full" />
