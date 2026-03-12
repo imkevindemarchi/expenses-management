@@ -304,7 +304,7 @@ const Summary: FC = () => {
             onFiltersChange("year", event.target.value)
           }
           startIcon={<CalendarIcon className="text-darkgray text-lg" />}
-          noShadow
+          noShadow={!isLightMode}
         />
       </Grid>
       <Grid size={{ xs: 12, md: 3 }}>
@@ -317,7 +317,7 @@ const Summary: FC = () => {
           showAllOptions
           alignTextToCenter
           className="text-center"
-          noShadow
+          noShadow={!isLightMode}
         />
       </Grid>
     </Grid>
@@ -586,6 +586,7 @@ const Summary: FC = () => {
               <ShadowBox
                 className="py-5 px-10 flex flex-col gap-5"
                 borderRadius={20}
+                noShadow={!isLightMode}
               >
                 {categoryHeader}
                 <div

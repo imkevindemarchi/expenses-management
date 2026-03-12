@@ -149,6 +149,7 @@ const PasswordReset: FC = () => {
       placeholder={t("insertNewPassword")}
       error={errors.password}
       startIcon={<LockIcon className="text-darkgray text-lg" />}
+      noShadow={!isLightMode}
     />
   );
 
@@ -161,6 +162,7 @@ const PasswordReset: FC = () => {
       placeholder={t("repeatPassword")}
       error={errors.password2}
       startIcon={<LockIcon className="text-darkgray text-lg" />}
+      noShadow={!isLightMode}
     />
   );
 

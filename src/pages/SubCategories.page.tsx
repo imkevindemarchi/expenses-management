@@ -211,6 +211,7 @@ const Subcategories: FC = () => {
         }}
         onSearch={getData}
         className="w-full"
+        noShadow={!isLightMode}
         startIcon={<SearchIcon className="text-darkgray text-3xl" />}
         endIcon={
           <div

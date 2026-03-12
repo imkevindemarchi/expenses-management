@@ -231,6 +231,7 @@ const Home: FC = () => {
       }
       className="w-full"
       startIcon={<SearchIcon className="text-darkgray text-3xl" />}
+      noShadow={!isLightMode}
       endIcon={
         <div
           onClick={resetFilterHandler}
@@ -255,6 +256,7 @@ const Home: FC = () => {
         }
         className="w-full"
         startIcon={<SearchIcon className="text-darkgray text-3xl" />}
+        noShadow={!isLightMode}
         endIcon={
           <div
             onClick={resetFilterHandler}

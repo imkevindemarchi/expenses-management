@@ -226,7 +226,7 @@ const YearSummary: FC = () => {
           onFiltersChange("year", event.target.value)
         }
         startIcon={<CalendarIcon className="text-darkgray text-lg" />}
-        noShadow
+        noShadow={!isLightMode}
       />
     </Grid>
   );
