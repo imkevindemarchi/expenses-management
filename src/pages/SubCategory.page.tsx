@@ -214,6 +214,7 @@ const Subcategory: FC = () => {
       placeholder={t("insertCategory")}
       error={errors.category}
       data={categories as IAutocompleteValue[]}
+      noShadow={!isLightMode}
     />
   );
 
@@ -252,6 +253,7 @@ const Subcategory: FC = () => {
       }}
       placeholder={t("insertName")}
       error={errors.label}
+      noShadow={!isLightMode}
     />
   );
 

@@ -206,6 +206,7 @@ const Category: FC = () => {
       }}
       placeholder={t("insertName")}
       error={errors.label}
+      noShadow={!isLightMode}
     />
   );
 

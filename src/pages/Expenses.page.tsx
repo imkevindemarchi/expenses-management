@@ -632,6 +632,7 @@ const Expenses: FC = () => {
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Input
+              type="number"
               value={table.value}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 event.target.value.length <= 4 &&

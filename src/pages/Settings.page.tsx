@@ -187,6 +187,7 @@ const Settings = () => {
           error={errors.password}
           startIcon={<EuroIcon className="text-darkgray text-lg" />}
           className="w-fit"
+          noShadow={!isLightMode}
         />
       </div>
     </div>
