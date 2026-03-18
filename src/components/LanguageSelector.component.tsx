@@ -41,7 +41,7 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
     ThemeContext,
   ) as TThemeContext;
 
-  const elabValue: string = value === "en" ? "gb" : value;
+  const elabValue: string = value === "en" ? "us" : value;
 
   useClickOutside(ref, () => setState(false));
 
@@ -74,7 +74,7 @@ const LanguageSelector: FC<IProps> = ({ value, onChange }) => {
         >
           {LANGUAGES.map((language: TLanguage, index: number) => {
             const countryCode: string =
-              language.id === "en" ? "gb" : language.id;
+              language.id === "en" ? "us" : language.id;
             const isSelectedLanguage: boolean = language.id === currentLanguage;
 
             return isSelectedLanguage ? (
