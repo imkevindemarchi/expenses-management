@@ -184,6 +184,10 @@ const Table: FC<IProps> = ({
                   const isDateColumn: boolean = column.key === "date";
                   const isImageColumn: boolean = column.key === "image";
                   const isIncomingColumn: boolean = column.key === "incomings";
+                  const isIncomingLabelColumn: boolean =
+                    item[column.key] === "Income";
+                  const isExitLabelColumn: boolean =
+                    item[column.key] === "Exit";
                   const isExitColumn: boolean = column.key === "exits";
                   const isValueZero: boolean = Number(item[column.key]) === 0;
                   const isTypeColumn: boolean = column.key === "type";
@@ -258,6 +262,34 @@ const Table: FC<IProps> = ({
                       >
                         <span className="text-primary text-lg">
                           {`€ ${item[column.key]}`}
+                        </span>
+                      </td>
+                    );
+
+                  if (isIncomingLabelColumn)
+                    return (
+                      <td
+                        key={index2}
+                        className={`whitespace-nowrap px-5 ${
+                          !smallPadding ? "p-5" : "p-1"
+                        }`}
+                      >
+                        <span className="text-primary text-lg">
+                          {t("income")}
+                        </span>
+                      </td>
+                    );
+
+                  if (isExitLabelColumn)
+                    return (
+                      <td
+                        key={index2}
+                        className={`whitespace-nowrap px-5 ${
+                          !smallPadding ? "p-5" : "p-1"
+                        }`}
+                      >
+                        <span className="text-primary-red text-lg">
+                          {t("exit")}
                         </span>
                       </td>
                     );
