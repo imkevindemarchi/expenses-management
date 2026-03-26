@@ -476,7 +476,7 @@ const Summary: FC = () => {
               className={`text-lg text-black transition-all duration-300 ${isLightMode ? "text-lg text-black" : "text-white"}`}
             >
               {t(leftToSpendLabel)}
-              {leftToSpend !== 0 && leftToSpendValue}!
+              {leftToSpend > 0 && leftToSpendValue}!
             </span>
             {!isMobile && (
               <span
