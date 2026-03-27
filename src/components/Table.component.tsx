@@ -12,6 +12,7 @@ import { ThemeContext, TThemeContext } from "../providers/theme.provider";
 
 // Icons
 import { ArrowLeftIcon, ArrowRightIcon, DeleteIcon } from "../assets/icons";
+import { formatNumber } from "../utils";
 
 export interface IColumn {
   key: string;
@@ -261,7 +262,7 @@ const Table: FC<IProps> = ({
                         }`}
                       >
                         <span className="text-primary text-lg">
-                          {`€ ${item[column.key]}`}
+                          {`€ ${formatNumber(item[column.key])}`}
                         </span>
                       </td>
                     );
@@ -305,7 +306,7 @@ const Table: FC<IProps> = ({
                         }`}
                       >
                         <span className="text-primary-red text-lg">
-                          {`€ ${item[column.key]}`}
+                          {`€ ${formatNumber(item[column.key])}`}
                         </span>
                       </td>
                     );
@@ -358,7 +359,7 @@ const Table: FC<IProps> = ({
                         className={`transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
                       >
                         {isValueColumn
-                          ? `€ ${item[column.key]}`
+                          ? `€ ${formatNumber(item[column.key])}`
                           : item[column.key]}
                       </span>
                     </td>

@@ -181,6 +181,7 @@ const Expenses: FC = () => {
                         category: category?.label,
                         subcategory: subcategory?.label,
                         month: month?.label,
+                        value: item.value,
                       };
                     });
                     setTableData(items);
