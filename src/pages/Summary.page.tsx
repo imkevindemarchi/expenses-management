@@ -41,7 +41,7 @@ import {
 import { TProgressBarStatus } from "../components/ProgressBar.component";
 
 // Utils
-import { setPageTitle } from "../utils";
+import { formatNumber, setPageTitle } from "../utils";
 
 interface IFilters {
   month: IAutocompleteValue;
@@ -282,7 +282,7 @@ const Summary: FC = () => {
   }
 
   function graphTooltipLabel(context: IDoughnutChartTooltip): string {
-    return ` €${context?.formattedValue}`;
+    return ` €${formatNumber(Number(context?.formattedValue))}`;
   }
 
   const title = (
@@ -330,7 +330,9 @@ const Summary: FC = () => {
       >
         {t("totalIncomings")}
       </span>
-      <span className="text-3xl text-primary">€ {getTotal("income")}</span>
+      <span className="text-3xl text-primary">
+        € {formatNumber(getTotal("income"))}
+      </span>
     </div>
   );
 
@@ -341,7 +343,9 @@ const Summary: FC = () => {
       >
         {t("totalExits")}
       </span>
-      <span className="text-3xl text-primary-red">€ {getTotal("exit")}</span>
+      <span className="text-3xl text-primary-red">
+        € {formatNumber(getTotal("exit"))}
+      </span>
     </div>
   );
 
@@ -458,7 +462,7 @@ const Summary: FC = () => {
 
     const leftToSpendValue = (
       <span className={`text-xl ml-2 font-bold ${getLeftToSpendColor()}`}>
-        €{leftToSpend}
+        €{formatNumber(leftToSpend)}
       </span>
     );
 
@@ -519,7 +523,7 @@ const Summary: FC = () => {
         const categoryTotal = (
           <span
             className={`text-xl transition-all duration-300 ${isLightMode ? "text-darkgray" : "text-gray"}`}
-          >{`€ ${getCategoryTotal(category, items as TItem[])}`}</span>
+          >{`€ ${formatNumber(getCategoryTotal(category, items as TItem[]))}`}</span>
         );
 
         const categoryHeader = (
@@ -540,10 +544,8 @@ const Summary: FC = () => {
                   subcategory,
                   items as TItem[],
                 );
-                const itemsTotalString: string = `€ ${itemsTotal}`.replaceAll(
-                  "-",
-                  "",
-                );
+                const itemsTotalString: string =
+                  `€ ${formatNumber(itemsTotal)}`.replaceAll("-", "");
                 const isItemVisible: boolean = itemsTotal !== 0;
 
                 const subcategoryLabel = (

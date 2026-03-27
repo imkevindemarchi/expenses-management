@@ -32,7 +32,7 @@ import {
 import { TProgressBarStatus } from "../components/ProgressBar.component";
 
 // Utils
-import { setPageTitle } from "../utils";
+import { formatNumber, setPageTitle } from "../utils";
 
 interface IFilters {
   year: number;
@@ -238,7 +238,9 @@ const YearSummary: FC = () => {
       >
         {t("totalIncomings")}
       </span>
-      <span className="text-3xl text-primary">€ {getTotal("income")}</span>
+      <span className="text-3xl text-primary">
+        € {formatNumber(getTotal("income"))}
+      </span>
     </div>
   );
 
@@ -249,7 +251,9 @@ const YearSummary: FC = () => {
       >
         {t("totalExits")}
       </span>
-      <span className="text-3xl text-primary-red">€ {getTotal("exit")}</span>
+      <span className="text-3xl text-primary-red">
+        € {formatNumber(getTotal("exit"))}
+      </span>
     </div>
   );
 
@@ -330,7 +334,7 @@ const YearSummary: FC = () => {
   }
 
   function graphTooltipLabel(context: IBarsChartTooltip): string {
-    return ` €${context?.formattedValue}`;
+    return ` €${formatNumber(Number(context?.formattedValue))}`;
   }
 
   const graph = (
