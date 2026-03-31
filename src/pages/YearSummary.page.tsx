@@ -334,7 +334,7 @@ const YearSummary: FC = () => {
   }
 
   function graphTooltipLabel(context: IBarsChartTooltip): string {
-    return ` €${formatNumber(Number(context?.formattedValue))}`;
+    return ` €${context?.formattedValue}`;
   }
 
   const graph = (

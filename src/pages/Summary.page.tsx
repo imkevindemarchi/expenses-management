@@ -282,7 +282,7 @@ const Summary: FC = () => {
   }
 
   function graphTooltipLabel(context: IDoughnutChartTooltip): string {
-    return ` €${formatNumber(Number(context?.formattedValue))}`;
+    return ` €${context?.formattedValue}`;
   }
 
   const title = (
