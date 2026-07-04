@@ -280,7 +280,7 @@ const Home: FC = () => {
                 onClick={() => onCategoryClick(category)}
                 className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50"
                 noShadow
-                borderColor="#3Bcc3d"
+                borderColor={process.env.REACT_APP_PRIMARY_COLOR || ""}
               >
                 <span
                   className={`text-lg transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}
@@ -321,7 +321,7 @@ const Home: FC = () => {
                     onClick={() => onSubcategoryClick(subcategory)}
                     className="p-2 flex justify-center items-center cursor-pointer hover:opacity-50"
                     noShadow
-                    borderColor="#3Bcc3d"
+                    borderColor={process.env.REACT_APP_PRIMARY_COLOR || ""}
                   >
                     <span
                       className={`text-lg transition-all duration-300 ${isLightMode ? "text-black" : "text-white"}`}

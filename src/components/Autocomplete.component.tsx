@@ -103,7 +103,7 @@ const Autocomplete: FC<IProps> = ({
 
   function onFocus(): void {
     setDropdown(true);
-    setBorderColor("#3Bcc3d");
+    setBorderColor(process.env.REACT_APP_PRIMARY_COLOR || "");
   }
 
   function onBlur() {
